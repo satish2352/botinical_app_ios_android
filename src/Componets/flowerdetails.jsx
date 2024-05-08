@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
+import Langchange from './Langchange';
+import LinearGradient from 'react-native-linear-gradient';
+
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const Aminitiesdetails = ({ route }) => {
+const flowerdetails = ({ route }) => {
     const data = route.params;
-    console.log(data);
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
                 <View style={styles.bgImage}
                 >
-
+                    
                     <Image style={styles.image} source={data.image} />
                 </View>
             </View>
@@ -20,19 +23,21 @@ const Aminitiesdetails = ({ route }) => {
 
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{data.title}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }} >{data.description}</Text>
-                    <View style={{top:350}}>
-                        <View style={styles.buttonview}>
-                            <TouchableOpacity style={styles.button} >
+                    <Text style={{ color: '#000',textAlign: 'justify' }}>{data.description}</Text>
+                    <View style={styles.headtext2wrap}>
+                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{data.title}</Text></Text>
+                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{data.title}</Text></Text>
+                    </View>
+                    <View style={styles.buttonview}>
+                        <TouchableOpacity style={styles.button} >
 
-                                <Text style={styles.buttonText}>Audio</Text>
-                                <Icon name="multitrack-audio" size={24} color="#fff" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
-                                <Text style={styles.buttonText}>Video</Text>
-                                <Icon name="ondemand-video" size={24} color="#fff" />
-                            </TouchableOpacity>
-                        </View>
+                            <Text style={styles.buttonText}>Audio</Text>
+                            <Icon name="multitrack-audio" size={24} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} >
+                            <Text style={styles.buttonText}>Video</Text>
+                            <Icon name="ondemand-video" size={24} color="#fff" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -44,17 +49,19 @@ const styles = StyleSheet.create({
     maincontainer: {
         flex: 1,
 
+
     },
     bgImage: {
         height: hp(40),
         width: '100%',
         alignItems: 'center',
         // justifyContent: 'center',
+        backgroundColor: "#ffff"
     },
     image: {
-        height: '100%',
+        height: '90%',
         width: '100%',
-        resizeMode: 'stretch',
+        resizeMode: 'contain',
         // marginVertical: 50
 
     },
@@ -67,10 +74,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
-        // justifyContent: 'flex-start',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: 2
+        elevation: 20, // Add elevation for Android shadow
 
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+         padding:10
     },
 
     button: {
@@ -92,30 +106,37 @@ const styles = StyleSheet.create({
     },
     headingwrap: {
         alignItems: 'flex-start',
-        top: 20,
+        top: 30,
         // position: "absolute",
-        marginHorizontal: 13,
-
+        marginHorizontal: 15,
 
 
 
 
     },
     headtext: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         fontFamily: 'Century Gothic',
         color: '#000000',
-        // margin: 20,
-        marginVertical: 20
+        // margin: 15,
+       paddingVertical:10
+
+    },
+    headtext2: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        color: '#000000',
+        padding: 5,
+        color: '#01595A'
+
     },
     buttonview: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginVertical: 20,
-        position: 'absolute',
-        justifyContent: "flex-end",
-        // alignSelf:"flex-end"
+        alignSelf:'center'
     },
 
 
@@ -124,5 +145,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 
     },
+    headtext2wrap: {
+        marginVertical: 10
+    }
 })
-export default Aminitiesdetails
+export default flowerdetails

@@ -1,8 +1,43 @@
+
+
+
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 // The main component
+const cardData = [
+        {
+            title: "Nature's Hub Food Court",
+            description: "The food court is placed in serene greenery. The ambience was awesome. The menu covers all the sessions with a limited number of offerings.",
+            image: require('../Assets/amenities/1.png')
+        },
+        {
+            title: "Open Gym",
+            description: "Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.",
+            image: require('../Assets/amenities/2.png')
+        },
+        {
+            title: "Adventure Arena",
+            description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
+            image: require('../Assets/amenities/3.png')
+        },
+        {
+            title: "Robust Fitness Center",
+            description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
+            image: require('../Assets/amenities/4.png')
+        },
+        {
+            title: "Adventure Arena",
+            description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
+            image: require('../Assets/amenities/3.png')
+        },
+        {
+            title: "Robust Fitness Center",
+            description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
+            image: require('../Assets/amenities/4.png')
+        },
+    ];
 const Amenities = ({ navigation }) => {
     const handlelogin = (data) => {
         navigation.navigate('Aminitiesdetails', data);
@@ -16,70 +51,54 @@ const Amenities = ({ navigation }) => {
         >
             <ScrollView style={{ marginTop: 40 }}>
                 <Text style={styles.header}>AMENITIES</Text>
-                <TouchableOpacity style={styles.cardwrap} onPress={() => handlelogin({
-                    title: "Nature's Hub Food Court",
-                    description: "The food court is placed in serene greenery. The ambience was awesome. The menu covers all the sessions with a limited number of offerings.",
-                    image: require('../Assets/amenities/11.png')
-                })}>
-                    <View style={styles.cardhead}>
-                        <Image
-                            source={require('../Assets/amenities/1.png')} // Replace with your image source
-                            style={styles.image2}
-                        />
-                    </View>
-                    <View style={styles.cardtext}>
-                        <Text style={styles.text}>Nature's Hub Food Court</Text>
-                        <Text style={styles.text2}>The food court is placed in serene greenery . The ambience was awesome . The menu covers all the session with limited number of offerings</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cardwrap2} onPress={() => handlelogin({
-                    title: "Open Gym",
-                    description: "Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.",
-                    image: require('../Assets/amenities/11.png')
-                })}>
-                    <View style={styles.cardtext}>
-                        <Text style={styles.text}>Open Gym</Text>
-                        <Text style={[styles.text2, { textAlign: 'left' }]}>Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.</Text>
-                    </View>
-                    <View style={styles.cardhead}>
-                        <Image
-                            source={require('../Assets/amenities/2.png')} // Replace with your image source
-                            style={styles.image3}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cardwrap} onPress={() => handlelogin({
-                    title: "Adventure Arena",
-                    description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
-                    image: require('../Assets/amenities/11.png')
-                })} >
-                    <View style={styles.cardhead}>
-                        <Image
-                            source={require('../Assets/amenities/3.png')} // Replace with your image source
-                            style={styles.image2}
-                        />
-                    </View>
-                    <View style={styles.cardtext}>
-                        <Text style={styles.text}>Adventure Arena</Text>
-                        <Text style={styles.text2}>Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cardwrap2} onPress={() => handlelogin({
-                    title: "Robust Fitness Center",
-                    description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
-                    image: require('../Assets/amenities/11.png')
-                })}>
-                    <View style={styles.cardtext}>
-                        <Text style={styles.text}>Robust Fitness Center</Text>
-                        <Text style={[styles.text2, { textAlign: 'left' }]}>A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.</Text>
-                    </View>
-                    <View style={styles.cardhead}>
-                        <Image
-                            source={require('../Assets/amenities/4.png')} // Replace with your image source
-                            style={styles.image3}
-                        />
-                    </View>
-                </TouchableOpacity>
+
+                {cardData.map((item,index)=>{
+
+                    
+                  if(index % 2 === 0)  {
+return(
+                    <View>
+                    <TouchableOpacity style={styles.cardwrap  } onPress={() => handlelogin(item)}>
+                        <View style={styles.cardhead}>
+                            <Image
+                                source={item.image} // Replace with your image source
+                                style={styles.image2}
+                            />
+                        </View>
+                        <View style={styles.cardtext}>
+                            <Text style={styles.text}>{item.title}</Text>
+                            <Text style={styles.text2}>{item.description}</Text>
+                        </View>
+                        </TouchableOpacity>
+                        </View>
+)
+                  }
+                  else{
+                    return(
+                       <View>
+                       <TouchableOpacity style={styles.cardwrap2  } onPress={() => handlelogin(item)}>
+                       <View style={styles.cardtext}>
+                       <Text style={styles.text}>{item.title}</Text>
+                       <Text style={[styles.text2, { textAlign: 'left' }]}>{item.description}</Text>
+                   </View>
+                   <View style={styles.cardhead}>
+                       <Image
+                           source={item.image} // Replace with your image source
+                           style={styles.image3}
+                       />
+                   </View>
+                   </TouchableOpacity>
+                   </View>
+                    )
+                    }
+                   
+                })
+            }
+
+            
+
+
+
             </ScrollView>
         </LinearGradient>
     );
@@ -187,4 +206,5 @@ const styles = StyleSheet.create({
 });
 
 export default Amenities;
+
 

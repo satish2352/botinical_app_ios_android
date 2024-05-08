@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const DATA = [
     { id: '1', title: 'Lotus', image: require('../Assets/flowers/banyantree1.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
     { id: '2', title: 'Lily', image: require('../Assets/flowers/Group1071.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
@@ -15,20 +17,42 @@ const DATA = [
 
 
 const Flowers = ({navigation}) => {
+    const [treeData, setTreeData] = useState([]);
+    useEffect(() => {
+        
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
+           
+            try {
+              
+                const response = await axios.post('https://botinical.com.sumagodemo.com/api/auth/get-flowers-list', {},{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                
+                setTreeData(response.data.data);
+               
+            } catch (error) {
+                console.error('Error fetching tree data:', error);
+            }
+        };
+        fetchData();
+    }, []);
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.card} onPress={() => handlelogin(item)}>
+        <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
             <View><Image source={item.image} style={styles.image} /></View>
 
             <View style={styles.textwrap}>
-                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.title}>{item.english_name}</Text>
             </View>
 
         </TouchableOpacity>
     );
 
 
-    const handlelogin = (data) => {
-        navigation.navigate('PlatsDetails', data);
+    const viewdetails = (data) => {
+        navigation.navigate('flowerdetails', data);
     }
     return (
         <View style={styles.container}>
@@ -41,7 +65,7 @@ const Flowers = ({navigation}) => {
                 <Text style={styles.text}>FLOWERS</Text>
             </LinearGradient>
             <FlatList
-                data={DATA}
+                data={treeData}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
                 numColumns={2}

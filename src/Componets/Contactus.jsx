@@ -7,7 +7,7 @@ const Contactus = ({ route }) => {
         <View
             style={styles.maincontainer}
         >
-            <View style={styles.subcontainer1}>
+            <View >
                 <View style={styles.bgImage}>
                     <Image style={styles.image} source={require('../Assets/contactus/contact.png')} />
                 </View>
@@ -24,7 +24,7 @@ const Contactus = ({ route }) => {
                 <Text style={styles.location}>
                     Email{'\n'}
                     <Text style={{ fontSize: 14, fontWeight: 'normal' }}>
-                    adoptsfdc@gmail.com 
+                        adoptsfdc@gmail.com
                     </Text>
                 </Text>
 
@@ -74,35 +74,36 @@ const styles = StyleSheet.create({
 
     },
     bgImage: {
-        left: 20
+        // left: 20
     },
     image: {
-        height: '75%',
+        height: '65%',
         width: '100%',
         resizeMode: 'center',
         // marginVertical: 50,
         alignSelf: 'flex-start',
+        
+        
     },
     contentContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        padding: 10,
+        padding: 15,
         backgroundColor: '#01595A',
     },
-    subcontainer1: {
-        flex: 1,
-    },
+
     contactcardwrap: {
         backgroundColor: 'white',
         borderRadius: 30,
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end',
         elevation: 20,
         shadowOpacity: 0.27,
         shadowRadius: 4.65,
         position: 'absolute',
         width: '90%',
         alignSelf: "center",
-        top: 180
+        marginTop: 180,
+
     },
     fromwrap: {
         alignItems: 'center',
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '700',
         color: '#ffff',
-        marginVertical: 10,
+        marginBottom:225,
         // alignSelf: 'flex-start',
         marginHorizontal: 35,
         fontFamily: 'Century Gothic',

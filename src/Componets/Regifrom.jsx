@@ -8,7 +8,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Regifrom = ({ navigation }) => {
     const {useerid } = useMyData();
- 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
@@ -25,7 +24,7 @@ const Regifrom = ({ navigation }) => {
             gender: gender,
             date_of_birth: dob,
             address: address,
-            occupation: occupation
+            occupation: occupation 
         },
         {
             headers: {
@@ -46,9 +45,7 @@ const Regifrom = ({ navigation }) => {
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
-               
                     <Image style={styles.Image} source={require('../Assets/simplelogo.png')} />
-                
             </View>
             <LinearGradient
                 colors={['#015A4A', '#89CE9B', '#89CE9B']}
@@ -101,9 +98,6 @@ const Regifrom = ({ navigation }) => {
                         <Text style={styles.buttonText}>SUBMIT </Text>
                     </TouchableOpacity>
                 </View>
-
-
-
             </LinearGradient>
         </View>
     )

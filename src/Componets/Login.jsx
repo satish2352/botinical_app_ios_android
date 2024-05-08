@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';   
-import { API_URL } from "@env";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import axios from 'axios';
+import config from '../../config/config';
+
 
 
 const Login = ({ navigation }) => {
@@ -11,29 +13,30 @@ const Login = ({ navigation }) => {
     const [mobile, setmobile] = useState('');
     const [pass, setpass] = useState('');
     const [error, setError] = useState('');
-  
-  
+
+
     const handlelogin = async () => {
+
         try {
             // Validate mobile number
             if (mobile === '') {
                 setError('Please fill in your mobile number');
                 return;
             }
-          
+
             // Make API call to request OTP
-            const response = await axios.post('https://botinical.com.sumagodemo.com/api/login', {
+            const response = await axios.post(`${config.API_URL}login`, {
                 mobile_number: mobile,
             });
-            console.log('Response from API:', response.data); 
+            console.log('Response from API:', response.data);
             setdata(response.data)
             if (data && data.status === 'true') {
                 // Handle successful OTP request
-                Alert.alert( data.message);// Corrected this line
+                Alert.alert(data.message);// Corrected this line
                 console.log('OTP Sent Successfullyyyyyyyyyyyy:', response.message);
-                
-             
-                navigation.navigate('Otpscreen',{ mobile_number: mobile });
+
+
+                navigation.navigate('Otpscreen', { mobile_number: mobile });
             } else {
                 // Handle unsuccessful OTP request
                 setError(response.data.error);
@@ -44,7 +47,7 @@ const Login = ({ navigation }) => {
             setError(error.message);
         }
     };
-    
+
     return (
         <View style={styles.maincontainer}>
 
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-     
+
     },
 })
 export default Login
