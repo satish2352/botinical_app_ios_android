@@ -4,7 +4,9 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import config from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+config
 // The main component
 const cardData = [
         {
@@ -39,6 +41,32 @@ const cardData = [
         },
     ];
 const Amenities = ({ navigation }) => {
+
+// const [cardData,setaminitiesData]=useState([]);
+//     useEffect(() => {
+        
+//         const fetchData = async () => {
+//             const token = await AsyncStorage.getItem('token');
+           
+//             try {
+              
+//                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {},{
+//                     headers: {
+//                         Authorization: `Bearer ${token}`
+//                     }
+//                 });
+                
+//                 setaminitiesData(response.data.data);
+               
+//             } catch (error) {
+//                 console.error('Error fetching about data:', error);
+//             }
+//         };
+//         fetchData();
+//     }, []);
+
+
+
     const handlelogin = (data) => {
         navigation.navigate('Aminitiesdetails', data);
     }

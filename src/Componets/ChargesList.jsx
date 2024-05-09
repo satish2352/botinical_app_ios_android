@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import config from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // Data for the cards
 const chargesData = [
     { title: 'Adult Entry', details: '₹40' },
@@ -17,6 +19,29 @@ const chargesData = [
 
 // The main component
 const ChargesList = () => {
+    // const [chargesData,setchargesData]=useState([]);
+//     useEffect(() => {
+        
+//         const fetchData = async () => {
+//             const token = await AsyncStorage.getItem('token');
+           
+//             try {
+              
+//                 const response = await axios.post(`${config.API_URL}auth/get-charges-list`, {},{
+//                     headers: {
+//                         Authorization: `Bearer ${token}`
+//                     }
+//                 });
+                
+//                 setchargesData(response.data.data);
+               
+//             } catch (error) {
+//                 console.error('Error fetching about data:', error);
+//             }
+//         };
+//         fetchData();
+//     }, []);
+
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}

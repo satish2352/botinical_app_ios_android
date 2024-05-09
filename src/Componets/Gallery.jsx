@@ -3,7 +3,8 @@
 
 import React from 'react';
 import { View, FlatList, Image, StyleSheet, Dimensions ,Text} from 'react-native';
-
+import config from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Gallery = () => {
     // Sample image data
     const images = [
@@ -17,6 +18,30 @@ const Gallery = () => {
 
         // Add more images as needed
     ];
+
+    // const [images,setgalleryData]=useState([]);
+//     useEffect(() => {
+        
+//         const fetchData = async () => {
+//             const token = await AsyncStorage.getItem('token');
+           
+//             try {
+              
+//                 const response = await axios.post(`${config.API_URL}auth/get-gallery`, {},{
+//                     headers: {
+//                         Authorization: `Bearer ${token}`
+//                     }
+//                 });
+                
+//                 setgalleryData(response.data.data);
+               
+//             } catch (error) {
+//                 console.error('Error fetching about data:', error);
+//             }
+//         };
+//         fetchData();
+//     }, []);
+
 
     const renderImageItem = ({ item, index }) => {
         // For odd index, render a single image

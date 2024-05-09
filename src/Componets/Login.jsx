@@ -15,27 +15,28 @@ const Login = ({ navigation }) => {
     const [error, setError] = useState('');
 
 
-    const handlelogin = async () => {
-
+    const handleLogin = async () => {
+     const URL= config.API_URL;
+     console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',URL);
         try {
             // Validate mobile number
             if (mobile === '') {
                 setError('Please fill in your mobile number');
                 return;
             }
-
+    
             // Make API call to request OTP
-            const response = await axios.post(`${config.API_URL}login`, {
+            const response = await axios.post(`${URL}login`, {
                 mobile_number: mobile,
             });
             console.log('Response from API:', response.data);
-            setdata(response.data)
-            if (data && data.status === 'true') {
+            setdata(response.data);
+    
+            if (response.data && response.data.status === 'true') {
                 // Handle successful OTP request
-                Alert.alert(data.message);// Corrected this line
-                console.log('OTP Sent Successfullyyyyyyyyyyyy:', response.message);
-
-
+                Alert.alert(response.data.message);
+                console.log('OTP Sent Successfullyyyyyyyyyyyy:', response.data.message);
+    
                 navigation.navigate('Otpscreen', { mobile_number: mobile });
             } else {
                 // Handle unsuccessful OTP request
@@ -47,7 +48,6 @@ const Login = ({ navigation }) => {
             setError(error.message);
         }
     };
-
     return (
         <View style={styles.maincontainer}>
 
@@ -70,7 +70,7 @@ const Login = ({ navigation }) => {
                             value={mobile}
                         />
                         {error ? <Text style={styles.error}>{error}</Text> : null}
-                        <TouchableOpacity style={styles.button} onPress={handlelogin} >
+                        <TouchableOpacity style={styles.button} onPress={handleLogin} >
                             <Text style={styles.buttonText}>Log In</Text>
                         </TouchableOpacity>
                     </View>
@@ -164,5 +164,4 @@ const styles = StyleSheet.create({
     },
 })
 export default Login
-
 
