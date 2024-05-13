@@ -3,28 +3,32 @@ import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
 import LinearGradient from 'react-native-linear-gradient';
-import { useMyData } from '../../Navigtors/globlevariable/MyContext';
+import { globalvariavle, useMyData } from '../../Navigtors/globlevariable/MyContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../config/config';
+
 const Regifrom = ({ navigation }) => {
-    const {useerid } = useMyData();
+    const {useerid } = globalvariavle();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
     const [dob, setDob] = useState('');
     const [address, setAddress] = useState('');
     const [occupation, setOccupation] = useState('');
+    const { SelectedLanguage1 } = globalvariavle();
 
     const handleRegistration = async() => {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
-        axios.post(`https://botinical.com.sumagodemo.com/api/auth/update-user-form?id=${useerid}`, {
+        axios.post(`${config.API_URL}auth/update-user-form?id=${useerid}`, {
             full_name: name,
             email: email,
             gender: gender,
             date_of_birth: dob,
             address: address,
-            occupation: occupation 
+            occupation: occupation ,
+            language: SelectedLanguage1,
         },
         {
             headers: {

@@ -1,53 +1,55 @@
 
 
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, FlatList, Image, StyleSheet, Dimensions ,Text} from 'react-native';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const Gallery = () => {
-    // Sample image data
-    const images = [
-        { id: 1, uri: require('../Assets/gallery/g2.png') },
-        { id: 2, uri: require('../Assets/gallery/g1.png') },
-        { id: 3, uri: require('../Assets/gallery/g3.png') },
-        { id: 4, uri: require('../Assets/gallery/g4.png') },
-        { id: 5, uri: require('../Assets/gallery/g5.png') },
-        { id: 6, uri: require('../Assets/gallery/g6.png') },
+import axios from 'axios';
+
+ const Gallery = () => {
+//     // Sample image data
+//     const images = [
+//         { id: 1, uri: require('../Assets/gallery/g2.png') },
+//         { id: 2, uri: require('../Assets/gallery/g1.png') },
+//         { id: 3, uri: require('../Assets/gallery/g3.png') },
+//         { id: 4, uri: require('../Assets/gallery/g4.png') },
+//         { id: 5, uri: require('../Assets/gallery/g5.png') },
+//         { id: 6, uri: require('../Assets/gallery/g6.png') },
 
 
-        // Add more images as needed
-    ];
+//         // Add more images as needed
+//     ];
 
-    // const [images,setgalleryData]=useState([]);
-//     useEffect(() => {
+    const [images,setgalleryData]=useState([]);
+    useEffect(() => {
         
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
            
-//             try {
+            try {
               
-//                 const response = await axios.post(`${config.API_URL}auth/get-gallery`, {},{
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
+                const response = await axios.post('https://botinical.com.sumagotest.in/api/auth/get-gallery', {},{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 
-//                 setgalleryData(response.data.data);
+                setgalleryData(response.data.data);
                
-//             } catch (error) {
-//                 console.error('Error fetching about data:', error);
-//             }
-//         };
-//         fetchData();
-//     }, []);
+            } catch (error) {
+                console.error('Error fetching about data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
 
     const renderImageItem = ({ item, index }) => {
         // For odd index, render a single image
         if (index % 2 !== 0) {
             return (
-                <Image source={item.uri} style={[styles.image, styles.singleImage]} />
+                <Image source={{uri :item.image}} style={[styles.image, styles.singleImage]} />
             );
         } else {
             // For even index, render two images side by side
@@ -55,14 +57,14 @@ const Gallery = () => {
             if (nextImage) {
                 return (
                     <View style={styles.imageContainer}>
-                        <Image source={item.uri} style={[styles.image, styles.doubleImage]} />
-                        <Image source={nextImage.uri} style={[styles.image, styles.doubleImage]} />
+                        <Image source={{uri :item.image}} style={[styles.image, styles.doubleImage]} />
+                        <Image source={{uri:nextImage.image}} style={[styles.image, styles.doubleImage]} />
                     </View>
                 );
             } else {
                 // If there's no next image, render a single image
                 return (
-                    <Image source={item.uri} style={[styles.image, styles.singleImage]} />
+                    <Image source={{uri :item.image}} style={[styles.image, styles.singleImage]} />
                 );
             }
         }

@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
 import LinearGradient from 'react-native-linear-gradient';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+
 const Registration = ({ navigation }) => {
     const handlelogin = () => {
         navigation.navigate('Regifrom');

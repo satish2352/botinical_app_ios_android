@@ -9,53 +9,58 @@ import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 // The main component
 
-const cardData = [
-    {
-        image: require('../Assets/aboutimage/i2.png'),
-        text: "Electronic gate has been provided to maintain transparency on issue of entry passes",
-        headname: "Herbal/Medicinal Garden"
-    },
-    {
-        image: require('../Assets/aboutimage/i3.png'),
-        text: "Educating the visitors to see the Zoo as scientific institution engaged in welfare and conservation of wildlife. Also to view the Zoo and knowledge centers for wildlife education, maintaining healthy ambience and pollution free environment.",
-        headname: "Butterfly Park"
-    },
-    {
-        image: require('../Assets/aboutimage/i2.png'),
-        text: "Electronic gate has been provided to maintain transparency on issue of entry passes",
-        headname: "Herbal/Medicinal Garden"
-    },
-    {
-        image: require('../Assets/aboutimage/i3.png'),
-        text: "Educating the visitors to see the Zoo as scientific institution engaged in welfare and conservation of wildlife. Also to view the Zoo and knowledge centers for wildlife education, maintaining healthy ambience and pollution free environment.",
-        headname: "Butterfly Park"
-    },
-];
+// const cardData = [
+//     {
+//         image: require('../Assets/aboutimage/i2.png'),
+//         text: "Electronic gate has been provided to maintain transparency on issue of entry passes",
+//         headname: "Herbal/Medicinal Garden"
+//     },
+//     {
+//         image: require('../Assets/aboutimage/i3.png'),
+//         text: "Educating the visitors to see the Zoo as scientific institution engaged in welfare and conservation of wildlife. Also to view the Zoo and knowledge centers for wildlife education, maintaining healthy ambience and pollution free environment.",
+//         headname: "Butterfly Park"
+//     },
+//     {
+//         image: require('../Assets/aboutimage/i2.png'),
+//         text: "Electronic gate has been provided to maintain transparency on issue of entry passes",
+//         headname: "Herbal/Medicinal Garden"
+//     },
+//     {
+//         image: require('../Assets/aboutimage/i3.png'),
+//         text: "Educating the visitors to see the Zoo as scientific institution engaged in welfare and conservation of wildlife. Also to view the Zoo and knowledge centers for wildlife education, maintaining healthy ambience and pollution free environment.",
+//         headname: "Butterfly Park"
+//     },
+// ];
 const About = () => {
-// const [cardData,setaboutData]=useState([]);
-//     useEffect(() => {
+const [cardData,setaboutData]=useState([]);
+const { SelectedLanguage1 } = globalvariavle();
+    useEffect(() => {
         
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
            
-//             try {
+            try {
               
-//                 const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {},{
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
+                const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {
+                    language: SelectedLanguage1,
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 
-//                 setaboutData(response.data.data);
+                setaboutData(response.data.data);
                
-//             } catch (error) {
-//                 console.error('Error fetching about data:', error);
-//             }
-//         };
-//         fetchData();
-//     }, []);
+            } catch (error) {
+                console.error('Error fetching about data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <LinearGradient
@@ -87,16 +92,16 @@ const About = () => {
 
                                     <View style={styles.cardhead}>
                                         <Image
-                                            source={item.image} // Replace with your image source
+                                            source={{uri:item.image}} // Replace with your image source
                                             style={styles.image2}
                                         />
                                     </View>
                                     <View style={styles.cardtext}>
-                                        <Text style={styles.text2}>{item.text}</Text>
+                                        <Text style={styles.text2}>{item.description}</Text>
                                     </View>
 
                                 </View>
-                                <Text style={styles.header2}>{item.headname}</Text>
+                                <Text style={styles.header2}>{item.name}</Text>
                             </View>
                             )}
                             else{
@@ -106,16 +111,16 @@ const About = () => {
 
                                     
                                     <View style={styles.cardtext}>
-                                        <Text style={styles.text2}>{item.text}</Text>
+                                        <Text style={styles.text2}>{item.description}</Text>
                                     </View>
                                     <View style={styles.cardhead1}>
                                         <Image
-                                            source={item.image} // Replace with your image source
+                                        source={{uri:item.image}} // Replace with your image source
                                             style={styles.image3}
                                         />
                                     </View>
                                 </View>
-                                <Text style={styles.header3}>{item.headname}</Text></View>
+                                <Text style={styles.header3}>{item.name}</Text></View>
                             )
                         }
                    
@@ -195,7 +200,7 @@ const styles = StyleSheet.create({
     },
     image3: {
         width: "100%",
-        height: "100%",
+        height: 160,
         resizeMode: 'cover',
 
         borderTopRightRadius: 20,

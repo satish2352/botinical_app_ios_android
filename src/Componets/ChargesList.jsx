@@ -1,46 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 // Data for the cards
-const chargesData = [
-    { title: 'Adult Entry', details: '₹40' },
-    { title: 'Adult Entry with Food Packet', details: '₹60' },
-    { title: 'Child Entry', details: '₹30' },
-    { title: '2 Wheeler Parking', details: '₹15' },
-    { title: '4 Wheeler Parking', details: '₹30' },
-    { title: 'Photoshoot (4 hrs)', details: '₹2000' },
-    { title: 'Photoshoot (1 hr)', details: '₹500' },
-    { title: 'Video Shoot (6 hrs)', details: '₹5000' },
-    { title: 'Video Shoot (Full day)', details: '₹10,000' },
-    { title: 'Cinema (6 hrs)', details: '₹15,000' },
-];
+// const chargesData = [
+//     { title: 'Adult Entry', details: '₹40' },
+//     { title: 'Adult Entry with Food Packet', details: '₹60' },
+//     { title: 'Child Entry', details: '₹30' },
+//     { title: '2 Wheeler Parking', details: '₹15' },
+//     { title: '4 Wheeler Parking', details: '₹30' },
+//     { title: 'Photoshoot (4 hrs)', details: '₹2000' },
+//     { title: 'Photoshoot (1 hr)', details: '₹500' },
+//     { title: 'Video Shoot (6 hrs)', details: '₹5000' },
+//     { title: 'Video Shoot (Full day)', details: '₹10,000' },
+//     { title: 'Cinema (6 hrs)', details: '₹15,000' },
+// ];
 
 // The main component
 const ChargesList = () => {
-    // const [chargesData,setchargesData]=useState([]);
-//     useEffect(() => {
+    
+    const [chargesData,setchargesData]=useState([]);
+    const { SelectedLanguage1 } = globalvariavle();
+    useEffect(() => {
         
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
            
-//             try {
+            try {
               
-//                 const response = await axios.post(`${config.API_URL}auth/get-charges-list`, {},{
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
+                const response = await axios.post(`${config.API_URL}auth/get-charges-list`, {
+                    language: SelectedLanguage1,
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 
-//                 setchargesData(response.data.data);
+                setchargesData(response.data.data);
                
-//             } catch (error) {
-//                 console.error('Error fetching about data:', error);
-//             }
-//         };
-//         fetchData();
-//     }, []);
+            } catch (error) {
+                console.error('Error fetching about data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <LinearGradient
@@ -58,10 +64,10 @@ const ChargesList = () => {
                 {chargesData.map((item, index) => (
                     <View key={index} style={styles.cardwrap}>
                         <View style={styles.cardhead}>
-                            <Text style={styles.cardTitle}>{item.title}</Text>
+                            <Text style={styles.cardTitle}>{item.name}</Text>
                         </View>
                         <View style={styles.cardtext}>
-                            <Text style={styles.cardDetails}>{item.details}</Text>
+                            <Text style={styles.cardDetails}>{item.price}</Text>
                         </View>
 
                     </View>

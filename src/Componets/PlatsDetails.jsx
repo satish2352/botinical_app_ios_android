@@ -1,20 +1,69 @@
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity,Modal } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
 import LinearGradient from 'react-native-linear-gradient';
-
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import config from '../../config/config';
+import AudioModal from './AudioModal';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 const PlatsDetails = ({ route }) => {
     const data = route.params;
+    const [audioModalVisible, setAudioModalVisible] = useState(false);
+ 
+    const { SelectedLanguage1 } = globalvariavle();
+
+    const [treeData, setTreedeatils] = useState([]);
+    const details = treeData;
+    useEffect(() => {
+        const id = data.id
+        console.log(id);
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
+
+            try {
+
+                const response = await axios.post(`${config.API_URL}auth/get-tress-list`,
+                    {
+                        tress_id: id,
+                        language: SelectedLanguage1,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                setTreedeatils(response.data.data[0]);
+
+            } catch (error) {
+                console.error('Error fetching tree data:', error);
+            }
+        };
+        fetchData();
+
+    }, []);
+
+
+
+ 
+
+    const openAudioModal = () => {
+        setAudioModalVisible(true);
+    };
+
+
+
+  
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
                 <View style={styles.bgImage}
                 >
-                    
-                    <Image style={styles.image} source={data.image} />
+
+                    <Image style={styles.image} source={{ uri: treeData.image }} />
                 </View>
             </View>
             <View
@@ -22,16 +71,16 @@ const PlatsDetails = ({ route }) => {
                 style={styles.contentContainer}>
 
                 <View style={styles.headingwrap}>
-                    <Text style={styles.headtext}>{data.title}</Text>
-                    <Text style={{ color: '#000',textAlign: 'justify' }}>{data.description}</Text>
+                    <Text style={styles.headtext}>{treeData.name}</Text>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{treeData.description}</Text>
                     <View style={styles.headtext2wrap}>
-                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{data.title}</Text></Text>
-                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{data.title}</Text></Text>
+                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{treeData.title}</Text></Text>
+                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{treeData.title}</Text></Text>
                     </View>
                     <View style={styles.buttonview}>
                         <TouchableOpacity style={styles.button} >
 
-                            <Text style={styles.buttonText}>Audio</Text>
+                            <Text style={styles.buttonText} onPress={openAudioModal}>Audio</Text>
                             <Icon name="multitrack-audio" size={24} color="#fff" />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} >
@@ -40,6 +89,9 @@ const PlatsDetails = ({ route }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+            </View>
+            <View>
+            <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>
             </View>
         </View>
     )
@@ -84,7 +136,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.27,
         shadowRadius: 4.65,
-         padding:10
+        padding: 10
     },
 
     button: {
@@ -120,7 +172,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Century Gothic',
         color: '#000000',
         // margin: 15,
-       paddingVertical:10
+        paddingVertical: 10
 
     },
     headtext2: {
@@ -136,7 +188,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginVertical: 20,
-        alignSelf:'center'
+        alignSelf: 'center'
     },
 
 
@@ -147,6 +199,7 @@ const styles = StyleSheet.create({
     },
     headtext2wrap: {
         marginVertical: 10
-    }
+    },
+    
 })
 export default PlatsDetails

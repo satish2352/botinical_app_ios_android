@@ -9,7 +9,7 @@
 //     const data = route.params;
 //     const [audioModalVisible, setAudioModalVisible] = useState(false);
 //     const [sound, setSound] = useState(null);
-  
+
 //     const openAudioModal = () => {
 //         setAudioModalVisible(true);
 //     };
@@ -222,6 +222,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
 import Slider from "@react-native-community/slider";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Aminitiesdetails = ({ route }) => {
     const data = route.params;
@@ -247,7 +248,24 @@ const Aminitiesdetails = ({ route }) => {
                 });
             }, 1000);
             return () => clearInterval(timer);
-        }
+        };
+        // const fetchData = async () => {
+        //     const token = await AsyncStorage.getItem('token');
+
+        //     try {
+
+        //         const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {},{
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`
+        //             }
+        //         });
+
+        //         setaboutData(response.data.data);
+
+        //     } catch (error) {
+        //         console.error('Error fetching about data:', error);
+        //     }
+        // };
     }, [sound]);
 
     const openAudioModal = () => {
@@ -349,17 +367,17 @@ const Aminitiesdetails = ({ route }) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        
-                    <Slider
-                    style={{ width: '90%', marginTop: 20 }}
-                    minimumValue={0}
-                    maximumValue={duration}
-                    value={sliderValue}
-                    onValueChange={onSliderValueChange}
-                    thumbTintColor="#01595A"
-                    minimumTrackTintColor="#01595A"
-                    maximumTrackTintColor="red"
-                />
+
+                        <Slider
+                            style={{ width: '90%', marginTop: 20 }}
+                            minimumValue={0}
+                            maximumValue={duration}
+                            value={sliderValue}
+                            onValueChange={onSliderValueChange}
+                            thumbTintColor="#01595A"
+                            minimumTrackTintColor="#01595A"
+                            maximumTrackTintColor="red"
+                        />
                         <View style={styles.controls}>
                             <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
                                 <Icon name="replay-5" size={30} color="#01595A" />

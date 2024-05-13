@@ -1,69 +1,73 @@
 
 
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-config
+import axios from 'axios';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 // The main component
-const cardData = [
-        {
-            title: "Nature's Hub Food Court",
-            description: "The food court is placed in serene greenery. The ambience was awesome. The menu covers all the sessions with a limited number of offerings.",
-            image: require('../Assets/amenities/1.png')
-        },
-        {
-            title: "Open Gym",
-            description: "Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.",
-            image: require('../Assets/amenities/2.png')
-        },
-        {
-            title: "Adventure Arena",
-            description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
-            image: require('../Assets/amenities/3.png')
-        },
-        {
-            title: "Robust Fitness Center",
-            description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
-            image: require('../Assets/amenities/4.png')
-        },
-        {
-            title: "Adventure Arena",
-            description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
-            image: require('../Assets/amenities/3.png')
-        },
-        {
-            title: "Robust Fitness Center",
-            description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
-            image: require('../Assets/amenities/4.png')
-        },
-    ];
+// const cardData = [
+//         {
+//             title: "Nature's Hub Food Court",
+//             description: "The food court is placed in serene greenery. The ambience was awesome. The menu covers all the sessions with a limited number of offerings.",
+//             image: require('../Assets/amenities/1.png')
+//         },
+//         {
+//             title: "Open Gym",
+//             description: "Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.",
+//             image: require('../Assets/amenities/2.png')
+//         },
+//         {
+//             title: "Adventure Arena",
+//             description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
+//             image: require('../Assets/amenities/3.png')
+//         },
+//         {
+//             title: "Robust Fitness Center",
+//             description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
+//             image: require('../Assets/amenities/4.png')
+//         },
+//         {
+//             title: "Adventure Arena",
+//             description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
+//             image: require('../Assets/amenities/3.png')
+//         },
+//         {
+//             title: "Robust Fitness Center",
+//             description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
+//             image: require('../Assets/amenities/4.png')
+//         },
+//     ];
 const Amenities = ({ navigation }) => {
 
-// const [cardData,setaminitiesData]=useState([]);
-//     useEffect(() => {
+const [cardData,setaminitiesData]=useState([]);
+const { SelectedLanguage1 } = globalvariavle();
+    useEffect(() => {
         
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
            
-//             try {
+            try {
               
-//                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {},{
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
+                const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+                    language: SelectedLanguage1,
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 
-//                 setaminitiesData(response.data.data);
+                setaminitiesData(response.data.data);
                
-//             } catch (error) {
-//                 console.error('Error fetching about data:', error);
-//             }
-//         };
-//         fetchData();
-//     }, []);
+            } catch (error) {
+                console.error('Error fetching about data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
 
 

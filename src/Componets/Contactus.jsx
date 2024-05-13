@@ -1,8 +1,70 @@
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
-import React from 'react'
-
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import config from '../../config/config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 const Contactus = ({ route }) => {
     const data = route.params;
+    const [name,setname]=useState('');
+    const [email,setemail]=useState('');
+    const [add,setadd]=useState('');
+    const [mesage,setmessage]=useState('');
+    const [contactdetails,setcontactdetails]=useState([]);
+    const { SelectedLanguage1 } = globalvariavle();
+   console.log(contactdetails);
+   useEffect(()=>{
+    const fetchData = async () => {
+        const token = await AsyncStorage.getItem('token');
+
+        try {
+
+            const response = await axios.post(`${config.API_URL}auth/get-contact-information`,
+                {
+                    
+                    language: SelectedLanguage1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+            setcontactdetails(response.data.data[0]);
+            console.log(response.data.data[0]);
+
+        } catch (error) {
+            console.error('Error fetching tree data:', error);
+        }
+    };
+    fetchData();
+   },[])
+    const handleRegistration = async() => {
+      
+        const token = await AsyncStorage.getItem('token');
+        console.log(token);
+        axios.post(`${config.API_URL}auth/add-contactus-form`, {
+            full_name: name,
+            email: email,
+            address: add,
+            message: mesage,
+          
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            console.log('Registration successful:', response.data.message);
+          Alert.alert('Registration successful:', response.data.message);
+          
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to register. Please try again later.');
+        });
+    }
     return (
         <View
             style={styles.maincontainer}
@@ -13,18 +75,18 @@ const Contactus = ({ route }) => {
                 </View>
             </View>
             <View style={styles.contentContainer}>
-                <Text style={styles.location}>location <Text style={{ fontSize: 14, fontWeight: 'normal' }}>Kothaguda Reserve Forest, Gachibowli Road, Near Hi-tec City, Kondapur, Hyderabad, Telangana 500032</Text></Text>
+                <Text style={styles.location}>location <Text style={{ fontSize: 14, fontWeight: 'normal' }}>{contactdetails.address}</Text></Text>
                 <Text style={styles.location}>
                     Phone{'\n'}
                     <Text style={{ fontSize: 14, fontWeight: 'normal' }}>
-                        Assit Director: 8008301605 {'\n'}
-                        Estate Officer: 9490664849
+                        Assit Director: {contactdetails.director_number} {'\n'}
+                        Estate Officer: {contactdetails.officer_number}
                     </Text>
                 </Text>
                 <Text style={styles.location}>
                     Email{'\n'}
                     <Text style={{ fontSize: 14, fontWeight: 'normal' }}>
-                        adoptsfdc@gmail.com
+                        {contactdetails.email}
                     </Text>
                 </Text>
 
@@ -37,17 +99,20 @@ const Contactus = ({ route }) => {
                         style={styles.input}
                         placeholder="NAME"
                         placeholderTextColor="black"
+                        onChangeText={setname}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="EMAIL"
                         placeholderTextColor="black"
+                        onChangeText={setemail}
                     />
 
                     <TextInput
                         style={styles.input}
                         placeholder="ADDRESS"
                         placeholderTextColor="black"
+                        onChangeText={setadd}
                     />
                     <TextInput
                         style={[styles.input, { height: 80 }]} // Adjust the height for the MESSAGE input
@@ -55,9 +120,10 @@ const Contactus = ({ route }) => {
                         placeholderTextColor="black"
                         multiline={true}
                         textAlignVertical="top"
+                        onChangeText={setmessage}
                     />
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>SEND</Text>
+                    <TouchableOpacity style={styles.button} onPress={handleRegistration}>
+                        <Text style={styles.buttonText} >SEND</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -70,7 +136,7 @@ const Contactus = ({ route }) => {
 const styles = StyleSheet.create({
     maincontainer: {
         flex: 1,
-        backgroundColor: "#ffff",
+        // backgroundColor: "#ffff",
 
     },
     bgImage: {
@@ -87,7 +153,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
+        // justifyContent: 'flex-end',
         padding: 15,
         backgroundColor: '#01595A',
     },
@@ -152,7 +218,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '700',
         color: '#ffff',
-        marginBottom:225,
+        marginBottom:22,
         // alignSelf: 'flex-start',
         marginHorizontal: 35,
         fontFamily: 'Century Gothic',

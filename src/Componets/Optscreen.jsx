@@ -164,8 +164,9 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ImageBackgr
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useMyData } from '../../Navigtors/globlevariable/MyContext';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 
+import config from '../../config/config';
 
 
 
@@ -176,7 +177,7 @@ const OtpScreen = ({ navigation, route }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [error, setError] = useState('');
     const inputRefs = useRef([]);
-    const {setid } = useMyData();
+    const {setid } = globalvariavle();
    
     const handleOtpChange = (index, value) => {
         if (value.length > 1) return; // Allow only one character in each box
@@ -191,37 +192,11 @@ const OtpScreen = ({ navigation, route }) => {
 
  
 
-
-    //     try {
-    //         const otpValue = otp.join('');
-    //         const response = await axios.post('https://botinical.com.sumagodemo.com/api/verifyotp', {
-    //             mobile_number: mobile_number,
-    //             user_otp: otpValue,
-    //         });
-    //         console.log('Response from API:', response.data);
-    //         setdata(response.data);
-    //         const id = response.data.data.id;
-    //         setid(id);
-    //         console.log('88888888888888888888888888888888888', id);
-    //         if (data && data.status === 'true') {
-    //             console.error('OTP Verification Error:', data.message);
-    //             Alert.alert(data.message);
-    //             await AsyncStorage.setItem('token', data.token);
-    //             navigation.navigate('Registration');
-    //         } else {
-    //             setError('Invalid OTP. Please try again.');
-    //         }
-    //     } catch (error) {
-    //         console.error('OTP Verification Error:', error);
-    //         setError('Failed to verify OTP. Please try again.');
-    //     }
-    // };
-
-
     const handleLogin = async () => {
+        const URL= config.API_URL;
         try {
             const otpValue = otp.join('');
-            const response = await axios.post('https://botinical.com.sumagodemo.com/api/verifyotp', {
+            const response = await axios.post(`${URL}verifyotp`, {
                 mobile_number: mobile_number,
                 user_otp: otpValue,
             });

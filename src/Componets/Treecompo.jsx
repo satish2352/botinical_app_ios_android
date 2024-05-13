@@ -55,7 +55,7 @@
 //         justifyContent: 'center',
 //         // alignItems: 'center',
 //         paddingHorizontal:10
-        
+
 
 
 
@@ -72,7 +72,7 @@
 //         shadowRadius: 2,
 //         margin: 8,
 //         width: '45%',
-      
+
 
 
 
@@ -128,24 +128,29 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../config/config';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
-   
+    const { SelectedLanguage1 } = globalvariavle();
     useEffect(() => {
-        
+        console.log(config.API_URL);
         const fetchData = async () => {
             const token = await AsyncStorage.getItem('token');
-           
+
             try {
-              
-                const response = await axios.post('https://botinical.com.sumagodemo.com/api/auth/get-tress-list', {},{
+
+                const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
+     language: SelectedLanguage1,
+    },{
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                
+
                 setTreeData(response.data.data);
-               
+
             } catch (error) {
                 console.error('Error fetching tree data:', error);
             }
@@ -157,7 +162,7 @@ const Treecompo = ({ navigation }) => {
         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
             <View><Image source={{ uri: item.image }} style={styles.image} /></View>
             <View style={styles.textwrap}>
-                <Text style={styles.title}>{item.english_name}</Text>
+                <Text style={styles.title}>{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -166,7 +171,7 @@ const Treecompo = ({ navigation }) => {
         navigation.navigate('PlatsDetails', data);
     };
 
- 
+
     return (
         <View style={styles.container}>
             <LinearGradient

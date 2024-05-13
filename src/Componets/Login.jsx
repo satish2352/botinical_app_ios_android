@@ -8,7 +8,7 @@ import config from '../../config/config';
 
 
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation }) => { 
     const [data, setdata] = useState();
     const [mobile, setmobile] = useState('');
     const [pass, setpass] = useState('');
@@ -17,7 +17,7 @@ const Login = ({ navigation }) => {
 
     const handleLogin = async () => {
      const URL= config.API_URL;
-     console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',URL);
+  
         try {
             // Validate mobile number
             if (mobile === '') {
