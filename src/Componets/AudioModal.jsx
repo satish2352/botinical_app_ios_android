@@ -18,7 +18,7 @@ const AudioModal = ({data,visible ,onClose}) => {
 
     useEffect(() => {
         const id = data.id
-        console.log(id);
+        // console.log(id);
         // const fetchData = async () => {
         //     const token = await AsyncStorage.getItem('token');
 

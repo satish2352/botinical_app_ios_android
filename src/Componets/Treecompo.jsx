@@ -156,7 +156,7 @@ const Treecompo = ({ navigation }) => {
             }
         };
         fetchData();
-    }, []);
+    }, [SelectedLanguage1]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
@@ -208,6 +208,8 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         margin: 8,
         width: '45%',
+        // height:210,
+        backgroundColor: '#01595A',
     },
     title: {
         fontSize: 18,

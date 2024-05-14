@@ -93,12 +93,12 @@ return(
                     <TouchableOpacity style={styles.cardwrap  } onPress={() => handlelogin(item)}>
                         <View style={styles.cardhead}>
                             <Image
-                                source={item.image} // Replace with your image source
+                                source={{uri:item.image}} // Replace with your image source
                                 style={styles.image2}
                             />
                         </View>
                         <View style={styles.cardtext}>
-                            <Text style={styles.text}>{item.title}</Text>
+                            <Text style={styles.text}>{item.name}</Text>
                             <Text style={styles.text2}>{item.description}</Text>
                         </View>
                         </TouchableOpacity>

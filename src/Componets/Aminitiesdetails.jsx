@@ -223,128 +223,71 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
 import Slider from "@react-native-community/slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../config/config';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import axios from 'axios';
+import AudioModal from './AudioModal';
+import VideoModal from './VideoModal';
 
 const Aminitiesdetails = ({ route }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
-    const [sound, setSound] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [sliderValue, setSliderValue] = useState(0);
+    const [videoModalVisible, setvideoModalVisible] = useState(false);
+ 
+    const [about, setaboutData] = useState([]);
+    console.log(about);
 
     useEffect(() => {
-        if (sound) {
-            sound.getCurrentTime((seconds, isPlaying) => {
-                setCurrentTime(seconds);
-                setIsPlaying(isPlaying);
-                setSliderValue(seconds);
-            });
-            const timer = setInterval(() => {
-                sound.getCurrentTime((seconds, isPlaying) => {
-                    setCurrentTime(seconds);
-                    setIsPlaying(isPlaying);
-                    setSliderValue(seconds);
+       
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
+
+            try {
+
+                const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+
+                    aminities_id:data.id
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
-            }, 1000);
-            return () => clearInterval(timer);
+
+                setaboutData(response.data.data[0]);
+
+            } catch (error) {
+                console.error('Error fetching about data:', error);
+            }
         };
-        // const fetchData = async () => {
-        //     const token = await AsyncStorage.getItem('token');
-
-        //     try {
-
-        //         const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {},{
-        //             headers: {
-        //                 Authorization: `Bearer ${token}`
-        //             }
-        //         });
-
-        //         setaboutData(response.data.data);
-
-        //     } catch (error) {
-        //         console.error('Error fetching about data:', error);
-        //     }
-        // };
-    }, [sound]);
+        fetchData();
+    }, []);
 
     const openAudioModal = () => {
         setAudioModalVisible(true);
     };
 
-    const closeAudioModal = () => {
-        if (sound) {
-            sound.stop(); // Stop the audio when closing the modal
-        }
-        setAudioModalVisible(false);
+  
+
+    const openvideoModal = () => {
+        setvideoModalVisible(true);
     };
 
-    const playAudio = () => {
-        if (!sound) {
-            const newSound = new Sound('ram.mp3', '', (error) => {
-                if (error) {
-                    console.log('Failed to load the sound', error);
-                    return;
-                }
-                setSound(newSound);
-                newSound.play(() => {
-                    newSound.release(); // Release the audio player resource when finished playing
-                    setSound(null);
-                    setIsPlaying(false);
-                });
-                setIsPlaying(true);
-                newSound.setVolume(1);
-                newSound.setNumberOfLoops(-1); // Loop indefinitely
-                newSound.getCurrentTime((seconds) => {
-                    setDuration(seconds);
-                });
-            });
-        } else {
-            sound.play(() => setIsPlaying(true));
-        }
-    };
+  
 
-    const pauseAudio = () => {
-        if (sound) {
-            sound.pause(() => setIsPlaying(false));
-        }
-    };
-
-    const seekForward = () => {
-        if (sound) {
-            sound.getCurrentTime((seconds) => {
-                sound.setCurrentTime(seconds + 5);
-            });
-        }
-    };
-
-    const seekBackward = () => {
-        if (sound) {
-            sound.getCurrentTime((seconds) => {
-                sound.setCurrentTime(seconds - 5);
-            });
-        }
-    };
-
-    const onSliderValueChange = (value) => {
-        setSliderValue(value);
-        if (sound) {
-            sound.setCurrentTime(value);
-            setCurrentTime(value);
-        }
-    };
+   
+   
 
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
                 <View style={styles.bgImage}>
-                    <Image style={styles.image} source={data.image} />
+                    <Image style={styles.image} source={{uri:about.image}} />
                 </View>
             </View>
             <View style={styles.contentContainer}>
                 <View style={styles.headingwrap}>
-                    <Text style={styles.headtext}>{data.title}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }}>{data.description}</Text>
+                    <Text style={styles.headtext}>{about.name}</Text>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{about.description}</Text>
                     <View style={{ top: 350 }}>
                         <View style={styles.buttonview}>
                             <TouchableOpacity style={styles.button} onPress={openAudioModal}>
@@ -352,55 +295,21 @@ const Aminitiesdetails = ({ route }) => {
                                 <Icon name="multitrack-audio" size={24} color="#fff" />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.button}>
-                                <Text style={styles.buttonText}>Video</Text>
+                                <Text style={styles.buttonText} onPress={openvideoModal}>Video</Text>
                                 <Icon name="ondemand-video" size={24} color="#fff" />
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={audioModalVisible}
-                onRequestClose={closeAudioModal}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-
-                        <Slider
-                            style={{ width: '90%', marginTop: 20 }}
-                            minimumValue={0}
-                            maximumValue={duration}
-                            value={sliderValue}
-                            onValueChange={onSliderValueChange}
-                            thumbTintColor="#01595A"
-                            minimumTrackTintColor="#01595A"
-                            maximumTrackTintColor="red"
-                        />
-                        <View style={styles.controls}>
-                            <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
-                                <Icon name="replay-5" size={30} color="#01595A" />
-                            </TouchableOpacity>
-                            {isPlaying ? (
-                                <TouchableOpacity style={styles.controlButton1} onPress={pauseAudio}>
-                                    <Icon name="pause" size={30} color="#fff" />
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity style={styles.controlButton1} onPress={playAudio}>
-                                    <Icon name="play-arrow" size={30} color="#fff" />
-                                </TouchableOpacity>
-                            )}
-                            <TouchableOpacity style={styles.controlButton} onPress={seekForward}>
-                                <Icon name="forward-5" size={30} color="#01595A" />
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity style={styles.modalButton} onPress={closeAudioModal}>
-                            <Text style={styles.modalButtonText}><Icon name="close" size={30} color="#01595A" /></Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+            <View>
+            <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>
+            </View>
+            <VideoModal
+            visible={videoModalVisible}
+            onClose={() => setvideoModalVisible(false)}
+            videoUri={about.video_upload}
+          />
         </View>
     );
 };

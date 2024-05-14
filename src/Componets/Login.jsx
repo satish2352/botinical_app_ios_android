@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
     
             if (response.data && response.data.status === 'true') {
                 // Handle successful OTP request
-                Alert.alert(response.data.message);
+                // Alert.alert(response.data.message);
                 console.log('OTP Sent Successfullyyyyyyyyyyyy:', response.data.message);
     
                 navigation.navigate('Otpscreen', { mobile_number: mobile });

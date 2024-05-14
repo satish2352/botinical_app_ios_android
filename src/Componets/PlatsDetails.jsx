@@ -9,12 +9,14 @@ import axios from 'axios';
 import config from '../../config/config';
 import AudioModal from './AudioModal';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import VideoModal from './VideoModal';
+
 const PlatsDetails = ({ route }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
  
     const { SelectedLanguage1 } = globalvariavle();
-
+    const [videoModalVisible, setvideoModalVisible] = useState(false);
     const [treeData, setTreedeatils] = useState([]);
     const details = treeData;
     useEffect(() => {
@@ -44,7 +46,7 @@ const PlatsDetails = ({ route }) => {
         };
         fetchData();
 
-    }, []);
+    }, [SelectedLanguage1]);
 
 
 
@@ -54,7 +56,9 @@ const PlatsDetails = ({ route }) => {
         setAudioModalVisible(true);
     };
 
-
+    const openvideoModal = () => {
+        setvideoModalVisible(true);
+    };
 
   
     return (
@@ -84,7 +88,7 @@ const PlatsDetails = ({ route }) => {
                             <Icon name="multitrack-audio" size={24} color="#fff" />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} >
-                            <Text style={styles.buttonText}>Video</Text>
+                            <Text style={styles.buttonText} onPress={openvideoModal}>Video</Text>
                             <Icon name="ondemand-video" size={24} color="#fff" />
                         </TouchableOpacity>
                     </View>
@@ -93,6 +97,16 @@ const PlatsDetails = ({ route }) => {
             <View>
             <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>
             </View>
+           
+            <VideoModal
+            visible={videoModalVisible}
+            onClose={() => setvideoModalVisible(false)}
+            videoUri={treeData.video_upload}
+          />
+          
+          
+            
+     
         </View>
     )
 }

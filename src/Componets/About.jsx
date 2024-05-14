@@ -60,7 +60,7 @@ const { SelectedLanguage1 } = globalvariavle();
             }
         };
         fetchData();
-    }, []);
+    }, [SelectedLanguage1]);
 
     return (
         <LinearGradient

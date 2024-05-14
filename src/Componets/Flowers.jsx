@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
     },
     card: {
         backgroundColor: '#FFF',
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
         resizeMode: "cover",
-        top: 10,
+        // top: 10,
     },
     textwrap: {
         alignItems: 'center',

@@ -90,9 +90,11 @@ const flowerdetails = ({ route }) => {
             <View>
                 <AudioModal data={flowerData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
             </View>
-            <View>
-                <VideoModal data={flowerData }  visible={videoModalVisible} onClose={() => setvideoModalVisible(false)}/>
-            </View>
+            <VideoModal
+            visible={videoModalVisible}
+            onClose={() => setvideoModalVisible(false)}
+            videoUri={flowerData.video_upload}
+          />
         </View>
     )
 }
