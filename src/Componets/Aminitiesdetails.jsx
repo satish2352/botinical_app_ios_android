@@ -233,7 +233,7 @@ const Aminitiesdetails = ({ route }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
     const [videoModalVisible, setvideoModalVisible] = useState(false);
- 
+    const { SelectedLanguage1 } = globalvariavle();
     const [about, setaboutData] = useState([]);
     console.log(about);
 
@@ -246,7 +246,8 @@ const Aminitiesdetails = ({ route }) => {
 
                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
 
-                    aminities_id:data.id
+                    aminities_id:data.id,
+                    language: SelectedLanguage1
                 },{
                     headers: {
                         Authorization: `Bearer ${token}`

@@ -8,7 +8,7 @@ import config from '../../config/config';
 
 
 
-const Login = ({ navigation }) => { 
+const Login = ({ navigation }) => {
     const [data, setdata] = useState();
     const [mobile, setmobile] = useState('');
     const [pass, setpass] = useState('');
@@ -16,27 +16,27 @@ const Login = ({ navigation }) => {
 
 
     const handleLogin = async () => {
-     const URL= config.API_URL;
-  
+        const URL = config.API_URL;
+
         try {
             // Validate mobile number
             if (mobile === '') {
                 setError('Please fill in your mobile number');
                 return;
             }
-    
+
             // Make API call to request OTP
             const response = await axios.post(`${URL}login`, {
                 mobile_number: mobile,
             });
             console.log('Response from API:', response.data);
             setdata(response.data);
-    
+
             if (response.data && response.data.status === 'true') {
                 // Handle successful OTP request
                 // Alert.alert(response.data.message);
                 console.log('OTP Sent Successfullyyyyyyyyyyyy:', response.data.message);
-    
+
                 navigation.navigate('Otpscreen', { mobile_number: mobile });
             } else {
                 // Handle unsuccessful OTP request
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 
 
     bottombgImage: {
-        height: hp(60),
+        height: hp(62),
         width: '100%',
         // alignItems: 'center',
         resizeMode: 'center',

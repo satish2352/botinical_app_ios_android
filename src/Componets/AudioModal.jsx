@@ -141,16 +141,7 @@ const AudioModal = ({data,visible ,onClose}) => {
         <View style={styles.centeredView}>
             <View style={styles.modalView}>
 
-                <Slider
-                    style={{ width: '90%', marginTop: 20 }}
-                    minimumValue={0}
-                    maximumValue={duration}
-                    value={sliderValue}
-                    onValueChange={onSliderValueChange}
-                    thumbTintColor="#01595A"
-                    minimumTrackTintColor="#01595A"
-                    maximumTrackTintColor="red"
-                />
+           
                 <View style={styles.controls}>
                     <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
                         <Icon name="replay-5" size={30} color="#01595A" />
@@ -193,7 +184,7 @@ const styles = StyleSheet.create({
     modalView: {
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        padding: 15,
         alignItems: "center",
         elevation: 5,
     },
@@ -204,7 +195,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     modalButton: {
-        marginTop: 20,
+        marginTop: 10,
         // backgroundColor: "#01595A",
         borderRadius: 50,
         paddingVertical: 5,
@@ -235,3 +226,17 @@ const styles = StyleSheet.create({
 })
 
 export default AudioModal;
+
+
+
+
+// <Slider
+// style={{ width: '90%', marginTop: 20 }}
+// minimumValue={0}
+// maximumValue={duration}
+// value={sliderValue}
+// onValueChange={onSliderValueChange}
+// thumbTintColor="#01595A"
+// minimumTrackTintColor="#01595A"
+// maximumTrackTintColor="red"
+// />

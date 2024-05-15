@@ -57,11 +57,11 @@ function HomeStackNavigation() {
         }
       }}
     >
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Otpscreen" component={Otpscreen} />
+      <Stack.Screen name="Login" component={Login}  />
+      <Stack.Screen name="Otpscreen" component={Otpscreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name="Registration" component={Registration} />
-      <Stack.Screen name="Regifrom" component={Regifrom} />
+      <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }}  />
+      <Stack.Screen name="Regifrom" component={Regifrom}  />
       <Stack.Screen name="ChargesList" component={ChargesList} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Home" component={Home} />

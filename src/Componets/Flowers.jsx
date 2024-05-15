@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        // alignItems: 'center',
+        paddingHorizontal: 10,
     },
     card: {
         backgroundColor: '#FFF',
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 2,
         margin: 8,
-        width: '45%',
+        width: '47%',
     },
     title: {
         fontSize: 18,

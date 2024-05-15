@@ -71,8 +71,8 @@ const flowerdetails = ({ route }) => {
                     <Text style={styles.headtext}>{flowerData.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{flowerData.description}</Text>
                     <View style={styles.headtext2wrap}>
-                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{flowerData.title}</Text></Text>
-                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{flowerData.title}</Text></Text>
+                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{flowerData.botnical_name}</Text></Text>
+                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{flowerData.common_name}</Text></Text>
                     </View>
                     <View style={styles.buttonview}>
                         <TouchableOpacity style={styles.button} >

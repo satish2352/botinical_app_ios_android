@@ -78,8 +78,8 @@ const PlatsDetails = ({ route }) => {
                     <Text style={styles.headtext}>{treeData.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{treeData.description}</Text>
                     <View style={styles.headtext2wrap}>
-                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{treeData.title}</Text></Text>
-                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{treeData.title}</Text></Text>
+                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000' }}>{treeData.botnical_name}</Text></Text>
+                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000' }}>{treeData.common_name}</Text></Text>
                     </View>
                     <View style={styles.buttonview}>
                         <TouchableOpacity style={styles.button} >
@@ -92,7 +92,7 @@ const PlatsDetails = ({ route }) => {
                             <Icon name="ondemand-video" size={24} color="#fff" />
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> 
             </View>
             <View>
             <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>

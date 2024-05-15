@@ -6,7 +6,7 @@ import { View, FlatList, Image, StyleSheet, Dimensions ,Text} from 'react-native
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
  const Gallery = () => {
 //     // Sample image data
 //     const images = [
@@ -22,6 +22,7 @@ import axios from 'axios';
 //     ];
 
     const [images,setgalleryData]=useState([]);
+    const { SelectedLanguage1 } = globalvariavle();
     useEffect(() => {
         
         const fetchData = async () => {
@@ -29,7 +30,9 @@ import axios from 'axios';
            
             try {
               
-                const response = await axios.post('https://botinical.com.sumagotest.in/api/auth/get-gallery', {},{
+                const response = await axios.post(`${config.API_URL}auth/get-gallery`, {
+                    language: SelectedLanguage1,
+                },{
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -42,7 +45,7 @@ import axios from 'axios';
             }
         };
         fetchData();
-    }, []);
+    }, [SelectedLanguage1]);
 
 
     const renderImageItem = ({ item, index }) => {

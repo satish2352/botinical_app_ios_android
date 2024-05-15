@@ -142,8 +142,8 @@ const Treecompo = ({ navigation }) => {
             try {
 
                 const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
-     language: SelectedLanguage1,
-    },{
+                    language: SelectedLanguage1,
+                }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -195,7 +195,7 @@ const Treecompo = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         paddingHorizontal: 10,
     },
     card: {
@@ -207,9 +207,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 2,
         margin: 8,
-        width: '45%',
+        width: '47%',
         // height:210,
         backgroundColor: '#01595A',
+
+
     },
     title: {
         fontSize: 18,
@@ -235,6 +237,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: '#fff',
+
     },
     gradient: {
         width: '60%',

@@ -39,7 +39,7 @@ function DrawerNavigator() {
    
     <Drawer.Navigator initialRouteName="HomeStack"
       screenOptions={{
-        statusBarHidden: false,
+        statusBarHidden: true,
         headerShown: false,
         drawerActiveBackgroundColor: '#01595A', // Customizing drawer's active background color
         drawerActiveTintColor: '#fff', // Customizing drawer's active text color
