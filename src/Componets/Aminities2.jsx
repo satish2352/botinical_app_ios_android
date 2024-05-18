@@ -190,6 +190,10 @@ const Aminities2 = ({ navigation }) => {
             }
         };
         fetchData();
+        return () => {
+          
+            console.log('Component will unmount');
+        };
     }, [SelectedLanguage1]);
 
     const renderButton = (buttonInfo) => (

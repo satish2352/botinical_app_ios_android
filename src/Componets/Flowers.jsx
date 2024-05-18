@@ -1,59 +1,65 @@
+
+
 // import React, { useEffect, useState } from 'react';
 // import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
 // import axios from 'axios';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-// const DATA = [
-//     { id: '1', title: 'Lotus', image: require('../Assets/flowers/banyantree1.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '2', title: 'Lily', image: require('../Assets/flowers/Group1071.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '3', title: 'Rhododendron', image: require('../Assets/flowers/Rhododendron.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '4', title: 'Jarul', image: require('../Assets/flowers/banyantree2.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '5', title: 'Kanikonna', image: require('../Assets/flowers/banyantree3.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '6', title: 'Palash', image: require('../Assets/flowers/banyantree4.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '7', title: 'Lotus', image: require('../Assets/flowers/banyantree5.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-//     { id: '8', title: 'Lily', image: require('../Assets/flowers/banyantree6.png'), description: 'The Lotus flower, known scientifically as Nelumbo nucifera, is a symbol of purity, enlightenment, self-regeneration, and rebirth. Its characteristics are a marvel because it flourishes in muddy waters and yet emerges unscathed, producing beautiful, fragrant flowers. This aquatic perennial is notable not just for its beauty but also for its significance in various cultures, especially in Eastern religions like Buddhism and Hinduism, where it represents spiritual awakening and purity of body, speech, and mind.' },
-// ];
+// import config from '../../config/config';
+// import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+// import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 
+// const Flowers = ({ navigation }) => {
+//     const [flowerData, setFlowerData] = useState([]);
+//     const [start, setStart] = useState(1);
+//     const { SelectedLanguage1 } = globalvariavle();
 
-// const Flowers = ({navigation}) => {
-//     const [treeData, setTreeData] = useState([]);
 //     useEffect(() => {
-
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
-
-//             try {
-
-//                 const response = await axios.post('https://botinical.com.sumagodemo.com/api/auth/get-flowers-list', {},{
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
-
-//                 setTreeData(response.data.data);
-
-//             } catch (error) {
-//                 console.error('Error fetching tree data:', error);
-//             }
-//         };
 //         fetchData();
-//     }, []);
-//     const renderItem = ({ item }) => (
-//         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
-//             <View><Image source={item.image} style={styles.image} /></View>
+//     }, [SelectedLanguage1, start]);
 
-//             <View style={styles.textwrap}>
-//                 <Text style={styles.title}>{item.title}</Text>
+//     const fetchData = async () => {
+//         const token = await AsyncStorage.getItem('token');
+//         try {
+//             const response = await axios.post(`${config.API_URL}auth/get-flowers-list`, {
+//                 language: SelectedLanguage1,
+//                 start
+//             }, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 }
+//             });
+//             setFlowerData(response.data.data);
+//         } catch (error) {
+//             console.error('Error fetching flowers data:', error);
+//         }
+//     };
+
+//     const renderFlowerItem = ({ item }) => (
+//         <TouchableOpacity style={styles.card} onPress={() => viewDetails(item)}>
+//             <View><Image source={{ uri: item.image }} style={styles.image} /></View>
+//             <View style={styles.textWrap}>
+//                 <Text style={styles.title}>{item.name}</Text>
 //             </View>
-
 //         </TouchableOpacity>
 //     );
 
-
-//     const viewdetails = (data) => {
+//     const viewDetails = (data) => {
 //         navigation.navigate('flowerdetails', data);
-//     }
+//     };
+
+//     const handleNext = () => {
+//         setStart(start + 1);
+//     };
+
+//     const handleBack = () => {
+//         if (start > 1) {
+//             setStart(start - 1);
+//         }
+//     };
+
 //     return (
 //         <View style={styles.container}>
 //             <LinearGradient
@@ -65,11 +71,17 @@
 //                 <Text style={styles.text}>FLOWERS</Text>
 //             </LinearGradient>
 //             <FlatList
-//                 data={DATA}
-//                 renderItem={renderItem}
-//                 keyExtractor={item => item.id}
+//                 data={flowerData}
+//                 renderItem={renderFlowerItem}
+//                 keyExtractor={item => item.id.toString()}
 //                 numColumns={2}
 //             />
+//             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+//             <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+//         </TouchableOpacity>
+//         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+//             <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+//         </TouchableOpacity>
 //         </View>
 //     );
 // };
@@ -78,12 +90,7 @@
 //     container: {
 //         flex: 1,
 //         justifyContent: 'center',
-//         alignItems: 'center',
-
-
-
-
-
+//         paddingHorizontal: 5,
 //     },
 //     card: {
 //         backgroundColor: '#FFF',
@@ -94,37 +101,28 @@
 //         shadowOpacity: 0.3,
 //         shadowRadius: 2,
 //         margin: 8,
-//         width: '45%',
-
-
-
-
+//         width: '46%',
 //     },
 //     title: {
 //         fontSize: 18,
 //         paddingVertical: 10,
 //         textAlign: 'center',
 //         color: '#fff'
-
-
 //     },
 //     image: {
 //         width: '100%',
-//         height: 160, // Adjust the height as needed
+//         height: 160,
 //         borderTopLeftRadius: 8,
 //         borderTopRightRadius: 8,
 //         resizeMode: "cover",
-//         top: 10,
-
 //     },
-//     textwrap: {
+//     textWrap: {
 //         alignItems: 'center',
 //         backgroundColor: '#01595A',
 //         width: '100%',
 //         borderBottomLeftRadius: 10,
 //         borderBottomRightRadius: 10,
 //     },
-
 //     text: {
 //         fontSize: 20,
 //         fontWeight: "bold",
@@ -139,73 +137,108 @@
 //         padding: 10,
 //         marginTop: 55
 //     },
+//     nextButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         right: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     backButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         left: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     icon: {
+//         color: '#fff',
+//         fontSize: 20,
+//     },
 // });
 
 // export default Flowers;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const Flowers = ({ navigation }) => {
-    const [treeData, setTreeData] = useState([]);
-
+    const [flowerData, setFlowerData] = useState([]);
+    const [start, setStart] = useState(1);
     const { SelectedLanguage1 } = globalvariavle();
+    const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
 
     useEffect(() => {
         fetchData();
-    }, [SelectedLanguage1]);
+    }, [SelectedLanguage1, start]);
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
+        setLoading(true);
         try {
             const response = await axios.post(`${config.API_URL}auth/get-flowers-list`, {
                 language: SelectedLanguage1,
+                start
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setTreeData(response.data.data);
+            if (start === 1) {
+                setFlowerData(response.data.data);
+            } else {
+                setFlowerData(prevData => [...prevData, ...response.data.data]);
+            }
         } catch (error) {
             console.error('Error fetching flowers data:', error);
+        } finally {
+            setLoading(false);
+            setLoadMoreLoading(false);
+            setRefreshing(false);
         }
     };
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
+    const renderFlowerItem = ({ item }) => (
+        <TouchableOpacity style={styles.card} onPress={() => viewDetails(item)}>
             <View><Image source={{ uri: item.image }} style={styles.image} /></View>
-            <View style={styles.textwrap}>
+            <View style={styles.textWrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
 
-    const viewdetails = (data) => {
+    const viewDetails = (data) => {
         navigation.navigate('flowerdetails', data);
+    };
+
+    const handleLoadMore = () => {
+        if (!loadMoreLoading) {
+            setLoadMoreLoading(true);
+            setStart(prevStart => prevStart + 1);
+        }
+    };
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        setStart(1);
     };
 
     return (
@@ -219,10 +252,16 @@ const Flowers = ({ navigation }) => {
                 <Text style={styles.text}>FLOWERS</Text>
             </LinearGradient>
             <FlatList
-                data={treeData}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
+                data={flowerData}
+                renderItem={renderFlowerItem}
+                keyExtractor={item => item.id.toString()}
                 numColumns={2}
+                ListFooterComponent={loading ? <ActivityIndicator size="large" color="#01595A" /> : (
+                    <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                        <FontAwesomeIcon icon={faChevronDown} style={styles.icon} />
+                    </TouchableOpacity>
+                )}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
         </View>
     );
@@ -232,7 +271,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
     },
     card: {
         backgroundColor: '#FFF',
@@ -243,7 +282,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 2,
         margin: 8,
-        width: '47%',
+        width: '46%',
     },
     title: {
         fontSize: 18,
@@ -257,9 +296,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
         resizeMode: "cover",
-        // top: 10,
     },
-    textwrap: {
+    textWrap: {
         alignItems: 'center',
         backgroundColor: '#01595A',
         width: '100%',
@@ -279,6 +317,20 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         padding: 10,
         marginTop: 55
+    },
+    loadMoreButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 12,
+        backgroundColor: '#01595A',
+        borderRadius: 50,
+        marginVertical: 10,
+        width: 50,
+        alignSelf: "center"
+    },
+    icon: {
+        color: '#fff',
+        fontSize: 20,
     },
 });
 

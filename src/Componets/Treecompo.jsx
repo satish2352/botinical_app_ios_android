@@ -1,34 +1,74 @@
-// import React from 'react';
-// import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+
+
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator,RefreshControl } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
-// const DATA = [
-//     { id: '1', title: 'Banyan Tree', image: require('../Assets/Trees/b3.png'), description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '2', title: 'Neem Tree', image: require('../Assets/Trees/b7.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '3', title: 'Peepal Tree ', image: require('../Assets/Trees/b8.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '4', title: 'Deodar Tree', image: require('../Assets/Trees/b6.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '5', title: 'Sandal Tree', image: require('../Assets/Trees/b5.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '6', title: 'Coconut Tree', image: require('../Assets/Trees/b4.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '7', title: 'Iron wood Tree', image: require('../Assets/Trees/b1.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-//     { id: '8', title: 'Khejri Tree', image: require('../Assets/Trees/b2.png'),description: 'A banyan, frequently written “banian,” is a type of fig that grows auxiliary trunks from accidental prop roots, enabling the tree to grow endlessly. It sets banyans apart from other trees with a strangling habit that emerges from their seed in a crack. The term “banyan” is frequently used to refer exclusively to Ficus benghalensis, also known as the “Indian banyan,” which is the national tree of India. However, it has also been used systematically to refer to the subgenus Urostigma' },
-// ];
-
-
+// import axios from 'axios';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import config from '../../config/config';
+// import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+// import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 // const Treecompo = ({ navigation }) => {
+//     const [treeData, setTreeData] = useState([]);
+//     const { SelectedLanguage1 } = globalvariavle();
+//     const [loading, setLoading] = useState(false);
+//     const [start, setStart] = useState(1);
+//     const [refreshing, setRefreshing] = useState(false);
+//     useEffect(() => {
+//         fetchData();
+        
+//     }, [SelectedLanguage1, start]);
+
+//     const fetchData = async () => {
+//         const token = await AsyncStorage.getItem('token');
+//         setLoading(true);
+//         try {
+//             const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
+//                 start,
+//                 language: SelectedLanguage1,
+//             }, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 }
+//             });
+
+//             setTreeData(response.data.data);
+//         } catch (error) {
+//             console.error('Error fetching tree data:', error);
+//         } finally {
+//             setLoading(false);
+//             setRefreshing(false);
+//         }
+//     };
+
 //     const renderItem = ({ item }) => (
-//         <TouchableOpacity style={styles.card} onPress={() => handlelogin(item)}>
-//             <View><Image source={item.image} style={styles.image} /></View>
-
+//         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
+//             <View><Image source={{ uri: item.image }} style={styles.image} /></View>
 //             <View style={styles.textwrap}>
-//                 <Text style={styles.title}>{item.title}</Text>
+//                 <Text style={styles.title}>{item.name}</Text>
 //             </View>
-
 //         </TouchableOpacity>
 //     );
-//     const handlelogin = (data) => {
 
+//     const viewdetails = (data) => {
 //         navigation.navigate('PlatsDetails', data);
-//     }
+//     };
+
+//     const handleNext = () => {
+//         setStart(start + 1);
+//     };
+
+//     const handleBack = () => {
+//         if (start > 1) {
+//             setStart(start - 1);
+//         }
+//     };
+//     const handleRefresh = () => {
+//         setRefreshing(true);
+//         fetchData();
+//     };
 //     return (
 //         <View style={styles.container}>
 //             <LinearGradient
@@ -40,11 +80,19 @@
 //                 <Text style={styles.text}>TREE</Text>
 //             </LinearGradient>
 //             <FlatList
-//                 data={DATA}
+//                 data={treeData}
 //                 renderItem={renderItem}
-//                 keyExtractor={item => item.id}
+//                 keyExtractor={(item) => item.id.toString()}
 //                 numColumns={2}
+//                 ListFooterComponent={loading && <ActivityIndicator size="large" color="#0000ff" />}
+//                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
 //             />
+//             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+//                 <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+//                 <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+//             </TouchableOpacity>
 //         </View>
 //     );
 // };
@@ -52,15 +100,7 @@
 // const styles = StyleSheet.create({
 //     container: {
 //         flex: 1,
-//         justifyContent: 'center',
-//         // alignItems: 'center',
-//         paddingHorizontal:10
-
-
-
-
-
-
+//         paddingHorizontal: 5,
 //     },
 //     card: {
 //         backgroundColor: '#FFF',
@@ -71,29 +111,21 @@
 //         shadowOpacity: 0.3,
 //         shadowRadius: 2,
 //         margin: 8,
-//         width: '45%',
-
-
-
-
-
+//         width: '46%',
+//         backgroundColor: '#01595A',
 //     },
 //     title: {
 //         fontSize: 18,
 //         paddingVertical: 10,
 //         textAlign: 'center',
 //         color: '#fff'
-
-
 //     },
 //     image: {
 //         width: '100%',
-//         height: 160, // Adjust the height as needed
+//         height: 160,
 //         borderTopLeftRadius: 8,
 //         borderTopRightRadius: 8,
 //         resizeMode: "cover",
-//         top: 2,
-
 //     },
 //     textwrap: {
 //         alignItems: 'center',
@@ -102,7 +134,6 @@
 //         borderBottomLeftRadius: 10,
 //         borderBottomRightRadius: 10,
 //     },
-
 //     text: {
 //         fontSize: 20,
 //         fontWeight: "bold",
@@ -117,46 +148,84 @@
 //         padding: 10,
 //         marginTop: 55
 //     },
+//     nextButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         right: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     backButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         left: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     icon: {
+//         color: '#fff',
+//         fontSize: 20,
+//     },
 // });
 
 // export default Treecompo;
 
 
-
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
     const { SelectedLanguage1 } = globalvariavle();
+    const [loading, setLoading] = useState(false);
+    const [start, setStart] = useState(1);
+    const [refreshing, setRefreshing] = useState(false);
+    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+
     useEffect(() => {
-        console.log(config.API_URL);
-        const fetchData = async () => {
-            const token = await AsyncStorage.getItem('token');
-
-            try {
-
-                const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
-                    language: SelectedLanguage1,
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                setTreeData(response.data.data);
-
-            } catch (error) {
-                console.error('Error fetching tree data:', error);
-            }
-        };
         fetchData();
-    }, [SelectedLanguage1]);
+    }, [SelectedLanguage1, start]);
+
+    const fetchData = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setLoading(true);
+        try {
+            const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
+                start,
+                language: SelectedLanguage1,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (start === 1) {
+                setTreeData(response.data.data);
+            } else {
+                setTreeData(prevData => [...prevData, ...response.data.data]);
+            }
+        } catch (error) {
+            console.error('Error fetching tree data:', error);
+        } finally {
+            setLoading(false);
+            setLoadMoreLoading(false);
+            setRefreshing(false);
+        }
+    };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
@@ -171,6 +240,17 @@ const Treecompo = ({ navigation }) => {
         navigation.navigate('PlatsDetails', data);
     };
 
+    const handleLoadMore = () => {
+        if (!loadMoreLoading) {
+            setLoadMoreLoading(true);
+            setStart(prevStart => prevStart + 1);
+        }
+    };
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        setStart(1);
+    };
 
     return (
         <View style={styles.container}>
@@ -185,8 +265,14 @@ const Treecompo = ({ navigation }) => {
             <FlatList
                 data={treeData}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 numColumns={2}
+                ListFooterComponent={loading ? <ActivityIndicator size="large" color="#01595A" /> : (
+                    <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                        <FontAwesomeIcon icon={faChevronDown} style={styles.icon} />
+                    </TouchableOpacity>
+                )}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
         </View>
     );
@@ -195,8 +281,7 @@ const Treecompo = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
     },
     card: {
         backgroundColor: '#FFF',
@@ -207,11 +292,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 2,
         margin: 8,
-        width: '47%',
-        // height:210,
+        width: '46%',
         backgroundColor: '#01595A',
-
-
     },
     title: {
         fontSize: 18,
@@ -237,7 +319,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: '#fff',
-
     },
     gradient: {
         width: '60%',
@@ -247,6 +328,20 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         padding: 10,
         marginTop: 55
+    },
+    loadMoreButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 12,
+        backgroundColor: '#01595A',
+        borderRadius: 50,
+        marginVertical: 10,
+        width: 50,
+        alignSelf: "center"
+    },
+    icon: {
+        color: '#fff',
+        fontSize: 20,
     },
 });
 

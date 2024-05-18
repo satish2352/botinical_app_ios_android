@@ -261,7 +261,11 @@ const Aminitiesdetails = ({ route }) => {
             }
         };
         fetchData();
-    }, []);
+        return () => {
+          
+            console.log('Component will unmount');
+        };
+    }, [SelectedLanguage1]);
 
     const openAudioModal = () => {
         setAudioModalVisible(true);

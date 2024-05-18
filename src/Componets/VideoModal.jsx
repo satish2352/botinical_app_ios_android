@@ -404,6 +404,10 @@ const VideoModal = ({ visible, onClose, videoUri }) => {
     if (!visible) {
       Orientation.lockToPortrait(); // Lock to portrait mode when modal is closed
     }
+    return () => {
+          
+      console.log('Component will unmount');
+  };
   }, [visible]);
 
   const formatTime = (seconds) => {

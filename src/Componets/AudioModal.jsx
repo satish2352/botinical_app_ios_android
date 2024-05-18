@@ -57,6 +57,10 @@ const AudioModal = ({data,visible ,onClose}) => {
             }, 1000);
             return () => clearInterval(timer);
         };
+        return () => {
+          
+            console.log('Component will unmount');
+        };
     }, [sound]);
 
 

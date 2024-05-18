@@ -1,79 +1,278 @@
 
 
 
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+// import React, { useEffect, useState } from 'react';
+// import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+// import LinearGradient from 'react-native-linear-gradient';
+// import config from '../../config/config';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import axios from 'axios';
+// import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+
+// const Amenities = ({ navigation }) => {
+
+//     const [cardData, setaminitiesData] = useState([]);
+//     const { SelectedLanguage1 } = globalvariavle();
+//     useEffect(() => {
+
+//         const fetchData = async () => {
+//             const token = await AsyncStorage.getItem('token');
+
+//             try {
+
+//                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+//                     language: SelectedLanguage1,
+//                 }, {
+//                     headers: {
+//                         Authorization: `Bearer ${token}`
+//                     }
+//                 });
+
+//                 setaminitiesData(response.data.data);
+
+//             } catch (error) {
+//                 console.error('Error fetching about data:', error);
+//             }
+//         };
+//         fetchData();
+//         return () => {
+          
+//             console.log('Component will unmount');
+//         };
+//     }, []);
+
+
+
+//     const handlelogin = (data) => {
+//         navigation.navigate('Aminitiesdetails', data);
+//     }
+//     return (
+//         <LinearGradient
+//             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
+//             style={styles.container}
+//             start={{ x: 1.0, y: 1.0 }}
+//             end={{ x: 0.0, y: 0.0 }}
+//         >
+//             <ScrollView style={{ marginTop: 40 }}>
+//                 <Text style={styles.header}>AMENITIES</Text>
+
+//                 {cardData.map((item, index) => {
+
+
+//                     if (index % 2 === 0) {
+//                         return (
+//                             <View>
+//                                 <TouchableOpacity style={styles.cardwrap} onPress={() => handlelogin(item)}>
+//                                     <View style={styles.cardhead}>
+//                                         <Image
+//                                             source={{ uri: item.image }} // Replace with your image source
+//                                             style={styles.image2}
+//                                         />
+//                                     </View>
+//                                     <View style={styles.cardtext}>
+//                                         <Text style={styles.text}>{item.name}</Text>
+//                                         <Text numberOfLines={8} ellipsizeMode="tail"  style={styles.text2}>{item.description}</Text>
+//                                     </View>
+//                                 </TouchableOpacity>
+//                             </View>
+//                         )
+//                     }
+//                     else {
+//                         return (
+//                             <View>
+//                                 <TouchableOpacity style={styles.cardwrap2} onPress={() => handlelogin(item)}>
+//                                     <View style={styles.cardtext}>
+//                                         <Text style={styles.text}>{item.name}</Text>
+//                                         <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={8} ellipsizeMode="tail">{item.description}</Text>
+//                                     </View>
+//                                     <View style={styles.cardhead}>
+//                                         <Image
+//                                             source={{uri: item.image}} // Replace with your image source
+//                                             style={styles.image3}
+//                                         />
+//                                     </View>
+//                                 </TouchableOpacity>
+//                             </View>
+//                         )
+//                     }
+
+//                 })
+//                 }
+
+//             </ScrollView>
+//         </LinearGradient>
+//     );
+// };
+
+// // Styles for the component
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         padding: 7,
+//     },
+//     header: {
+//         fontSize: 22,
+//         fontWeight: 'bold',
+//         marginBottom: 15,
+//         alignSelf: 'center',
+//         color: '#000000',
+//     },
+//     header2: {
+//         fontSize: 16,
+//         fontWeight: 'bold',
+//         marginBottom: 5,
+//         // alignSelf: 'center',
+//         color: '#000000',
+//         marginHorizontal: 15
+//     },
+//     header3: {
+//         fontSize: 16,
+//         fontWeight: 'bold',
+//         marginBottom: 5,
+//         alignSelf: 'flex-end',
+//         color: '#000000',
+//         marginHorizontal: 15
+//     },
+//     text: {
+//         fontSize: 16,
+//         marginBottom: 5,
+//         textAlign: 'center',
+//         color: "#01595A",
+//         fontWeight: '500',
+//     },
+//     text2: {
+//         fontSize: 13,
+//         color: '#000',
+//         textAlign: 'right'
+//     },
+//     image2: {
+//         width: 165,
+//         height: 155,
+//         resizeMode: 'cover',
+//         alignSelf: 'flex-start',
+//         borderRadius: 100,
+//         right: 2
+//     },
+//     image3: {
+//         width: 165,
+//         height: 155,
+//         resizeMode: 'cover',
+//         alignSelf: 'flex-end',
+//         borderRadius: 100,
+//         left: 3
+//     },
+//     cardwrap: {
+//         backgroundColor: 'white',
+//         borderRadius: 25,
+//         shadowColor: '#000',
+//         shadowOpacity: 0.23,
+//         shadowRadius: 2.62,
+//         elevation: 6,
+//         flexDirection: "row",
+//         alignItems: "center",
+//         marginBottom: 20,
+//         marginHorizontal: 10,
+//         borderTopLeftRadius: 110,
+//         borderBottomLeftRadius: 120,
+//     },
+//     cardwrap2: {
+//         backgroundColor: 'white',
+//         borderRadius: 25,
+//         shadowColor: '#000',
+//         shadowOpacity: 0.23,
+//         shadowRadius: 2.62,
+//         elevation: 6,
+//         flexDirection: "row",
+//         alignItems: "center",
+//         marginBottom: 20,
+//         marginHorizontal: 10,
+//         borderTopRightRadius: 80,
+//         borderBottomRightRadius: 80
+//     },
+//     cardhead: {
+//         // flex:1,
+//         width: "42%",
+//         height: '100%',
+//         // padding: 15,
+//         borderRadius: 50,
+//         // alignItems: 'center'
+//     },
+//     cardtext: {
+//         width: "60%",
+//         // alignItems: "center",
+//         paddingHorizontal: 15
+//         // marginRight:5
+//     }
+// });
+
+// export default Amenities;
+
+
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl ,handleScroll} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
-// The main component
-// const cardData = [
-//         {
-//             title: "Nature's Hub Food Court",
-//             description: "The food court is placed in serene greenery. The ambience was awesome. The menu covers all the sessions with a limited number of offerings.",
-//             image: require('../Assets/amenities/1.png')
-//         },
-//         {
-//             title: "Open Gym",
-//             description: "Botanical Gardens in Gachibowli offers horticulture, picnic spots, rock formations, and an outdoor gym.",
-//             image: require('../Assets/amenities/2.png')
-//         },
-//         {
-//             title: "Adventure Arena",
-//             description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
-//             image: require('../Assets/amenities/3.png')
-//         },
-//         {
-//             title: "Robust Fitness Center",
-//             description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
-//             image: require('../Assets/amenities/4.png')
-//         },
-//         {
-//             title: "Adventure Arena",
-//             description: "Feakouts Adventure Zone in Kondapur's Botanical Garden has amazing outdoor activities like zip lining, archery, bull rides, zorbing, etc.",
-//             image: require('../Assets/amenities/3.png')
-//         },
-//         {
-//             title: "Robust Fitness Center",
-//             description: "A social, recreational and health facility, fitness centre is equipped with carry out exercises in Botanical garden.",
-//             image: require('../Assets/amenities/4.png')
-//         },
-//     ];
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+
 const Amenities = ({ navigation }) => {
+    const [cardData, setAmenitiesData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [refreshing, setRefreshing] = useState(false);
+    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+    const { SelectedLanguage1 } = globalvariavle();
+    const scrollViewRef = useRef();
 
-const [cardData,setaminitiesData]=useState([]);
-const { SelectedLanguage1 } = globalvariavle();
     useEffect(() => {
-        
-        const fetchData = async () => {
-            const token = await AsyncStorage.getItem('token');
-           
-            try {
-              
-                const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
-                    language: SelectedLanguage1,
-                },{
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                
-                setaminitiesData(response.data.data);
-               
-            } catch (error) {
-                console.error('Error fetching about data:', error);
+        fetchData(page, SelectedLanguage1);
+    }, [SelectedLanguage1, page]);
+
+    const fetchData = async (pageNumber, language) => {
+        const token = await AsyncStorage.getItem('token');
+        setLoading(true);
+        try {
+            const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+                start: pageNumber,
+                language: language,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (pageNumber === 1) {
+                setAmenitiesData(response.data.data);
+            } else {
+                setAmenitiesData(prevData => [...prevData, ...response.data.data]);
             }
-        };
-        fetchData();
-    }, []);
+        } catch (error) {
+            console.error('Error fetching amenities data:', error);
+        } finally {
+            setLoading(false);
+            setLoadMoreLoading(false);
+            setRefreshing(false);
+        }
+    };
 
-
-
-    const handlelogin = (data) => {
+    const handleLogin = (data) => {
         navigation.navigate('Aminitiesdetails', data);
-    }
+    };
+
+    const handleLoadMore = () => {
+        if (!loadMoreLoading) {
+            setPage(prevPage => prevPage + 1);
+            setLoadMoreLoading(true);
+        }
+    };
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        setPage(1);
+    };
+
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -81,62 +280,61 @@ const { SelectedLanguage1 } = globalvariavle();
             start={{ x: 1.0, y: 1.0 }}
             end={{ x: 0.0, y: 0.0 }}
         >
-            <ScrollView style={{ marginTop: 40 }}>
+            <ScrollView
+                ref={scrollViewRef}
+                style={{ marginTop: 40 }}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
+            >
                 <Text style={styles.header}>AMENITIES</Text>
 
-                {cardData.map((item,index)=>{
-
-                    
-                  if(index % 2 === 0)  {
-return(
-                    <View>
-                    <TouchableOpacity style={styles.cardwrap  } onPress={() => handlelogin(item)}>
-                        <View style={styles.cardhead}>
-                            <Image
-                                source={{uri:item.image}} // Replace with your image source
-                                style={styles.image2}
-                            />
-                        </View>
-                        <View style={styles.cardtext}>
-                            <Text style={styles.text}>{item.name}</Text>
-                            <Text style={styles.text2}>{item.description}</Text>
-                        </View>
-                        </TouchableOpacity>
-                        </View>
-)
-                  }
-                  else{
-                    return(
-                       <View>
-                       <TouchableOpacity style={styles.cardwrap2  } onPress={() => handlelogin(item)}>
-                       <View style={styles.cardtext}>
-                       <Text style={styles.text}>{item.title}</Text>
-                       <Text style={[styles.text2, { textAlign: 'left' }]}>{item.description}</Text>
-                   </View>
-                   <View style={styles.cardhead}>
-                       <Image
-                           source={item.image} // Replace with your image source
-                           style={styles.image3}
-                       />
-                   </View>
-                   </TouchableOpacity>
-                   </View>
-                    )
+                {cardData.map((item, index) => {
+                    if (index % 2 === 0) {
+                        return (
+                            <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
+                                <View style={styles.cardhead}>
+                                    <Image
+                                        source={{ uri: item.image }}
+                                        style={styles.image2}
+                                    />
+                                </View>
+                                <View style={styles.cardtext}>
+                                    <Text style={styles.text}>{item.name}</Text>
+                                    <Text numberOfLines={7} ellipsizeMode="tail" style={styles.text2}>{item.description}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    } else {
+                        return (
+                            <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
+                                <View style={styles.cardtext}>
+                                    <Text style={styles.text}>{item.name}</Text>
+                                    <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={7} ellipsizeMode="tail">{item.description}</Text>
+                                </View>
+                                <View style={styles.cardhead}>
+                                    <Image
+                                        source={{ uri: item.image }}
+                                        style={styles.image3}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        );
                     }
-                   
-                })
-            }
-
-            
-
-
-
+                })}
+                {loading && <ActivityIndicator size="large" color="#0000ff" />}
+                {!loading && (
+                    <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
+                        <FontAwesomeIcon icon={faChevronDown} style={styles.icon} />
+                    </TouchableOpacity>
+                )}
             </ScrollView>
         </LinearGradient>
     );
 };
 
-// Styles for the component
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -149,26 +347,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color: '#000000',
     },
-    header2: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 5,
-        // alignSelf: 'center',
-        color: '#000000',
-        marginHorizontal: 15
-    },
-    header3: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 5,
-        alignSelf: 'flex-end',
-        color: '#000000',
-        marginHorizontal: 15
-    },
     text: {
         fontSize: 16,
         marginBottom: 5,
-        textAlign: 'justify',
+        textAlign: 'center',
         color: "#01595A",
         fontWeight: '500',
     },
@@ -182,7 +364,7 @@ const styles = StyleSheet.create({
         height: 155,
         resizeMode: 'cover',
         alignSelf: 'flex-start',
-        borderRadius: 70,
+        borderRadius: 100,
         right: 2
     },
     image3: {
@@ -190,7 +372,7 @@ const styles = StyleSheet.create({
         height: 155,
         resizeMode: 'cover',
         alignSelf: 'flex-end',
-        // borderRadius: 70,
+        borderRadius: 100,
         left: 3
     },
     cardwrap: {
@@ -222,21 +404,27 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 80
     },
     cardhead: {
-        // flex:1,
         width: "42%",
         height: '100%',
-        // padding: 15,
         borderRadius: 50,
-        // alignItems: 'center'
     },
     cardtext: {
         width: "60%",
-        // alignItems: "center",
         paddingHorizontal: 15
-        // marginRight:5
-    }
+    },
+    loadMoreButton: {
+        justifyContent: 'center',
+        padding: 12,
+        backgroundColor: '#01595A',
+        borderRadius: 60,
+        marginVertical: 10,
+        width: 40,
+        alignSelf: "center"
+    },
+    icon: {
+        color: '#fff',
+        fontSize: 20,
+    },
 });
 
 export default Amenities;
-
-
