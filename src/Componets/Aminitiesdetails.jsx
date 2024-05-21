@@ -293,7 +293,7 @@ const Aminitiesdetails = ({ route }) => {
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{about.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{about.description}</Text>
-                    <View style={{ top: 350 }}>
+                    <View style={{ top: 250 }}>
                         <View style={styles.buttonview}>
                             <TouchableOpacity style={styles.button} onPress={openAudioModal}>
                                 <Text style={styles.buttonText}>Audio</Text>

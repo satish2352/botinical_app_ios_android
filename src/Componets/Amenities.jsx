@@ -1,51 +1,66 @@
 
-
-
 // import React, { useEffect, useState } from 'react';
-// import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+// import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
 // import config from '../../config/config';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import axios from 'axios';
 // import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+// import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 // const Amenities = ({ navigation }) => {
-
-//     const [cardData, setaminitiesData] = useState([]);
+//     const [cardData, setAmenitiesData] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [start, setStart] = useState(1);
+//     const [refreshing, setRefreshing] = useState(false);
 //     const { SelectedLanguage1 } = globalvariavle();
+
 //     useEffect(() => {
-
-//         const fetchData = async () => {
-//             const token = await AsyncStorage.getItem('token');
-
-//             try {
-
-//                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
-//                     language: SelectedLanguage1,
-//                 }, {
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
-
-//                 setaminitiesData(response.data.data);
-
-//             } catch (error) {
-//                 console.error('Error fetching about data:', error);
-//             }
-//         };
 //         fetchData();
-//         return () => {
-          
-//             console.log('Component will unmount');
-//         };
-//     }, []);
+//     }, [SelectedLanguage1, start]);
 
+//     const fetchData = async () => {
+//         const token = await AsyncStorage.getItem('token');
+//         setLoading(true);
+//         try {
+//             const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+//                 start,
+//                 language: SelectedLanguage1,
+//             }, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 }
+//             });
+//             setAmenitiesData(response.data.data);
+//         } catch (error) {
+//             console.error('Error fetching amenities data:', error);
+//         } finally {
+//             setLoading(false);
+//             setRefreshing(false);
+//         }
+//     };
 
-
-//     const handlelogin = (data) => {
+//     const handleLogin = (data) => {
 //         navigation.navigate('Aminitiesdetails', data);
-//     }
+//     };
+
+//     const handleNext = () => {
+//         setStart(prevStart => prevStart + 1);
+//     };
+
+//     const handleBack = () => {
+//         if (start > 1) {
+//             setStart(prevStart => prevStart - 1);
+//         }
+//     };
+
+//     const handleRefresh = () => {
+//         setRefreshing(true);
+//         setStart(1);
+//         fetchData();
+//     };
+
 //     return (
 //         <LinearGradient
 //             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -53,58 +68,59 @@
 //             start={{ x: 1.0, y: 1.0 }}
 //             end={{ x: 0.0, y: 0.0 }}
 //         >
-//             <ScrollView style={{ marginTop: 40 }}>
+//             <ScrollView
+//                 style={{ marginTop: 40 }}
+//                 refreshControl={
+//                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+//                 }
+//             >
 //                 <Text style={styles.header}>AMENITIES</Text>
 
 //                 {cardData.map((item, index) => {
-
-
 //                     if (index % 2 === 0) {
 //                         return (
-//                             <View>
-//                                 <TouchableOpacity style={styles.cardwrap} onPress={() => handlelogin(item)}>
-//                                     <View style={styles.cardhead}>
-//                                         <Image
-//                                             source={{ uri: item.image }} // Replace with your image source
-//                                             style={styles.image2}
-//                                         />
-//                                     </View>
-//                                     <View style={styles.cardtext}>
-//                                         <Text style={styles.text}>{item.name}</Text>
-//                                         <Text numberOfLines={8} ellipsizeMode="tail"  style={styles.text2}>{item.description}</Text>
-//                                     </View>
-//                                 </TouchableOpacity>
-//                             </View>
-//                         )
-//                     }
-//                     else {
+//                             <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
+//                                 <View style={styles.cardhead}>
+//                                     <Image
+//                                         source={{ uri: item.image }}
+//                                         style={styles.image2}
+//                                     />
+//                                 </View>
+//                                 <View style={styles.cardtext}>
+//                                     <Text style={styles.text}>{item.name}</Text>
+//                                     <Text numberOfLines={7} ellipsizeMode="tail" style={styles.text2}>{item.description}</Text>
+//                                 </View>
+//                             </TouchableOpacity>
+//                         );
+//                     } else {
 //                         return (
-//                             <View>
-//                                 <TouchableOpacity style={styles.cardwrap2} onPress={() => handlelogin(item)}>
-//                                     <View style={styles.cardtext}>
-//                                         <Text style={styles.text}>{item.name}</Text>
-//                                         <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={8} ellipsizeMode="tail">{item.description}</Text>
-//                                     </View>
-//                                     <View style={styles.cardhead}>
-//                                         <Image
-//                                             source={{uri: item.image}} // Replace with your image source
-//                                             style={styles.image3}
-//                                         />
-//                                     </View>
-//                                 </TouchableOpacity>
-//                             </View>
-//                         )
+//                             <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
+//                                 <View style={styles.cardtext}>
+//                                     <Text style={styles.text}>{item.name}</Text>
+//                                     <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={7} ellipsizeMode="tail">{item.description}</Text>
+//                                 </View>
+//                                 <View style={styles.cardhead}>
+//                                     <Image
+//                                         source={{ uri: item.image }}
+//                                         style={styles.image3}
+//                                     />
+//                                 </View>
+//                             </TouchableOpacity>
+//                         );
 //                     }
-
-//                 })
-//                 }
-
+//                 })}
+//                 {loading && <ActivityIndicator size="large" color="#01595A" />}
 //             </ScrollView>
+//             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+//                 <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+//                 <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+//             </TouchableOpacity>
 //         </LinearGradient>
 //     );
 // };
 
-// // Styles for the component
 // const styles = StyleSheet.create({
 //     container: {
 //         flex: 1,
@@ -116,22 +132,6 @@
 //         marginBottom: 15,
 //         alignSelf: 'center',
 //         color: '#000000',
-//     },
-//     header2: {
-//         fontSize: 16,
-//         fontWeight: 'bold',
-//         marginBottom: 5,
-//         // alignSelf: 'center',
-//         color: '#000000',
-//         marginHorizontal: 15
-//     },
-//     header3: {
-//         fontSize: 16,
-//         fontWeight: 'bold',
-//         marginBottom: 5,
-//         alignSelf: 'flex-end',
-//         color: '#000000',
-//         marginHorizontal: 15
 //     },
 //     text: {
 //         fontSize: 16,
@@ -190,69 +190,86 @@
 //         borderBottomRightRadius: 80
 //     },
 //     cardhead: {
-//         // flex:1,
 //         width: "42%",
 //         height: '100%',
-//         // padding: 15,
 //         borderRadius: 50,
-//         // alignItems: 'center'
 //     },
 //     cardtext: {
 //         width: "60%",
-//         // alignItems: "center",
 //         paddingHorizontal: 15
-//         // marginRight:5
-//     }
+//     },
+//     nextButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         right: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     backButton: {
+//         position: 'absolute',
+//         bottom: 20,
+//         left: 20,
+//         backgroundColor: '#01595A',
+//         borderRadius: 50,
+//         width: 50,
+//         height: 50,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     icon: {
+//         color: '#fff',
+//         fontSize: 20,
+//     },
 // });
 
 // export default Amenities;
 
 
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl ,handleScroll} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Amenities = ({ navigation }) => {
     const [cardData, setAmenitiesData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);
-    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const { SelectedLanguage1 } = globalvariavle();
-    const scrollViewRef = useRef();
 
     useEffect(() => {
-        fetchData(page, SelectedLanguage1);
-    }, [SelectedLanguage1, page]);
+        fetchData();
+    }, [SelectedLanguage1, start]);
 
-    const fetchData = async (pageNumber, language) => {
+    const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
             const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
-                start: pageNumber,
-                language: language,
+                start,
+                language: SelectedLanguage1,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (pageNumber === 1) {
-                setAmenitiesData(response.data.data);
-            } else {
-                setAmenitiesData(prevData => [...prevData, ...response.data.data]);
-            }
+            setAmenitiesData(response.data.data);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error('Error fetching amenities data:', error);
         } finally {
             setLoading(false);
-            setLoadMoreLoading(false);
             setRefreshing(false);
         }
     };
@@ -261,16 +278,25 @@ const Amenities = ({ navigation }) => {
         navigation.navigate('Aminitiesdetails', data);
     };
 
-    const handleLoadMore = () => {
-        if (!loadMoreLoading) {
-            setPage(prevPage => prevPage + 1);
-            setLoadMoreLoading(true);
+    const handleNext = () => {
+        if (start < totalPages) {
+            setStart(prevStart => prevStart + 1);
+            setCurrentPage(prevPage => prevPage + 1);
+        }
+    };
+
+    const handleBack = () => {
+        if (start > 1) {
+            setStart(prevStart => prevStart - 1);
+            setCurrentPage(prevPage => prevPage - 1);
         }
     };
 
     const handleRefresh = () => {
         setRefreshing(true);
-        setPage(1);
+        setStart(1);
+        setCurrentPage(1);
+        fetchData();
     };
 
     return (
@@ -281,10 +307,7 @@ const Amenities = ({ navigation }) => {
             end={{ x: 0.0, y: 0.0 }}
         >
             <ScrollView
-                ref={scrollViewRef}
                 style={{ marginTop: 40 }}
-                onScroll={handleScroll}
-                scrollEventThrottle={16}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
@@ -324,13 +347,15 @@ const Amenities = ({ navigation }) => {
                         );
                     }
                 })}
-                {loading && <ActivityIndicator size="large" color="#0000ff" />}
-                {!loading && (
-                    <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                        <FontAwesomeIcon icon={faChevronDown} style={styles.icon} />
-                    </TouchableOpacity>
-                )}
+                {loading && <ActivityIndicator size="large" color="#01595A" />}
             </ScrollView>
+            <Text style={styles.pageIndicator}>{currentPage}/{totalPages}</Text>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
+                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.nextButton} onPress={handleNext} disabled={start === totalPages}>
+                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+            </TouchableOpacity>
         </LinearGradient>
     );
 };
@@ -412,14 +437,35 @@ const styles = StyleSheet.create({
         width: "60%",
         paddingHorizontal: 15
     },
-    loadMoreButton: {
-        justifyContent: 'center',
-        padding: 12,
+    nextButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
         backgroundColor: '#01595A',
-        borderRadius: 60,
-        marginVertical: 10,
-        width: 40,
-        alignSelf: "center"
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    backButton: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        backgroundColor: '#01595A',
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    pageIndicator: {
+        position: 'absolute',
+        bottom: 40,
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#01595A',
     },
     icon: {
         color: '#fff',
@@ -428,3 +474,4 @@ const styles = StyleSheet.create({
 });
 
 export default Amenities;
+
