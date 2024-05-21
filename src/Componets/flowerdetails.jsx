@@ -57,7 +57,14 @@ const flowerdetails = ({ route }) => {
     const openvideoModal = () => {
         setvideoModalVisible(true);
     };
-
+ 
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        result = result.replace(/&nbsp;/g, " ");
+        result = result.replace(/wikipedia/gi, "");
+        return result;
+    }
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
@@ -73,7 +80,7 @@ const flowerdetails = ({ route }) => {
 
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{flowerData.name}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }}>{flowerData.description}</Text>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(flowerData.description)}</Text>
                     <View style={styles.headtext2wrap}>
                         <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{flowerData.botnical_name}</Text></Text>
                         <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{flowerData.common_name}</Text></Text>

@@ -298,7 +298,14 @@ const Amenities = ({ navigation }) => {
         setCurrentPage(1);
         fetchData();
     };
-
+   
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        result = result.replace(/&nbsp;/g, " ");
+        result = result.replace(/wikipedia/gi, "");
+        return result;
+    }
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -326,7 +333,7 @@ const Amenities = ({ navigation }) => {
                                 </View>
                                 <View style={styles.cardtext}>
                                     <Text style={styles.text}>{item.name}</Text>
-                                    <Text numberOfLines={7} ellipsizeMode="tail" style={styles.text2}>{item.description}</Text>
+                                    <Text numberOfLines={7} ellipsizeMode="tail" style={styles.text2}>{stripHtmlTags(item.description)}</Text>
                                 </View>
                             </TouchableOpacity>
                         );
@@ -335,7 +342,7 @@ const Amenities = ({ navigation }) => {
                             <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
                                 <View style={styles.cardtext}>
                                     <Text style={styles.text}>{item.name}</Text>
-                                    <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={7} ellipsizeMode="tail">{item.description}</Text>
+                                    <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
                                 </View>
                                 <View style={styles.cardhead}>
                                     <Image
@@ -348,8 +355,10 @@ const Amenities = ({ navigation }) => {
                     }
                 })}
                 {loading && <ActivityIndicator size="large" color="#01595A" />}
+                {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+                <Text style={styles.pageIndicator}>{currentPage} / {totalPages}</Text>
             </ScrollView>
-            <Text style={styles.pageIndicator}>{currentPage}/{totalPages}</Text>
+            
             <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
                 <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
             </TouchableOpacity>
@@ -460,12 +469,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     pageIndicator: {
-        position: 'absolute',
-        bottom: 40,
-        alignSelf: 'center',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
-        color: '#01595A',
+        marginBottom: 10,
+        alignSelf: 'center',
+        color: '#000000',
     },
     icon: {
         color: '#fff',

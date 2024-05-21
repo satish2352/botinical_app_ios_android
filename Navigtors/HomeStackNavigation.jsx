@@ -57,15 +57,13 @@ function HomeStackNavigation() {
         }
       }}
     >
-      <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login}  />
       <Stack.Screen name="Otpscreen" component={Otpscreen} options={{ headerShown: false }} />
-
       <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }}  />
       <Stack.Screen name="Regifrom" component={Regifrom}  />
       <Stack.Screen name="ChargesList" component={ChargesList} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Home" component={Home} />
-
       <Stack.Screen name="Amenities" component={Amenities} />
       <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
       <Stack.Screen name="Treecompo" component={Treecompo} />
@@ -75,7 +73,6 @@ function HomeStackNavigation() {
       <Stack.Screen name="Contactus" component={Contactus} />
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Aminities2" component={Aminities2} />
-
     </Stack.Navigator>
   
   );

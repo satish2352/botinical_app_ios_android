@@ -63,7 +63,14 @@ const PlatsDetails = ({ route }) => {
         setvideoModalVisible(true);
     };
 
-  
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        result = result.replace(/&nbsp;/g, " ");
+        result = result.replace(/wikipedia/gi, "");
+        return result;
+    };
+
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
@@ -79,7 +86,7 @@ const PlatsDetails = ({ route }) => {
 
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{treeData.name}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }}>{treeData.description}</Text>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
                     <View style={styles.headtext2wrap}>
                         <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000' }}>{treeData.botnical_name}</Text></Text>
                         <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000' }}>{treeData.common_name}</Text></Text>

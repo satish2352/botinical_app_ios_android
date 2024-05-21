@@ -306,35 +306,40 @@ const About = () => {
 
     useEffect(() => {
 
-        const fetchData = async () => {
-            const token = await AsyncStorage.getItem('token');
-            setLoading(true);
-            try {
-
-                const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {
-                    start,
-                    language: SelectedLanguage1,
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                setaboutData(response.data.data);
-                setTotalPages(response.data.totalPages);
-                console.log('uuuuuuuuuuuuu'.response.data);
-
-            } catch (error) {
-                console.error('Error fetching about data:', error);
-            } finally {
-                setLoading(false);
-                setRefreshing(false);
-            }
-        };
+      
         fetchData();
         return () => { console.log('Component will unmount') }
 
     }, [SelectedLanguage1, start]);
+    const fetchData = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setLoading(true);
+        try {
+
+            const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {
+                start,
+                language: SelectedLanguage1,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setaboutData(response.data.data);
+            setTotalPages(response.data.totalPages);
+           
+
+        } catch (error) {
+            console.error('Error fetching about data:', error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetchData();
+    };
 
     const handleNext = () => {
         if (start < totalPages) {
@@ -347,11 +352,15 @@ const About = () => {
             setStart(start - 1);
         }
     };
-    const handleRefresh = () => {
-        setRefreshing(true);
-        fetchData();
-    };
+   
 
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        result = result.replace(/&nbsp;/g, " ");
+        result = result.replace(/wikipedia/gi, "");
+        return result;
+    }
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -389,7 +398,7 @@ const About = () => {
                                             />
                                         </View>
                                         <View style={styles.cardtext}>
-                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{item.description}</Text>
+                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
                                         </View>
 
                                     </View>
@@ -404,7 +413,7 @@ const About = () => {
 
 
                                         <View style={styles.cardtext}>
-                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{item.description}</Text>
+                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
                                         </View>
                                         <View style={styles.cardhead1}>
                                             <Image
@@ -443,7 +452,7 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        fontSize:22,
+        fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 5,
         alignSelf: 'center',

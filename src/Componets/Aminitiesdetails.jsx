@@ -280,7 +280,14 @@ const Aminitiesdetails = ({ route }) => {
   
 
    
-   
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        result = result.replace(/&nbsp;/g, " ");
+        result = result.replace(/wikipedia/gi, "");
+        return result;
+    };
+
 
     return (
         <View style={styles.maincontainer}>
@@ -292,7 +299,7 @@ const Aminitiesdetails = ({ route }) => {
             <View style={styles.contentContainer}>
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{about.name}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }}>{about.description}</Text>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
                     <View style={{ top: 250 }}>
                         <View style={styles.buttonview}>
                             <TouchableOpacity style={styles.button} onPress={openAudioModal}>
