@@ -15,6 +15,7 @@ import Contactstack from './Contactstack';
 import { View, Image, StyleSheet } from 'react-native';
 import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
+import Mainmapstack from './Mainmapstack';
 
 const Drawer = createDrawerNavigator();
 
@@ -143,12 +144,23 @@ function DrawerNavigator() {
         name="AminetiesMapstack"
         component={AminetiesMapstack}
         options={{
-          title: 'Amineties Map',
+          title: 'Amenities Map',
           drawerIcon: ({ focused, size }) => (
             <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),
         }}
       />
+      <Drawer.Screen
+      name="Mainmapstack"
+      component={Mainmapstack}
+      options={{
+        title: 'Main Map',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+        ),
+      }}
+      />
+     
     </Drawer.Navigator>
   
   );
@@ -174,3 +186,6 @@ const styles = StyleSheet.create({
 
   },
 });
+
+
+

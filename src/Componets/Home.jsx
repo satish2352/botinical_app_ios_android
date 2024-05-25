@@ -70,7 +70,7 @@ const Home = ({ navigation }) => {
                 </View>
                 <ScrollView>
                 <View style={styles.headingwrap}>
-                    <Text style={styles.headtext}>AREA 1</Text>
+                    <Text style={styles.headtext}>ZONE 1</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}> Butterfly Park presents an innumerable variety of butterflies that cane spotted throughout the year. Hyderabad Zoo is the first zoo in the country to start a park solely dedicated to butterflpresents an innumerable variety of butterflies that can be spotted throughout the year. Hyderabad Zoo is the first zoo in the country to start a park solely dedicated to butterflies. dedicated to butterflies.Established in 1988, Butterfly Park 988, Butterfly Park presents an innumerable variety of butterflies that can bButterfly Park 988, Butterfly Park presents an innumerable variety of butterflies that cane spotted throughout the year. Hyderabad Zoo is the first zoo in the country to start a park solely dedicated to butterflpresents an innumerable variety of butterflies that can be spotted throughout the year. Hyderabad Zoo is the first zoo in the country to start a park
                     </Text>
                 </View>

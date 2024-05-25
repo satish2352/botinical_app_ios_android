@@ -33,6 +33,7 @@ function HomeStackNavigation() {
     <Stack.Navigator initialRouteName="Login"
       screenOptions={{
         statusBarHidden: true,
+        translucent:false,
         headerTransparent: true,
         headerTitle: '',
         headerTintColor: '#01595A',

@@ -298,6 +298,7 @@ import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons
 
 const About = () => {
     const [cardData, setaboutData] = useState([]);
+    const [cardData1, setaboutData1] = useState([]);
     const { SelectedLanguage1 } = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
@@ -308,6 +309,7 @@ const About = () => {
 
       
         fetchData();
+        fetchData1();
         return () => { console.log('Component will unmount') }
 
     }, [SelectedLanguage1, start]);
@@ -316,7 +318,7 @@ const About = () => {
         setLoading(true);
         try {
 
-            const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {
+            const response = await axios.post(`${config.API_URL}auth/get-aboutus-element-list`, {
                 start,
                 language: SelectedLanguage1,
             }, {
@@ -336,9 +338,35 @@ const About = () => {
             setRefreshing(false);
         }
     };
+    const fetchData1 = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setLoading(true);
+        try {
+
+            const response = await axios.post(`${config.API_URL}auth/get-aboutus-list`, {
+               start,
+                language: SelectedLanguage1,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setaboutData1(response.data.data[0]);
+           
+           
+
+        } catch (error) {
+            console.error('Error fetching about data:', error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
     const handleRefresh = () => {
         setRefreshing(true);
         fetchData();
+        fetchData1();
     };
 
     const handleNext = () => {
@@ -374,11 +402,11 @@ const About = () => {
                 <Text style={styles.header}>ABOUT US</Text>
                 <View style={styles.imageView}>
                     <Image
-                        source={require('../Assets/aboutimage/i1.png')} // Replace with your image source
+                    source={{ uri: cardData1.image }} // Replace with your image source
                         style={styles.image1}
                     />
-                    <Text style={styles.text}>
-                        Botanical Garden of Hyderabad is also one of the interesting sightseeing places in Hyderabad offering a refreshing setting and rich flora. Having been developed by the Forest Departments, Botanical Garden is situated in Madhapur near the Hi-tech City which is almost 16 km away from centre of the city.
+                    <Text style={styles.text} numberOfLines={7} ellipsizeMode="tail">
+                    {stripHtmlTags(cardData1.description)}
                     </Text>
                 </View>
                 {

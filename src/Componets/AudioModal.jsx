@@ -15,9 +15,10 @@ const AudioModal = ({data,visible ,onClose}) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [sliderValue, setSliderValue] = useState(0);
 
-
+ 
     useEffect(() => {
         const id = data.id
+      
         // console.log(id);
         // const fetchData = async () => {
         //     const token = await AsyncStorage.getItem('token');
@@ -57,6 +58,7 @@ const AudioModal = ({data,visible ,onClose}) => {
             }, 1000);
             return () => clearInterval(timer);
         };
+        
         return () => {
           
             console.log('Component will unmount');

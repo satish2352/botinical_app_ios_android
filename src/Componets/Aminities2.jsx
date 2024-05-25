@@ -159,13 +159,6 @@ const Aminities2 = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
     const [buttonData,setaminitiesData]=useState([]);
     const { SelectedLanguage1 } = globalvariavle();
-    // const buttonData = [
-    //     { text: 'Washroom', icon: 'family-restroom' },
-    //     { text: 'Water', icon: 'water-drop' },
-    //     { text: 'Canteen', icon: 'fastfood' },
-    //     { text: 'Guest House', icon: 'house' },
-    //     { text: 'Guest House', icon: 'house' }
-    // ]
 
     useEffect(() => {
         
@@ -199,7 +192,7 @@ const Aminities2 = ({ navigation }) => {
     const renderButton = (buttonInfo) => (
         <TouchableOpacity style={styles.button} key={buttonInfo.name}>
             <Text style={styles.buttonText}>{buttonInfo.name}</Text>
-            <Icon name={buttonInfo.icon} size={24} color="#fff" />
+  
         </TouchableOpacity>
     );
 

@@ -246,7 +246,7 @@ const Aminitiesdetails = ({ route }) => {
 
                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
 
-                    aminities_id:data.id,
+                    amenities_id:data.id,
                     language: SelectedLanguage1
                 },{
                     headers: {
@@ -300,9 +300,10 @@ const Aminitiesdetails = ({ route }) => {
                 <View style={styles.headingwrap}>
                     <Text style={styles.headtext}>{about.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
-                    <View style={{ top: 250 }}>
+                    <View style={{top:450,alignSelf:'center',position:"absolute",justifyContent:"flex-end"}}>
                         <View style={styles.buttonview}>
                             <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                            
                                 <Text style={styles.buttonText}>Audio</Text>
                                 <Icon name="multitrack-audio" size={24} color="#fff" />
                             </TouchableOpacity>
@@ -328,7 +329,7 @@ const Aminitiesdetails = ({ route }) => {
 
 const styles = StyleSheet.create({
     maincontainer: {
-        flex: 1,
+        flex: 1, 
     },
     bgImage: {
         height: hp(40),
@@ -382,8 +383,8 @@ const styles = StyleSheet.create({
     buttonview: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginVertical: 20,
-        justifyContent: "flex-end",
+        // marginVertical: 20,
+        justifyContent: "center",
     },
     centeredView: {
         flex: 1,

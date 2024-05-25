@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
         textAlign: 'right'
     },
     image2: {
-        width: 165,
+        width: 160,
         height: 155,
         resizeMode: 'cover',
         alignSelf: 'flex-start',
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
         right: 2
     },
     image3: {
-        width: 165,
+        width: 160,
         height: 155,
         resizeMode: 'cover',
         alignSelf: 'flex-end',
