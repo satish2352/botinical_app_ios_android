@@ -387,32 +387,7 @@ const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 </Document>
 </kml>`;
 
-const amenities = [
-  {
-    coordinate: { latitude: 19.983889, longitude: 73.781463 },
-    title: 'Amenity1',
-    description: 'Details about Amenity1 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 ',
-    image: require('../Assets/Trees/b3.png')
-  },
-  {
-    coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
-    title: 'Amenity2',
-    description: 'Details about Amenity2 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b2.png')
-  },
-  {
-    coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
-    title: 'Amenity3',
-    description: 'Details about Amenity3 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b5.png')
-  },
-  {
-    coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
-    title: 'Amenity4',
-    description: 'Details about Amenity4 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b4.png')
-  }
-];
+
 
 
 const renderItem = ({ item, index }) => {
@@ -424,6 +399,9 @@ const renderItem = ({ item, index }) => {
 };
 
 const Mainmap = () => {
+
+
+
   const [selectedAmenity, setSelectedAmenity] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -432,6 +410,38 @@ const Mainmap = () => {
   const [directionsDestination, setDirectionsDestination] = useState(null);
 
   const GOOGLE_MAPS_APIKEY ="AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+
+
+  const amenities = [
+    {
+      coordinate: { latitude: 19.983889, longitude: 73.781463 },
+      title: 'Amenity1',
+      description: 'Details about Amenity1. This is a brief description of what Amenity1 offers and its features.',
+      image: require('../Assets/Trees/b3.png')
+    },
+    {
+      coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
+      title: 'Amenity2',
+      description: 'Details about Amenity2. This is a brief description of what Amenity2 offers and its features.',
+      image: require('../Assets/Trees/b2.png')
+    },
+    {
+      coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
+      title: 'Amenity3',
+      description: 'Details about Amenity3. This is a brief description of what Amenity3 offers and its features.',
+      image: require('../Assets/Trees/b5.png')
+    },
+    {
+      coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
+      title: 'Amenity4',
+      description: 'Details about Amenity4. This is a brief description of what Amenity4 offers and its features.',
+      image: require('../Assets/Trees/b4.png')
+    }
+  ];
+  
+
+
+
 
   const carouselData = [
     { image: require('../Assets/butter.png') },
@@ -476,13 +486,14 @@ const Mainmap = () => {
     setSelectedAmenity(null);
     setShowDirections(false);
   };
-    const handleDirectionPress = () => {
+    const handleDirectionPress = (selectedAmenity) => {
     if (selectedAmenity) {
       setDirectionsDestination(selectedAmenity.coordinate);
       setShowDirections(true);
       setSelectedAmenity(null);
     }
   };
+
   const coordinates = parseCoordinates(kmlData);
 
 
@@ -510,18 +521,25 @@ const Mainmap = () => {
             coordinate={amenity.coordinate}
             title={amenity.title}
 
-            onPress={() => handleMarkerPress(amenity)}
+            onPress={ ()=>handleMarkerPress(amenity)}
           >
             <Image style={{ height: 50, width: 50 }} source={amenity.image} />
           </Marker>
         ))}
+        {userLocation && (
+          <Marker
+            coordinate={userLocation}
+            title="User Location"
+            pinColor="black"
+          />
+        )}
               {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
             destination={directionsDestination}
             apikey={GOOGLE_MAPS_APIKEY}
             strokeWidth={4}
-            strokeColor="blue"
+            strokeColor="black"
           />
         )}
       </MapView>
@@ -561,10 +579,10 @@ const Mainmap = () => {
               </TouchableOpacity>
               <ScrollView>
 
-                <Image style={styles.image} source={selectedAmenity.image} />
+              
                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
                   <Text style={styles.title}>{selectedAmenity.title}</Text>
-                  <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
+                  <TouchableOpacity style={styles.dibtn} onPress={()=>handleDirectionPress(selectedAmenity)}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
                 </View>
                 <Text style={styles.description}>{selectedAmenity.description}</Text>
 
@@ -572,9 +590,9 @@ const Mainmap = () => {
 
             </View>
           </View>
-        </Modal >
+        </Modal>
       )}
-    </View >
+    </View>
   );
 };
 
@@ -609,11 +627,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:'black'
   },
   description: {
     fontSize: 16,
     marginBottom: 10,
     // textAlign: 'center',
+    color:'black'
   },
   image: {
     alignSelf: 'center',
@@ -689,255 +709,3 @@ export default Mainmap;
 
 
 
-
-// import React, { useEffect, useState } from 'react';
-// import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView } from 'react-native';
-// import MapView, { Marker } from 'react-native-maps';
-// import Carousel, { Pagination } from 'react-native-snap-carousel';
-// import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-// import Geolocation from 'react-native-geolocation-service';
-// import MapViewDirections from 'react-native-maps-directions';
-
-// const GOOGLE_MAPS_APIKEY = 'AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98';
-
-// const amenities = [
-//   {
-//     coordinate: { latitude: 19.983889, longitude: 73.781463 },
-//     title: 'Amenity1',
-//     description: 'Details about Amenity1...',
-//     image: require('../Assets/Trees/b3.png')
-//   },
-//   {
-//     coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
-//     title: 'Amenity2',
-//     description: 'Details about Amenity2...',
-//     image: require('../Assets/Trees/b2.png')
-//   },
-//   {
-//     coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
-//     title: 'Amenity3',
-//     description: 'Details about Amenity3...',
-//     image: require('../Assets/Trees/b5.png')
-//   },
-//   {
-//     coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
-//     title: 'Amenity4',
-//     description: 'Details about Amenity4...',
-//     image: require('../Assets/Trees/b4.png')
-//   }
-// ];
-
-// const renderItem = ({ item }) => {
-//   return (
-//     <View style={styles.carouselItem}>
-//       <Image style={styles.carouselImage} source={item.image} />
-//     </View>
-//   );
-// };
-
-// const Mainmap = () => {
-//   const [selectedAmenity, setSelectedAmenity] = useState(null);
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [userLocation, setUserLocation] = useState(null);
-//   const [showDirections, setShowDirections] = useState(false);
-//   const [directionsDestination, setDirectionsDestination] = useState(null);
-
-//   const carouselData = [
-//     { image: require('../Assets/butter.png') },
-//     { image: require('../Assets/tiger.png') },
-//     { image: require('../Assets/tiger.png') },
-//   ];
-
-//   useEffect(() => {
-//     Geolocation.getCurrentPosition(
-//       (position) => {
-//         const { latitude, longitude } = position.coords;
-//         setUserLocation({ latitude, longitude });
-//       },
-//       (error) => {
-//         console.log(error.code, error.message);
-//       },
-//       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-//     );
-//   }, []);
-
-//   const handleMarkerPress = (amenity) => {
-//     setSelectedAmenity(amenity);
-//     setShowDirections(false);
-//   };
-
-//   const closeModal = () => {
-//     setSelectedAmenity(null);
-//     setShowDirections(false);
-//   };
-
-//   const handleDirectionPress = () => {
-//     if (selectedAmenity) {
-//       setDirectionsDestination(selectedAmenity.coordinate);
-//       setShowDirections(true);
-//       setSelectedAmenity(null);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <MapView
-//         style={styles.map}
-//         initialRegion={{
-//           latitude: 19.983401500044838,
-//           longitude: 73.78004973895017,
-//           latitudeDelta: 0.01,
-//           longitudeDelta: 0.01,
-//         }}
-//       >
-//         {amenities.map((amenity, index) => (
-//           <Marker
-//             key={index}
-//             coordinate={amenity.coordinate}
-//             title={amenity.title}
-//             description={amenity.description}
-//             onPress={() => handleMarkerPress(amenity)}
-//           />
-//         ))}
-
-//         {showDirections && userLocation && directionsDestination && (
-//           <MapViewDirections
-//             origin={userLocation}
-//             destination={directionsDestination}
-//             apikey={GOOGLE_MAPS_APIKEY}
-//             strokeWidth={4}
-//             strokeColor="blue"
-//           />
-//         )}
-//       </MapView>
-
-//       {selectedAmenity && (
-//         <Modal
-//           visible={true}
-//           transparent={true}
-//           onRequestClose={closeModal}
-//         >
-//           <View style={styles.modalContainer}>
-//             <View style={styles.modalContent}>
-//               <Text style={styles.modalTitle}>{selectedAmenity.title}</Text>
-//               <ScrollView style={styles.modalDescription}>
-//                 <Text>{selectedAmenity.description}</Text>
-//               </ScrollView>
-//               <View style={styles.modalButtons}>
-//                 <TouchableOpacity style={styles.directionButton} onPress={handleDirectionPress}>
-//                   <Text style={styles.buttonText}>Direction</Text>
-//                 </TouchableOpacity>
-//                 <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-//                   <Text style={styles.buttonText}>Close</Text>
-//                 </TouchableOpacity>
-//               </View>
-//             </View>
-//           </View>
-//         </Modal>
-//       )}
-
-//       <View style={styles.carouselContainer}>
-//         <Carousel
-//           data={carouselData}
-//           renderItem={renderItem}
-//           sliderWidth={wp('100%')}
-//           itemWidth={wp('80%')}
-//           onSnapToItem={(index) => setActiveIndex(index)}
-//         />
-//         <Pagination
-//           dotsLength={carouselData.length}
-//           activeDotIndex={activeIndex}
-//           containerStyle={styles.paginationContainer}
-//           dotStyle={styles.paginationDot}
-//           inactiveDotOpacity={0.4}
-//           inactiveDotScale={0.6}
-//         />
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   map: {
-//     flex: 1,
-//   },
-//   carouselContainer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     marginBottom: hp('2%'),
-//   },
-//   carouselItem: {
-//     backgroundColor: 'white',
-//     borderRadius: 8,
-//     height: hp('30%'),
-//     padding: 20,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   carouselImage: {
-//     width: wp('70%'),
-//     height: hp('25%'),
-//     resizeMode: 'contain',
-//   },
-//   paginationContainer: {
-//     paddingVertical: 8,
-//   },
-//   paginationDot: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     marginHorizontal: 8,
-//     backgroundColor: 'rgba(0, 0, 0, 0.92)',
-//   },
-//   modalContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   modalContent: {
-//     width: wp('80%'),
-//     backgroundColor: 'white',
-//     borderRadius: 8,
-//     padding: 16,
-//     alignItems: 'center',
-//   },
-//   modalTitle: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginBottom: 8,
-//   },
-//   modalDescription: {
-//     marginBottom: 16,
-//   },
-//   modalButtons: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//   },
-//   directionButton: {
-//     flex: 1,
-//     padding: 10,
-//     marginRight: 5,
-//     backgroundColor: 'blue',
-//     borderRadius: 8,
-//     alignItems: 'center',
-//   },
-//   closeButton: {
-//     flex: 1,
-//     padding: 10,
-//     marginLeft: 5,
-//     backgroundColor: 'red',
-//     borderRadius: 8,
-//     alignItems: 'center',
-//   },
-//   buttonText: {
-//     color: 'white',
-//     fontSize: 16,
-//   },
-// });
-
-// export default Mainmap;

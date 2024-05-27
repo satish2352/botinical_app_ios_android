@@ -30,14 +30,14 @@ function Mainmapstack() {
                         </View>
                     )
                 },
-                headerLeft: () => {
-                    return (
-                      <View >
-                        <Langchange/>
-          
-                      </View>
-                    )
-                  }
+                // headerLeft: () => {
+                //     return (
+                //         <View >
+                //             <Langchange />
+
+                //         </View>
+                //     )
+                // }
             }}
         >
             <Stack.Screen name="Mainmap" component={Mainmap} />
