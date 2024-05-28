@@ -1,7 +1,8 @@
 
 
+
 // import React, { useEffect, useState } from 'react';
-// import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
+// import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Button ,PermissionsAndroid} from 'react-native';
 // import MapView, { Polyline, Marker } from 'react-native-maps';
 // import Carousel, { Pagination } from 'react-native-snap-carousel';
 // import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -58,8 +59,8 @@
 //             </coordinates>
 //         </LineString>
 //     </Placemark>
-   
-   
+
+
 // </Document>
 // </kml>`;
 
@@ -103,11 +104,60 @@
 //   const [selectedAmenity, setSelectedAmenity] = useState(null);
 //   const [activeIndex, setActiveIndex] = useState(0);
 
+//   const [userLocation, setUserLocation] = useState(null);
+
+//   const [showDirections, setShowDirections] = useState(false);
+//   const [directionsDestination, setDirectionsDestination] = useState(null);
+
+//   const GOOGLE_MAPS_APIKEY ="AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+
 //   const carouselData = [
 //     { image: require('../Assets/butter.png') },
 //     { image: require('../Assets/tiger.png') },
 //     { image: require('../Assets/tiger.png') },
 //   ];
+
+//   const requestlocationPermission = async () => {
+//     try {
+//       const granted = await PermissionsAndroid.request(
+//         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//         {
+//           title: 'App Location Permission',
+//           message:
+//             'Cool Photo App needs access to your Location ' +
+//             'so you can take awesome pictures.',
+//           buttonNeutral: 'Ask Me Later',
+//           buttonNegative: 'Cancel',
+//           buttonPositive: 'OK',
+//         },
+//       );
+//       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//         console.log('You can use the Location');
+//       } else {
+//         console.log('Location permission denied');
+//       }
+//     } catch (err) {
+//       console.warn(err);
+//     }
+//   };
+
+
+//   useEffect(() => {
+//     requestlocationPermission();
+
+//     Geolocation.getCurrentPosition(
+//       (position) => {
+//         const { latitude, longitude } = position.coords;
+//         setUserLocation({ latitude, longitude });
+
+//       },
+//       (error) => {
+//         console.log(error.code, error.message);
+//       },
+//       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+//     );
+//   }, []);
+
 
 //   const parseCoordinates = (kml) => {
 //     const coordinates = [];
@@ -125,12 +175,23 @@
 //   };
 //   const handleMarkerPress = (amenity) => {
 //     setSelectedAmenity(amenity);
+//     setShowDirections(false);
 //   };
 
 //   const closeModal = () => {
 //     setSelectedAmenity(null);
+//     setShowDirections(false);
+//   };
+//     const handleDirectionPress = () => {
+//     if (selectedAmenity) {
+//       setDirectionsDestination(selectedAmenity.coordinate);
+//       setShowDirections(true);
+//       setSelectedAmenity(null);
+//     }
 //   };
 //   const coordinates = parseCoordinates(kmlData);
+
+
 
 //   return (
 //     <View style={styles.container}>
@@ -160,6 +221,22 @@
 //             <Image style={{ height: 50, width: 50 }} source={amenity.image} />
 //           </Marker>
 //         ))}
+//         {userLocation && (
+//           <Marker
+//             coordinate={userLocation}
+//             title="User Location"
+//             pinColor="red"
+//           />
+//         )}
+//               {showDirections && userLocation && directionsDestination && (
+//           <MapViewDirections
+//             origin={userLocation}
+//             destination={directionsDestination}
+//             apikey={GOOGLE_MAPS_APIKEY}
+//             strokeWidth={4}
+//             strokeColor="blue"
+//           />
+//         )}
 //       </MapView>
 //       {selectedAmenity && (
 //         <Modal
@@ -197,10 +274,9 @@
 //               </TouchableOpacity>
 //               <ScrollView>
 
-//                 <Image style={styles.image} source={selectedAmenity.image} />
 //                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
 //                   <Text style={styles.title}>{selectedAmenity.title}</Text>
-//                   <TouchableOpacity style={styles.dibtn}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
+//                   <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
 //                 </View>
 //                 <Text style={styles.description}>{selectedAmenity.description}</Text>
 
@@ -208,9 +284,9 @@
 
 //             </View>
 //           </View>
-//         </Modal >
+//         </Modal>
 //       )}
-//     </View >
+//     </View>
 //   );
 // };
 
@@ -245,11 +321,13 @@
 //     fontSize: 24,
 //     fontWeight: 'bold',
 //     marginBottom: 10,
+//     color:'black'
 //   },
 //   description: {
 //     fontSize: 16,
 //     marginBottom: 10,
 //     // textAlign: 'center',
+//     color:'black'
 //   },
 //   image: {
 //     alignSelf: 'center',
@@ -324,14 +402,19 @@
 // export default Mainmap;
 
 
+
+
+
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
+import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Button, PermissionsAndroid } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { requestLocationAccuracy, checkLocationAccuracy, LocationAccuracy } from 'react-native-location-enabler';
 
 
 const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -387,7 +470,32 @@ const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 </Document>
 </kml>`;
 
-
+const amenities = [
+  {
+    coordinate: { latitude: 19.983889, longitude: 73.781463 },
+    title: 'Amenity1',
+    description: 'Details about Amenity1 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 ',
+    image: require('../Assets/Trees/b3.png')
+  },
+  {
+    coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
+    title: 'Amenity2',
+    description: 'Details about Amenity2 Detailssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
+    image: require('../Assets/Trees/b2.png')
+  },
+  {
+    coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
+    title: 'Amenity3',
+    description: 'Details about Amenity3 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
+    image: require('../Assets/Trees/b5.png')
+  },
+  {
+    coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
+    title: 'Amenity4',
+    description: 'Details about Amenity4 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
+    image: require('../Assets/Trees/b4.png')
+  }
+];
 
 
 const renderItem = ({ item, index }) => {
@@ -399,49 +507,17 @@ const renderItem = ({ item, index }) => {
 };
 
 const Mainmap = () => {
-
-
-
   const [selectedAmenity, setSelectedAmenity] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const [userLocation, setUserLocation] = useState(null);
+  const [transportMode, setTransportMode] = useState('driving');
   const [showDirections, setShowDirections] = useState(false);
   const [directionsDestination, setDirectionsDestination] = useState(null);
-
-  const GOOGLE_MAPS_APIKEY ="AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
-
-
-  const amenities = [
-    {
-      coordinate: { latitude: 19.983889, longitude: 73.781463 },
-      title: 'Amenity1',
-      description: 'Details about Amenity1. This is a brief description of what Amenity1 offers and its features.',
-      image: require('../Assets/Trees/b3.png')
-    },
-    {
-      coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
-      title: 'Amenity2',
-      description: 'Details about Amenity2. This is a brief description of what Amenity2 offers and its features.',
-      image: require('../Assets/Trees/b2.png')
-    },
-    {
-      coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
-      title: 'Amenity3',
-      description: 'Details about Amenity3. This is a brief description of what Amenity3 offers and its features.',
-      image: require('../Assets/Trees/b5.png')
-    },
-    {
-      coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
-      title: 'Amenity4',
-      description: 'Details about Amenity4. This is a brief description of what Amenity4 offers and its features.',
-      image: require('../Assets/Trees/b4.png')
-    }
-  ];
-  
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
 
-
+  const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
 
   const carouselData = [
     { image: require('../Assets/butter.png') },
@@ -449,11 +525,39 @@ const Mainmap = () => {
     { image: require('../Assets/tiger.png') },
   ];
 
+  const requestlocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'App Location Permission',
+          message:
+            'Cool Photo App needs access to your Location ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the Location');
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+
   useEffect(() => {
+    requestlocationPermission();
+
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation({ latitude, longitude });
+
       },
       (error) => {
         console.log(error.code, error.message);
@@ -486,14 +590,13 @@ const Mainmap = () => {
     setSelectedAmenity(null);
     setShowDirections(false);
   };
-    const handleDirectionPress = (selectedAmenity) => {
+  const handleDirectionPress = () => {
     if (selectedAmenity) {
       setDirectionsDestination(selectedAmenity.coordinate);
       setShowDirections(true);
       setSelectedAmenity(null);
     }
   };
-
   const coordinates = parseCoordinates(kmlData);
 
 
@@ -521,7 +624,7 @@ const Mainmap = () => {
             coordinate={amenity.coordinate}
             title={amenity.title}
 
-            onPress={ ()=>handleMarkerPress(amenity)}
+            onPress={() => handleMarkerPress(amenity)}
           >
             <Image style={{ height: 50, width: 50 }} source={amenity.image} />
           </Marker>
@@ -530,18 +633,28 @@ const Mainmap = () => {
           <Marker
             coordinate={userLocation}
             title="User Location"
-            pinColor="black"
+            pinColor="red"
           />
         )}
-              {showDirections && userLocation && directionsDestination && (
+        {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
             destination={directionsDestination}
             apikey={GOOGLE_MAPS_APIKEY}
             strokeWidth={4}
-            strokeColor="black"
+            strokeColor="blue"
+            mode={transportMode}
+            optimizeWaypoints={true}
+            onReady={(result) => {
+              console.log(`Distance: ${result.distance} km`);
+              console.log(`Duration: ${result.duration} min.`);
+            }}
+            onError={(errorMessage) => {
+              console.error('Error with directions:', errorMessage);
+            }}
           />
         )}
+
       </MapView>
       {selectedAmenity && (
         <Modal
@@ -579,15 +692,34 @@ const Mainmap = () => {
               </TouchableOpacity>
               <ScrollView>
 
-              
                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
                   <Text style={styles.title}>{selectedAmenity.title}</Text>
-                  <TouchableOpacity style={styles.dibtn} onPress={()=>handleDirectionPress(selectedAmenity)}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
+                  <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
                 </View>
                 <Text style={styles.description}>{selectedAmenity.description}</Text>
 
               </ScrollView>
-
+              {/* Add buttons to select transportation mode */}
+              <View style={styles.transportModeContainer}>
+                <TouchableOpacity
+                  style={[styles.transportModeButton, transportMode === 'driving' && styles.selectedTransportMode]}
+                  onPress={() => setTransportMode('driving')}
+                >
+                  <Text>Car</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.transportModeButton, transportMode === 'walking' && styles.selectedTransportMode]}
+                  onPress={() => setTransportMode('walking')}
+                >
+                  <Text>Walk</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.transportModeButton, transportMode === 'bike' && styles.selectedTransportMode]}
+                  onPress={() => setTransportMode('bike')}
+                >
+                  <Text>Bike</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -627,13 +759,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color:'black'
+    color: 'black'
   },
   description: {
     fontSize: 16,
     marginBottom: 10,
     // textAlign: 'center',
-    color:'black'
+    color: 'black'
   },
   image: {
     alignSelf: 'center',
@@ -700,12 +832,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: '#01595A',
-  }
+  },
+  transportModeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+  transportModeButton: {
+    backgroundColor: '#e0e0e0',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  selectedTransportMode: {
+    backgroundColor: '#01595A',
+    color: '#fff',
+  },
 
 
 });
 
 export default Mainmap;
-
 
 

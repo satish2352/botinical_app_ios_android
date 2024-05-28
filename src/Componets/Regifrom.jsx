@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 8,
         fontSize: 16, // Font size of the input text
         fontWeight: '400',
+        color: '#000'
 
     },
     button: {
