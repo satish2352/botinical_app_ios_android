@@ -16,6 +16,7 @@ import { View, Image, StyleSheet } from 'react-native';
 import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
+import AddEntityStack from './AddEntityStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -155,6 +156,16 @@ function DrawerNavigator() {
       component={Mainmapstack}
       options={{
         title: 'Main Map',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+        ),
+      }}
+      />
+      <Drawer.Screen
+      name="AddEntityStack"
+      component={AddEntityStack}
+      options={{
+        title: 'Add Entities',
         drawerIcon: ({ focused, size }) => (
           <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
         ),

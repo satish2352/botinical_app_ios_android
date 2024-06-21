@@ -1,8 +1,4 @@
 
-
-
-
-
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Dimensions, Button, PermissionsAndroid, Platform } from 'react-native';
 import MapView, { Polyline, Marker, Polygon, AnimatedRegion } from 'react-native-maps';
@@ -13,92 +9,98 @@ import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { requestLocationAccuracy, checkLocationAccuracy, LocationAccuracy } from 'react-native-location-enabler';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../config/config';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 
 
 const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
 <Document>
-    <name>mum219.kml</name>
-    <StyleMap id="m_ylw-pushpin">
-        <Pair>
-            <key>normal</key>
-            <styleUrl>#s_ylw-pushpin</styleUrl>
-        </Pair>
-        <Pair>
-            <key>highlight</key>
-            <styleUrl>#s_ylw-pushpin_hl</styleUrl>
-        </Pair>
-    </StyleMap>
-    <Style id="s_ylw-pushpin">
-        <IconStyle>
-            <scale>1.1</scale>
-            <Icon>
-                <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
-            </Icon>
-            <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
-        </IconStyle>
-        <LineStyle>
-            <color>ff0000ff</color>
-        </LineStyle>
-    </Style>
-    <Style id="s_ylw-pushpin_hl">
-        <IconStyle>
-            <scale>1.3</scale>
-            <Icon>
-                <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
-            </Icon>
-            <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
-        </IconStyle>
-        <LineStyle>
-            <color>ff0000ff</color>
-        </LineStyle>
-    </Style>
-    <Placemark>
-        <name>Untitled Path</name>
-        <styleUrl>#m_ylw-pushpin</styleUrl>
-        <LineString>
-            <tessellate>1</tessellate>
-            <coordinates>
-                73.78163209258453,19.98398598405316,0 73.7816321295435,19.98397836952064,0 73.78140022186813,19.98403568584315,0 73.78126116098484,19.98409342835519,0 73.78111093447403,19.98413599279547,0 73.78097572675269,19.98417916205889,0 73.78082732637102,19.98423462074464,0 73.78062844703553,19.98428552006987,0 73.78051250493874,19.98433286566392,0 73.7804556986088,19.98423730627376,0 73.78039650116907,19.98418886671168,0 73.78030195862448,19.98406029878652,0 73.78023733305695,19.98399271081001,0 73.78015640824729,19.98389206783411,0 73.78006883588228,19.98378637267189,0 73.77998724479211,19.98367990718262,0 73.77993140835335,19.98361734454905,0 73.77982595509029,19.9835080332333,0 73.77975111819735,19.98341795070108,0 73.77970930733349,19.98331956750258,0 73.7796555068964,19.9832166925749,0 73.77961863332477,19.98311890041287,0 73.77962942061136,19.98308167351762,0 73.77977069882967,19.98303724069224,0 73.77987567606544,19.98303046282984,0 73.78007010482426,19.98299465876448,0 73.78026346890373,19.98295632018158,0 73.78052387144977,19.98290068949542,0 73.78081672422,19.98282254207567,0 73.78103028645828,19.98275720203063,0 73.78110889569126,19.98289311589633,0 73.78115834182785,19.9830077180395,0 73.7812424845384,19.98312876605446,0 73.78131317971769,19.98326784833735,0 73.78140099689828,19.98342750134641,0 73.78148553807721,19.98359679937998,0 73.78155421553855,19.98375124498569,0 73.78166271375008,19.98393427130611,0 73.78163209258453,19.98398598405316,0 
-            </coordinates>
-        </LineString>
-    </Placemark>
-   
-   
+	<name>Botanical Garden.kmz</name>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>https://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ff00ffff</color>
+		</LineStyle>
+		<PolyStyle>
+			<fill>0</fill>
+		</PolyStyle>
+	</Style>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>https://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ff00ffff</color>
+		</LineStyle>
+		<PolyStyle>
+			<fill>0</fill>
+		</PolyStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark>
+		<name>Botanical Garden</name>
+		<LookAt>
+			<longitude>78.35728537719703</longitude>
+			<latitude>17.45407013149723</latitude>
+			<altitude>0</altitude>
+			<heading>2.067360542951285e-14</heading>
+			<tilt>45.00000000000001</tilt>
+			<range>1360.410508856907</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						78.35099653865082,17.45258830380859,0 78.35116790053983,17.45232961342451,0 78.35266334368971,17.45153770712911,0 78.35371782118027,17.45107491551616,0 78.35499268769874,17.45065400267217,0 78.35572124770651,17.45064130685334,0 78.35656914064103,17.45099100479441,0 78.35712279169209,17.45097994196231,0 78.35759540877359,17.45094883785035,0 78.35851433440141,17.45097665421504,0 78.35913552257284,17.45097292433351,0 78.35930663851239,17.4510608401952,0 78.35988824145373,17.45131880236901,0 78.3606271257956,17.45166195783192,0 78.361917959089,17.45232117145466,0 78.36285919294649,17.45287356459466,0 78.36348944382391,17.4533023248711,0 78.36350986625452,17.45380132178829,0 78.36353400306359,17.45431843019696,0 78.36356307253274,17.45476908116544,0 78.36360285292459,17.45508787676559,0 78.36367866663961,17.45532785829392,0 78.36369984871322,17.45545839009273,0 78.36366699725954,17.45552258886455,0 78.36358939690169,17.45558324815694,0 78.3627213805627,17.45597428087079,0 78.36165039026709,17.45637600963586,0 78.36109269709588,17.45668562029861,0 78.35961602206781,17.45749895614112,0 78.35948447473288,17.4552270968703,0 78.35851133340692,17.45440917849551,0 78.35787350501812,17.45408332123594,0 78.3576323636177,17.45396881728725,0 78.35659500323349,17.45383342257061,0 78.35640260266234,17.45375546622433,0 78.35619874374818,17.45373103185598,0 78.35594226249596,17.45378818688738,0 78.3558080563414,17.45379228850712,0 78.35567443046696,17.45386651547782,0 78.35545269663639,17.45393735164832,0 78.35528976073213,17.45403009825355,0 78.3551017326219,17.45409832342855,0 78.35488794141962,17.45408334227464,0 78.35470480045224,17.4539448208536,0 78.35415875363074,17.45381467819875,0 78.35404639758548,17.45372040003664,0 78.35348175553288,17.45359339051824,0 78.35265538045066,17.45341301534266,0 78.35178764208352,17.45319588787392,0 78.35087090568076,17.45293436174352,0 78.35099653865082,17.45258830380859,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
 </Document>
-</kml>`;
+</kml>
+`;
 
 const amenities = [
   {
-    coordinate: { latitude: 19.983889, longitude: 73.781463 },
-    title: 'Amenity1',
-    description: 'Details about Amenity1 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 ',
-    image: require('../Assets/Trees/b3.png')
+    coordinate: { latitude: 17.45361843537005, longitude: 78.35391183141539 },
+    title: 'Washroom',
+    description: 'The washroom is a clean and well-maintained space designed for comfort and hygiene. It features modern fixtures, including a sleek sink, a spacious countertop, and a well-lit mirror. The environment is welcoming, with fresh towels, fragrant soap, and a soothing color palette, ensuring a pleasant and refreshing experience for every visitor. ',
+    image: require('../Assets/amenities/washroom.png')
   },
   {
-    coordinate: { latitude: 19.98413361586103, longitude: 73.78068925317841 },
-    title: 'Amenity2',
-    description: 'Details about Amenity2 Detailssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b2.png')
+    coordinate: { latitude: 17.45322502795336, longitude: 78.35348263668773 },
+    title: 'Drinking Water',
+    description: 'Drinking water is essential for maintaining good health and well-being. Clean and safe to consume, it keeps our bodies hydrated, aids in digestion, and helps regulate body temperature. Accessible through various sources like taps, fountains, and bottled options, drinking water is a vital part of our daily routine, ensuring we stay refreshed and energized.',
+    image: require('../Assets/amenities/drinkingwater.png')
   },
-  {
-    coordinate: { latitude: 19.983401500044838, longitude: 73.78004973895017 },
-    title: 'Amenity3',
-    description: 'Details about Amenity3 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b5.png')
-  },
-  {
-    coordinate: { latitude: 19.983179849115512, longitude: 73.78100750040255 },
-    title: 'Amenity4',
-    description: 'Details about Amenity4 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b4.png')
-  },
-  {
-    coordinate: { latitude: 19.984408451096826, longitude: 73.77967341502521 },
-    title: 'Extra',
-    description: 'Details about Amenity4 Details about Amenity1  Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1 Details about Amenity1',
-    image: require('../Assets/Trees/b4.png')
-  }
+  
+  
 ];
 
 
@@ -110,17 +112,25 @@ const renderItem = ({ item, index }) => {
   );
 };
 
+
+
+
 const Mainmap = () => {
   const [selectedAmenity, setSelectedAmenity] = useState(null);
+  const [amenities, setamenities] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const [start, setStart] = useState(1);
   const [userLocation, setUserLocation] = useState(null);
   const [transportMode, setTransportMode] = useState('driving');
   const [showDirections, setShowDirections] = useState(false);
   const [directionsDestination, setDirectionsDestination] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const { SelectedLanguage1 } = globalvariavle();
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width / screen.height;
-  const LATITUDE_DELTA = 0.04;
+  const LATITUDE_DELTA = 0.01;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const markerRef = useRef()
 
@@ -146,9 +156,10 @@ const Mainmap = () => {
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
 
   const carouselData = [
-    { image: require('../Assets/butter.png') },
-    { image: require('../Assets/tiger.png') },
-    { image: require('../Assets/tiger.png') },
+    { image: require('../Assets/s1.jpg') },
+    { image: require('../Assets/s2.jpg') },
+    { image: require('../Assets/s3.jpg') },
+  
   ];
 
   const requestlocationPermission = async () => {
@@ -201,6 +212,29 @@ const Mainmap = () => {
     );
   }
 
+  const fetchData = async () => {
+    const token = await AsyncStorage.getItem('token');
+    setLoading(true);
+    try {
+        const response = await axios.post(`${config.API_URL}auth/get-map-data`, {
+            language: SelectedLanguage1,
+            start
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setamenities(response.data.Data);
+        console.log(response.data.Data);
+        setTotalPages(response.data.totalPages);
+    } catch (error) {
+        console.error('Error fetching map data:', error);
+    } finally {
+        setLoading(false);
+        setRefreshing(false);
+    }
+  };
+
 
   useEffect(() => {
     requestlocationPermission();
@@ -208,12 +242,16 @@ const Mainmap = () => {
     livelocation();
   }, []);
   useEffect(() => {
-    const interval = setInterval(() => {
-      livelocation()
+    fetchData();
+}, [start]);
 
-    }, 6000);
-    return () => clearInterval(interval)
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     livelocation()
+
+  //   }, 6000);
+  //   return () => clearInterval(interval)
+  // }, []);
 
 
   const parseCoordinates = (kml) => {
@@ -241,7 +279,10 @@ const Mainmap = () => {
   };
   const handleDirectionPress = () => {
     if (selectedAmenity) {
-      setDirectionsDestination(selectedAmenity.coordinate);
+      setDirectionsDestination({
+        latitude: parseFloat(selectedAmenity.latitude),
+        longitude: parseFloat(selectedAmenity.longitude),
+      });
       setShowDirections(true);
       setSelectedAmenity(null);
     }
@@ -274,10 +315,10 @@ const Mainmap = () => {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: 19.9836752199088,
-          longitude: 73.7806615225102,
-          latitudeDelta: 0.004,
-          longitudeDelta: 0.004
+          latitude: 17.45407013149723,
+          longitude: 78.35728537719703,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01
         }}
       >
         <Polyline
@@ -292,16 +333,24 @@ const Mainmap = () => {
           strokeColor="rgba(0,0,0,0.5)"
           strokeWidth={2}
         />
-        {amenities.map((amenity, index) => (
+        {amenities.map((amenity,index) => (
+          
           <Marker
+          
             key={index}
-            coordinate={amenity.coordinate}
-            title={amenity.title}
+            // coordinate={amenity.coordinate}
+            coordinate={{
+              latitude: parseFloat(amenity.latitude),
+              longitude: parseFloat(amenity.longitude),
+            }}
+            title={amenity.name}
 
             onPress={() => handleMarkerPress(amenity)}
           >
-            <Image style={{ height: 50, width: 50 }} source={amenity.image} />
+          
+            <Image style={{ height: 50, width: 50 }} source={{ uri: amenity.image}} />
           </Marker>
+          
         ))}
         {userLocation && (
           <Marker.Animated
@@ -311,14 +360,14 @@ const Mainmap = () => {
             pinColor="red"
             
           />
-        )}
+        )} 
         {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
             destination={directionsDestination}
             apikey={GOOGLE_MAPS_APIKEY}
             strokeWidth={4}
-            strokeColor="hotpink"
+            strokeColor="blue"
             mode={transportMode}
             lineDashPattern={transportMode === 'walking' ? [1, 10] : null}
             optimizeWaypoints={true}

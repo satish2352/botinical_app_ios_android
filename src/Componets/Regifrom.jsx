@@ -12,12 +12,14 @@ const Regifrom = ({ navigation }) => {
     const { useerid } = globalvariavle();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
     const [gender, setGender] = useState('');
     const [dob, setDob] = useState('');
     const [address, setAddress] = useState('');
     const [occupation, setOccupation] = useState('');
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [mobileError, setMobileError] = useState('');
     const [genderError, setGenderError] = useState('');
     const [dobError, setDobError] = useState('');
     const [addressError, setAddressError] = useState('');
@@ -40,6 +42,17 @@ const Regifrom = ({ navigation }) => {
             valid = false;
         } else {
             setEmailError('');
+        } if (!mobile === '') {
+            setMobileError('Please fill in your mobile number');
+            valid = false;
+
+        }
+        else if (!/^\d{10}$/.test(mobile)) {
+            setMobileError('Please enter a valid 10-digit mobile number');
+            valid = false;
+        }
+        else {
+            setMobileError('');
         }
         if (!gender.trim()) {
             setGenderError('Gender is required');
@@ -83,24 +96,24 @@ const Regifrom = ({ navigation }) => {
             occupation: occupation,
             language: SelectedLanguage1,
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            console.log('Registration successful:', response.data.message);
-            Alert.alert('Registration successful:', response.data.message);
-            navigation.navigate('Home');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Alert.alert('Error', 'Failed to register. Please try again later.');
-            // Handle error here
-        });
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                console.log('Registration successful:', response.data.message);
+                Alert.alert('Registration successful:', response.data.message);
+                navigation.navigate('Home');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Alert.alert('Error', 'Failed to register. Please try again later.');
+                // Handle error here
+            });
 
     }
-   
+
     const validateEmail = (email) => {
         // Email validation regex
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -139,6 +152,14 @@ const Regifrom = ({ navigation }) => {
                         onChangeText={setEmail}
                     />
                     {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="MOBILE"
+                        placeholderTextColor="black"
+                        keyboardType="numeric"
+                        onChangeText={setMobile}
+                    />
+                    {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input2}
@@ -212,7 +233,7 @@ const styles = StyleSheet.create({
         // justifyContent: 'flex-end',
         // alignItems: 'center'
     },
-   
+
     input: {
         width: '85%',
         height: 45,

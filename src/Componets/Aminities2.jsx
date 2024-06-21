@@ -150,9 +150,10 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 
 const Aminities2 = ({ navigation }) => {
     const carouselData = [
-        { image: require('../Assets/butter.png') },
-        { image: require('../Assets/tiger.png') },
-        { image: require('../Assets/butter.png') },
+        { image: require('../Assets/s1.jpg') },
+        { image: require('../Assets/s2.jpg') },
+        { image: require('../Assets/s3.jpg') },
+        
     ];
 
     const [activeIndex, setActiveIndex] = useState(0);

@@ -22,7 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Entypo';
 import { View } from 'react-native';
 import flowerdetails from '../src/Componets/flowerdetails';
-
+import AddEntityStack from './AddEntityStack';
 
 
 const Stack = createNativeStackNavigator();
@@ -74,6 +74,7 @@ function HomeStackNavigation() {
       <Stack.Screen name="Contactus" component={Contactus} />
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Aminities2" component={Aminities2} />
+     
     </Stack.Navigator>
   
   );
