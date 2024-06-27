@@ -81,7 +81,7 @@ const Treecompo = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>TREE</Text>
+                <Text style={styles.text}>TREES</Text>
             </LinearGradient>
             <FlatList
                 data={treeData}
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color: '#000000',
     },
+ 
 });
 
 export default Treecompo;

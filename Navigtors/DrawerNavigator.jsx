@@ -72,6 +72,36 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
+      name="Mainmapstack"
+      component={Mainmapstack}
+      options={{
+        title: 'Garden Map',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+        ),
+      }}
+      />
+      <Drawer.Screen
+      name="Treesstack"
+      component={Treesstack}
+      options={{
+        title: 'Trees',
+        drawerIcon: ({ focused, size }) => (
+          <Foundation name="trees" size={25} color={focused ? '#fff' : '#ccc'} />
+        ),
+      }}
+    />
+    <Drawer.Screen
+    name="flowersstack"
+    component={flowersstack}
+    options={{
+      title: 'Plants',
+      drawerIcon: ({ focused, size }) => (
+        <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
+      ),
+    }}
+  />
+      <Drawer.Screen
         name="Aminitiesstack"
         component={Aminitiesstack}
         options={{
@@ -81,46 +111,19 @@ function DrawerNavigator() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Treesstack"
-        component={Treesstack}
-        options={{
-          title: 'Trees',
-          drawerIcon: ({ focused, size }) => (
-            <Foundation name="trees" size={25} color={focused ? '#fff' : '#ccc'} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="flowersstack"
-        component={flowersstack}
-        options={{
-          title: 'Flowers',
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
-          ),
-        }}
-      />
+    
+  
       <Drawer.Screen
         name="Chargesstack"
         component={Chargesstack}
         options={{
-          title: 'Charges',
+          title: 'Ticket Details',
           drawerIcon: ({ focused, size }) => (
             <Icon name="cash" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Charges
           ),
         }}
       />
-      <Drawer.Screen
-        name="Gardenmapstacks"
-        component={Gardenmapstacks}
-        options={{
-          title: 'Garden Map',
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Garden Map
-          ),
-        }}
-      />
+  
       <Drawer.Screen
         name="Gallerystack"
         component={Gallerystack}
@@ -141,26 +144,8 @@ function DrawerNavigator() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="AminetiesMapstack"
-        component={AminetiesMapstack}
-        options={{
-          title: 'Amenities Map',
-          drawerIcon: ({ focused, size }) => (
-            <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
-          ),
-        }}
-      />
-      <Drawer.Screen
-      name="Mainmapstack"
-      component={Mainmapstack}
-      options={{
-        title: 'Main Map',
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
-        ),
-      }}
-      />
+      
+
       <Drawer.Screen
       name="AddEntityStack"
       component={AddEntityStack}
@@ -200,3 +185,26 @@ const styles = StyleSheet.create({
 
 
 
+
+
+// <Drawer.Screen
+// name="Gardenmapstacks"
+// component={Gardenmapstacks}
+// options={{
+//   title: 'Garden Map',
+//   drawerIcon: ({ focused, size }) => (
+//     <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Garden Map
+//   ),
+// }}
+// />
+
+// <Drawer.Screen
+//         name="AminetiesMapstack"
+//         component={AminetiesMapstack}
+//         options={{
+//           title: 'Amenities Map',
+//           drawerIcon: ({ focused, size }) => (
+//             <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+//           ),
+//         }}
+//       />

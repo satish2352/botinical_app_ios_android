@@ -15,9 +15,9 @@ const flowerdetails = ({ route }) => {
     const [audioModalVisible, setAudioModalVisible] = useState(false);
     const [videoModalVisible, setvideoModalVisible] = useState(false);
     const [flowerData, setflowerseatils] = useState([]);
-    
+
     const { SelectedLanguage1 } = globalvariavle();
- 
+
     useEffect(() => {
 
         const id = data.id
@@ -47,7 +47,7 @@ const flowerdetails = ({ route }) => {
         };
         fetchData();
         return () => {
-          
+
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
@@ -57,10 +57,10 @@ const flowerdetails = ({ route }) => {
     const openvideoModal = () => {
         setvideoModalVisible(true);
     };
- 
+
     const stripHtmlTags = (str) => {
         if (!str) return '';
-        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
         result = result.replace(/&nbsp;/g, " ");
         result = result.replace(/wikipedia/gi, "");
         return result;
@@ -82,9 +82,14 @@ const flowerdetails = ({ route }) => {
                     <Text style={styles.headtext}>{flowerData.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(flowerData.description)}</Text>
                     <View style={styles.headtext2wrap}>
-                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000', }}>{flowerData.botnical_name}</Text></Text>
-                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000', }}>{flowerData.common_name}</Text></Text>
-                    </View>
+                    <Text style={styles.headtext2}>BOTNICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{flowerData.botnical_name}</Text></Text>
+                    <View style={{flexDirection:"row"}}></View>
+                    <Text style={styles.headtext2}>COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{flowerData.common_name}</Text></Text>
+                    <Text style={styles.headtext2}>HIGHT :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{flowerData.height}&nbsp;{flowerData.height_type}</Text></Text>
+                    <Text style={styles.headtext2}>CANOPY :&nbsp;&nbsp;<Text style={{ color: '#000' ,fontWeight:"400",}}>{flowerData.canopy}&nbsp;{flowerData.canopy_type}</Text></Text>
+                    <Text style={styles.headtext2}>GIRTH :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{flowerData.girth}&nbsp;{flowerData.girth_type}</Text></Text>
+                 
+                </View>
                     <View style={styles.buttonview}>
                         <TouchableOpacity style={styles.button} >
 
@@ -102,10 +107,10 @@ const flowerdetails = ({ route }) => {
                 <AudioModal data={flowerData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
             </View>
             <VideoModal
-            visible={videoModalVisible}
-            onClose={() => setvideoModalVisible(false)}
-            videoUri={flowerData.video_upload}
-          />
+                visible={videoModalVisible}
+                onClose={() => setvideoModalVisible(false)}
+                videoUri={flowerData.video_upload}
+            />
         </View>
     )
 }
@@ -124,9 +129,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffff"
     },
     image: {
-        height: '90%',
+        height: '95%',
         width: '100%',
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         // marginVertical: 50
 
     },
@@ -183,13 +188,14 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: 'bold',
         fontFamily: 'Century Gothic',
+
         color: '#000000',
         // margin: 15,
         paddingVertical: 10
 
     },
     headtext2: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         fontFamily: 'Century Gothic',
         color: '#000000',

@@ -79,16 +79,16 @@ const ChargesList = () => {
             start={{ x: 1.0, y: 1.0 }}
             end={{ x: 0.0, y: 0.0 }}
         >
-            <ScrollView 
+            <ScrollView
                 style={{ marginTop: 45 }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             >
-                <Text style={styles.header}>BOTANICAL GARDEN CHARGES</Text>
+                <Text style={styles.header}>BOTANICAL GARDEN TICKETS</Text>
                 <Text style={styles.text}>
                     The Nehru Zoological Park is open to the public from Tuesday to Sunday (6 DAYS) and every Monday is a Zoo holiday. The government has enhanced the tariffs for entry into the Zoo from 10th August 2023 onwards.
                 </Text>
                 <Text style={styles.subHeader}>ENTRY FEE AND OTHER CHARGES</Text>
-                
+
                 {chargesData.map((item, index) => (
                     <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => openModal(item)}>
                         <View style={styles.cardhead}>
@@ -117,16 +117,16 @@ const ChargesList = () => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                       
+
                         {selectedItem && (
                             <View style={styles.modalDetailsContainer}>
-                            
-                            <View style={styles.modaldata}>
-                            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                            <FontAwesomeIcon icon={faTimes} style={styles.closeIcon} />
-                        </TouchableOpacity>
-                                <Text style={styles.modalTitle}>{selectedItem.name}</Text>
-                                
+
+                                <View style={styles.modaldata}>
+                                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                                        <FontAwesomeIcon icon={faTimes} size={25} style={styles.closeIcon} />
+                                    </TouchableOpacity>
+                                    <Text style={styles.modalTitle}>{selectedItem.name}</Text>
+
                                 </View>
                                 <Text style={styles.modalDetails}> {selectedItem.rules_terms}</Text>
                                 {/* Add more details as necessary */}
@@ -247,14 +247,14 @@ const styles = StyleSheet.create({
         width: '80%',
         backgroundColor: 'white',
         borderRadius: 20,
-        
+
         // alignItems: 'center',
     },
     closeButton: {
         alignSelf: 'flex-end',
-        position:"absolute",
-        margin:5,
-        right:10
+        position: "absolute",
+        margin: 5,
+        right: 10
     },
     closeIcon: {
         color: '#fff',
@@ -263,30 +263,30 @@ const styles = StyleSheet.create({
     modalDetailsContainer: {
         // alignItems: 'center',
         // justifyContent:"center"
-      
+
     },
     modalTitle: {
         fontSize: 22,
         fontWeight: 'bold',
         margin: 10,
         color: '#fff',
-        textAlign:'center'
+        textAlign: 'center'
     },
     modalDetails: {
         fontSize: 15,
         color: '#000',
-        fontWeight:'bold',
+        fontWeight: 'bold',
         padding: 10,
 
-        
-       
+
+
     },
-    modaldata:{
-       
-        backgroundColor:'#01595A',
-        borderTopLeftRadius:20,
-        borderTopRightRadius:20
-       
+    modaldata: {
+
+        backgroundColor: '#01595A',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
+
     }
 });
 

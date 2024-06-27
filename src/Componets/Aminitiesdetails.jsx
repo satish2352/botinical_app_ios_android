@@ -216,7 +216,7 @@
 
 
 
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -238,7 +238,7 @@ const Aminitiesdetails = ({ route }) => {
     console.log(about);
 
     useEffect(() => {
-       
+
         const fetchData = async () => {
             const token = await AsyncStorage.getItem('token');
 
@@ -246,9 +246,9 @@ const Aminitiesdetails = ({ route }) => {
 
                 const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
 
-                    amenities_id:data.id,
+                    amenities_id: data.id,
                     language: SelectedLanguage1
-                },{
+                }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -262,7 +262,7 @@ const Aminitiesdetails = ({ route }) => {
         };
         fetchData();
         return () => {
-          
+
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
@@ -271,18 +271,18 @@ const Aminitiesdetails = ({ route }) => {
         setAudioModalVisible(true);
     };
 
-  
+
 
     const openvideoModal = () => {
         setvideoModalVisible(true);
     };
 
-  
 
-   
+
+
     const stripHtmlTags = (str) => {
         if (!str) return '';
-        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
         result = result.replace(/&nbsp;/g, " ");
         result = result.replace(/wikipedia/gi, "");
         return result;
@@ -290,20 +290,43 @@ const Aminitiesdetails = ({ route }) => {
 
 
     return (
+
         <View style={styles.maincontainer}>
+
             <View style={styles.subcontainer1}>
                 <View style={styles.bgImage}>
-                    <Image style={styles.image} source={{uri:about.image}} />
+                    <Image style={styles.image} source={{ uri: about.image }} />
                 </View>
             </View>
+            
             <View style={styles.contentContainer}>
-                <View style={styles.headingwrap}>
-                    <Text style={styles.headtext}>{about.name}</Text>
-                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
-                    <View style={{top:450,alignSelf:'center',position:"absolute",justifyContent:"flex-end"}}>
+                
+                    <View style={styles.headingwrap}>
+                        <Text style={styles.headtext}>{about.name}</Text>
+                        <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
+                        <ScrollView>
+                        <View style={styles.headtext2wrap}>
+                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
+                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
+                            </View>
+                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
+                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
+                            </View>
+
+
+
+                        </View>
+
+                    
+                        </ScrollView>
+                        <View style={{position:'absolute',alignSelf:'center',top:420}} >
                         <View style={styles.buttonview}>
                             <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                            
+
                                 <Text style={styles.buttonText}>Audio</Text>
                                 <Icon name="multitrack-audio" size={24} color="#fff" />
                             </TouchableOpacity>
@@ -313,23 +336,27 @@ const Aminitiesdetails = ({ route }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                    </View>
+                
             </View>
+          
             <View>
-            <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>
+                <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
             </View>
             <VideoModal
-            visible={videoModalVisible}
-            onClose={() => setvideoModalVisible(false)}
-            videoUri={about.video_upload}
-          />
+                visible={videoModalVisible}
+                onClose={() => setvideoModalVisible(false)}
+                videoUri={about.video_upload}
+            />
+
         </View>
+
     );
 };
 
 const styles = StyleSheet.create({
     maincontainer: {
-        flex: 1, 
+        flex: 1,
     },
     bgImage: {
         height: hp(40),
@@ -369,7 +396,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     headingwrap: {
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
         top: 20,
         marginHorizontal: 13,
     },
@@ -433,6 +460,19 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 5,
         paddingHorizontal: 5,
+    },
+    headtext2wrap: {
+        marginVertical: 10,
+        alignItems: "center"
+    },
+    headtext2: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        color: '#000000',
+        padding: 5,
+        color: '#01595A'
+
     },
 });
 

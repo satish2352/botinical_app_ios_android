@@ -17,7 +17,8 @@ const AudioModal = ({data,visible ,onClose}) => {
 
  
     useEffect(() => {
-        const id = data.id
+        const id = data
+        // console.log("000000000000000000000000000000",data.audio_link);
       
         // console.log(id);
         // const fetchData = async () => {
@@ -42,7 +43,6 @@ const AudioModal = ({data,visible ,onClose}) => {
         //     }
         // };
         // fetchData();
-
         if (sound) {
             sound.getCurrentTime((seconds, isPlaying) => {
                 setCurrentTime(seconds);
@@ -60,7 +60,6 @@ const AudioModal = ({data,visible ,onClose}) => {
         };
         
         return () => {
-          
             console.log('Component will unmount');
         };
     }, [sound]);
@@ -83,6 +82,7 @@ const AudioModal = ({data,visible ,onClose}) => {
 
     const playAudio = () => {
         if (!sound) {
+            console.log("0000000666666600",data.audio_link);
             const newSound = new Sound(data.audio_link, '', (error) => {
                 if (error) {
                     console.log('Failed to load the sound', error);

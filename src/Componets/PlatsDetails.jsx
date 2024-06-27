@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity,Modal } from 'react-native'
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
@@ -14,7 +14,7 @@ import VideoModal from './VideoModal';
 const PlatsDetails = ({ route }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
- 
+
     const { SelectedLanguage1 } = globalvariavle();
     const [videoModalVisible, setvideoModalVisible] = useState(false);
     const [treeData, setTreedeatils] = useState([]);
@@ -46,14 +46,14 @@ const PlatsDetails = ({ route }) => {
         };
         fetchData();
         return () => {
-          
+
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
 
 
 
- 
+
 
     const openAudioModal = () => {
         setAudioModalVisible(true);
@@ -65,7 +65,7 @@ const PlatsDetails = ({ route }) => {
 
     const stripHtmlTags = (str) => {
         if (!str) return '';
-        let result= str.replace(/<\/?[^>]+(>|$)/g, "");
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
         result = result.replace(/&nbsp;/g, " ");
         result = result.replace(/wikipedia/gi, "");
         return result;
@@ -88,9 +88,16 @@ const PlatsDetails = ({ route }) => {
                     <Text style={styles.headtext}>{treeData.name}</Text>
                     <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
                     <View style={styles.headtext2wrap}>
-                        <Text style={styles.headtext2}>BOTNICAL NAME-<Text style={{ color: '#000' }}>{treeData.botnical_name}</Text></Text>
-                        <Text style={styles.headtext2}>COMMON NAME-<Text style={{ color: '#000' }}>{treeData.common_name}</Text></Text>
+                        <Text style={styles.headtext2}>BOTNICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{treeData.botnical_name}</Text></Text>
+                        <View style={{flexDirection:"row"}}></View>
+                        <Text style={styles.headtext2}>COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{treeData.common_name}</Text></Text>
+                        <Text style={styles.headtext2}>HIGHT :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{treeData.height}&nbsp;{treeData.height_type}</Text></Text>
+                        <Text style={styles.headtext2}>CANOPY :&nbsp;&nbsp;<Text style={{ color: '#000' ,fontWeight:"400",}}>{treeData.canopy}&nbsp;{treeData.canopy_type}</Text></Text>
+                        <Text style={styles.headtext2}>GIRTH :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{treeData.girth}&nbsp;{treeData.girth_type}</Text></Text>
+                     
                     </View>
+                    
+
                     <View style={styles.buttonview}>
                         <TouchableOpacity style={styles.button} >
 
@@ -102,21 +109,21 @@ const PlatsDetails = ({ route }) => {
                             <Icon name="ondemand-video" size={24} color="#fff" />
                         </TouchableOpacity>
                     </View>
-                </View> 
+                </View>
             </View>
             <View>
-            <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)}/>
+                <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
             </View>
-           
+
             <VideoModal
-            visible={videoModalVisible}
-            onClose={() => setvideoModalVisible(false)}
-            videoUri={treeData.video_upload}
-          />
-          
-          
-            
-     
+                visible={videoModalVisible}
+                onClose={() => setvideoModalVisible(false)}
+                videoUri={treeData.video_upload}
+            />
+
+
+
+
         </View>
     )
 }
@@ -135,9 +142,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffff"
     },
     image: {
-        height: '90%',
+        height: '95%',
         width: '100%',
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         // marginVertical: 50
 
     },
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
 
     },
     headtext2: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         fontFamily: 'Century Gothic',
         color: '#000000',
@@ -224,6 +231,12 @@ const styles = StyleSheet.create({
     headtext2wrap: {
         marginVertical: 10
     },
-    
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: 'black'
+    },
+
 })
 export default PlatsDetails

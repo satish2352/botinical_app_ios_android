@@ -65,7 +65,7 @@ const AddEntity = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.card} onPress={() => viewdetails(item)}>
-            <View><Image source={item.image } style={styles.image} /></View>
+          
             <View style={styles.textwrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
@@ -105,7 +105,7 @@ const AddEntity = ({ navigation }) => {
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.name.toString()}
-                numColumns={2}
+                numColumns={0}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
                       <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
@@ -129,18 +129,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 5,
+        backgroundColor: '#ffff'
     },
     card: {
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        elevation: 3,
-        shadowOffset: { width: 1, height: 1 },
-        shadowColor: '#333',
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
+     
         margin: 8,
-        width: '46%',
+        elevation: 10,
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 5,
+        shadowRadius: 12,
         backgroundColor: '#01595A',
+        borderRadius:10,
+       
     },
     title: {
         fontSize: 18,
@@ -157,10 +158,12 @@ const styles = StyleSheet.create({
     },
     textwrap: {
         alignItems: 'center',
-        backgroundColor: '#01595A',
-        width: '100%',
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
+    
+        // width: '100%',
+       
+    
+       
+       
     },
     text: {
         fontSize: 20,

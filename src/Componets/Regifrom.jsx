@@ -124,6 +124,9 @@ const Regifrom = ({ navigation }) => {
         const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(19|20)\d{2}$/;
         return regex.test(date);
     }
+    const skipregi = () => {
+        navigation.navigate('Home');
+    }
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
@@ -197,7 +200,10 @@ const Regifrom = ({ navigation }) => {
                     <TouchableOpacity style={styles.button} onPress={handleRegistration} >
                         <Text style={styles.buttonText} >SUBMIT </Text>
                     </TouchableOpacity>
-                </View>
+                    <View style={styles.regiline}><Text style={{color:"#ffff"}}> Already have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Login')}>Login</Text></Text></View>
+              
+                    </View>
+                    <Text style={{ fontSize: 15, fontWeight: '500', color: '#ffff', alignSelf: 'flex-end', marginHorizontal: 25, marginBottom:20}} onPress={skipregi}>SKIP FOR NOW</Text>
             </LinearGradient>
         </View>
     )
@@ -283,8 +289,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 2,
         backgroundColor: '#01595A',
-        alignSelf: 'flex-end',
-        marginRight: 25
+        alignSelf: 'center',
+        // marginRight: 25
     },
     buttonText: {
         color: '#ffffff',
@@ -315,6 +321,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginHorizontal: 29
     },
+    regiline: {
+        margin: 5
+        
+    }
 })
 export default Regifrom
 

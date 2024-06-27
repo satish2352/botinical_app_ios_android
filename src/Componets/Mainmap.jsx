@@ -14,6 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 
+import VideoModal from './VideoModal';
+import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import AudioModal from './AudioModal';
 
 const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -99,8 +102,8 @@ const amenities = [
     description: 'Drinking water is essential for maintaining good health and well-being. Clean and safe to consume, it keeps our bodies hydrated, aids in digestion, and helps regulate body temperature. Accessible through various sources like taps, fountains, and bottled options, drinking water is a vital part of our daily routine, ensuring we stay refreshed and energized.',
     image: require('../Assets/amenities/drinkingwater.png')
   },
-  
-  
+
+
 ];
 
 
@@ -113,7 +116,13 @@ const renderItem = ({ item, index }) => {
 };
 
 
-
+const stripHtmlTags = (str) => {
+  if (!str) return '';
+  let result = str.replace(/<\/?[^>]+(>|$)/g, "");
+  result = result.replace(/&nbsp;/g, " ");
+  result = result.replace(/wikipedia/gi, "");
+  return result;
+}
 
 const Mainmap = () => {
   const [selectedAmenity, setSelectedAmenity] = useState(null);
@@ -128,12 +137,17 @@ const Mainmap = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const { SelectedLanguage1 } = globalvariavle();
+  const [audioModalVisible, setAudioModalVisible] = useState(false);
+  const [videoModalVisible, setvideoModalVisible] = useState(false);
+  const [audiovideodata, setaudiovideodata] = useState([]);
+  console.log("!!!!!!!!!!!!!!!!!!!!",audiovideodata);
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width / screen.height;
   const LATITUDE_DELTA = 0.01;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const markerRef = useRef()
-
+  console.log("55555555555555555555555555555",amenities);
+  // console.log("77777777777777777777",directionsDestination);
   const [state, setState] = useState({
 
     coordinateanimated: new AnimatedRegion({
@@ -159,7 +173,7 @@ const Mainmap = () => {
     { image: require('../Assets/s1.jpg') },
     { image: require('../Assets/s2.jpg') },
     { image: require('../Assets/s3.jpg') },
-  
+
   ];
 
   const requestlocationPermission = async () => {
@@ -216,22 +230,22 @@ const Mainmap = () => {
     const token = await AsyncStorage.getItem('token');
     setLoading(true);
     try {
-        const response = await axios.post(`${config.API_URL}auth/get-map-data`, {
-            language: SelectedLanguage1,
-            start
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        setamenities(response.data.Data);
-        console.log(response.data.Data);
-        setTotalPages(response.data.totalPages);
+      const response = await axios.post(`${config.API_URL}auth/get-map-data`, {
+        language: SelectedLanguage1,
+        start
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setamenities(response.data.data);
+ 
+      setTotalPages(response.data.totalPages);
     } catch (error) {
-        console.error('Error fetching map data:', error);
+      console.error('Error fetching map data:', error);
     } finally {
-        setLoading(false);
-        setRefreshing(false);
+      setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -243,7 +257,7 @@ const Mainmap = () => {
   }, []);
   useEffect(() => {
     fetchData();
-}, [start]);
+  }, [start]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -270,6 +284,7 @@ const Mainmap = () => {
   };
   const handleMarkerPress = (amenity) => {
     setSelectedAmenity(amenity);
+    setaudiovideodata(amenity)
     setShowDirections(false);
   };
 
@@ -279,6 +294,7 @@ const Mainmap = () => {
   };
   const handleDirectionPress = () => {
     if (selectedAmenity) {
+      
       setDirectionsDestination({
         latitude: parseFloat(selectedAmenity.latitude),
         longitude: parseFloat(selectedAmenity.longitude),
@@ -309,6 +325,14 @@ const Mainmap = () => {
   //     longitudeDelta: 0.004
   //   })
   // }
+  
+  const openAudioModal = () => {
+    setAudioModalVisible(true);
+};
+
+const openvideoModal = () => {
+    setvideoModalVisible(true);
+};
   return (
     <View style={styles.container}>
       <MapView
@@ -333,10 +357,10 @@ const Mainmap = () => {
           strokeColor="rgba(0,0,0,0.5)"
           strokeWidth={2}
         />
-        {amenities.map((amenity,index) => (
-          
+        {amenities.map((amenity, index) => (
+         
           <Marker
-          
+
             key={index}
             // coordinate={amenity.coordinate}
             coordinate={{
@@ -347,20 +371,21 @@ const Mainmap = () => {
 
             onPress={() => handleMarkerPress(amenity)}
           >
-          
-            <Image style={{ height: 50, width: 50 }} source={{ uri: amenity.image}} />
+
+            <Image style={{ height: 50, width: 50 }} source={{ uri: amenity.icon_image }} />
+            
           </Marker>
-          
-        ))}
+         
+        ) )}
         {userLocation && (
           <Marker.Animated
             ref={markerRef}
             coordinate={coordinateanimated}
             title="User Location"
             pinColor="red"
-            
+
           />
-        )} 
+        )}
         {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
@@ -390,7 +415,7 @@ const Mainmap = () => {
             }}
           />
         )}
-     
+
       </MapView>
       {/*<TouchableOpacity
       style={{
@@ -405,7 +430,7 @@ const Mainmap = () => {
     >
       <Text style={{color:'#fff'}}>Re-Center</Text>
     </TouchableOpacity>*/}
-      
+
       {selectedAmenity && (
         <Modal
           animationType="slide"
@@ -415,27 +440,10 @@ const Mainmap = () => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <View style={styles.carouselwrap}>
-                <Carousel
-                  data={carouselData}
-                  renderItem={renderItem}
-                  sliderWidth={wp(100)}
-                  autoplay={true}
-                  itemWidth={wp(90)} // Set item width to full width
-                  onSnapToItem={(index) => setActiveIndex(index)}
-                  autoplayInterval={5000}
-                  loop={true}
-                />
-                <View style={styles.paginationContainer}>
-                  <Pagination
-                    dotsLength={carouselData.length}
-                    activeDotIndex={activeIndex}
-                    dotStyle={styles.paginationDot}
-                    inactiveDotStyle={styles.paginationInactiveDot}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.6}
-                  />
-                </View>
+              <View style={styles.bgImage}
+              >
+
+                <Image style={styles.image1} source={{ uri: selectedAmenity.image }} />
               </View>
               <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
                 <Icon name="close" size={34} color="#01595A" />
@@ -443,11 +451,36 @@ const Mainmap = () => {
               <ScrollView>
 
                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-                  <Text style={styles.title}>{selectedAmenity.title}</Text>
+                  <Text style={styles.title}>{selectedAmenity.name}</Text>
                   <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
                 </View>
-                <Text style={styles.description}>{selectedAmenity.description}</Text>
+                <Text style={styles.description}> {stripHtmlTags(selectedAmenity.description)}</Text>
+                <View >  
+                <Text style={styles.headtext2}>COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{selectedAmenity.common_name}</Text></Text>
+                <Text style={styles.headtext2}>HIGHT :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{selectedAmenity.height}&nbsp;{selectedAmenity.height_type}</Text></Text>
+                <Text style={styles.headtext2}>CANOPY :&nbsp;&nbsp;<Text style={{ color: '#000' ,fontWeight:"400",}}>{selectedAmenity.canopy}&nbsp;{selectedAmenity.canopy_type}</Text></Text>
+                <Text style={styles.headtext2}>GIRTH :&nbsp;&nbsp;<Text style={{ color: '#000',fontWeight:"400", }}>{selectedAmenity.girth}&nbsp;{selectedAmenity.girth_type}</Text></Text>
+                </View>
+                <View style={styles.buttonview}>
+                <TouchableOpacity style={styles.button} >
 
+                    <Text style={styles.buttonText} onPress={openAudioModal}>Audio</Text>
+                    <Icon1 name="multitrack-audio" size={24} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText} onPress={openvideoModal}>Video</Text>
+                    <Icon1 name="ondemand-video" size={24} color="#fff" />
+                </TouchableOpacity>
+                <View>
+                <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+            </View>
+
+            <VideoModal
+                visible={videoModalVisible}
+                onClose={() => setvideoModalVisible(false)}
+                videoUri={audiovideodata.video_upload}
+            />
+            </View>
               </ScrollView>
               {/* Add buttons to select transportation mode */}
               <View style={styles.transportModeContainer}>
@@ -503,7 +536,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '70%',
     borderTopLeftRadius: 40,
-    borderTopRightRadius: 40
+    borderTopRightRadius: 40,
+
   },
   title: {
     fontSize: 24,
@@ -600,11 +634,88 @@ const styles = StyleSheet.create({
     backgroundColor: '#01595A',
     color: '#fff',
   },
+  bgImage: {
+    height: hp(40),
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#ffff",
+    // backgroundColor: "black"
 
+  },
+  image1: {
+    height: '70%',
+    width: '95%',
+    resizeMode: 'cover',
+    marginVertical: 20,
+    borderRadius: 10,
+    backgroundColor: "red"
+
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: '500',
+    margin: 10
+},
+button: {
+  width: '40%',
+  height: 45,
+  borderRadius: 40,
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'row',
+  backgroundColor: '#01595A',
+  margin: 10,
+
+},
+buttonview: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  marginVertical: 20,
+  alignSelf: 'center'
+},
+headtext2: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  fontFamily: 'Century Gothic',
+  color: '#000000',
+  padding: 5,
+  color: '#01595A'
+
+},
 
 });
 
 export default Mainmap;
+
+
+
+
+
+
+// <View style={styles.carouselwrap}>
+// <Carousel
+//   data={carouselData}
+//   renderItem={renderItem}
+//   sliderWidth={wp(100)}
+//   autoplay={true}
+//   itemWidth={wp(90)} // Set item width to full width
+//   onSnapToItem={(index) => setActiveIndex(index)}
+//   autoplayInterval={5000}
+//   loop={true}
+// />
+// <View style={styles.paginationContainer}>
+//   <Pagination
+//     dotsLength={carouselData.length}
+//     activeDotIndex={activeIndex}
+//     dotStyle={styles.paginationDot}
+//     inactiveDotStyle={styles.paginationInactiveDot}
+//     inactiveDotOpacity={0.4}
+//     inactiveDotScale={0.6}
+//   />
+// </View>
+// </View>
 
 
 

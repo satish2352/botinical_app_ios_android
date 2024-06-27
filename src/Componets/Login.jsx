@@ -242,6 +242,7 @@ const Login = ({ navigation }) => {
                                 <Text style={styles.buttonText}>Log In</Text>
                             )}
                         </TouchableOpacity>
+                        <View style={styles.regiline}><Text style={{color:'black'}}> Dont have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Regifrom')}>Register now</Text></Text></View>
                     </View>
                 </ImageBackground>
             </View>
@@ -316,6 +317,9 @@ const styles = StyleSheet.create({
     error: {
         color: 'red',
     },
+    regiline: {
+        margin: 8
+    }
 });
 
 export default Login;
