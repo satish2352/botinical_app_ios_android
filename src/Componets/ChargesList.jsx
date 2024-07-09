@@ -85,7 +85,7 @@ const ChargesList = () => {
             >
                 <Text style={styles.header}>BOTANICAL GARDEN TICKETS</Text>
                 <Text style={styles.text}>
-                    The Nehru Zoological Park is open to the public from Tuesday to Sunday (6 DAYS) and every Monday is a Zoo holiday. The government has enhanced the tariffs for entry into the Zoo from 10th August 2023 onwards.
+                Botanical Garden of Hyderabad is also one of the interesting sightseeing places in Hyderabad offering a refreshing setting and rich flora. Having been developed by the Forest Departments, Botanical Garden is situated in Madhapur near the Hi-tech City which is almost 16 km away from centre of the city.
                 </Text>
                 <Text style={styles.subHeader}>ENTRY FEE AND OTHER CHARGES</Text>
 

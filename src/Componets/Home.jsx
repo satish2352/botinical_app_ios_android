@@ -266,33 +266,76 @@
 
 // export default Home;
 
-import React, { useState } from 'react';
-import { StyleSheet, View, Image, StatusBar, Text, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Image, StatusBar, Text, TouchableWithoutFeedback, Dimensions, ScrollView } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import axios from 'axios';
+import config from '../../config/config';
 
 const Home = () => {
     const [isModalVisible, setModalVisible] = useState(true);
+    const [homedata, sethomedatadeatils] = useState([]);
+    const { SelectedLanguage1 } = globalvariavle();
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = await AsyncStorage.getItem('token');
+    
+            axios.post(
+                `${config.API_URL}auth/get-home-data`,
+                {
+                    language: SelectedLanguage1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            .then(response => {
+                sethomedatadeatils(response.data.data[0]);
+            })
+            .catch(error => {
+                console.error('Error fetching tree data:', error);
+            });
+        };
+    
+        fetchData();
+        return () => {
+            console.log('Component will unmount');
+        };
+    }, [SelectedLanguage1]);
+    
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result = str.replace(/<\/?[^>]+(>|$)/g, '');
+        result = result.replace(/&nbsp;/g, ' ');
+        result = result.replace(/wikipedia/gi, '');
+        return result;
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-            
+
             <TouchableWithoutFeedback onPress={toggleModal}>
                 <View style={styles.zoomContainer}>
                     <ImageZoom
-                        cropWidth={Dimensions.get('window').width}
-                        cropHeight={Dimensions.get('window').height}
-                        imageWidth={Dimensions.get('window').width}
-                        imageHeight={Dimensions.get('window').height}
+                    cropWidth={Dimensions.get('window').width}
+                    cropHeight={Dimensions.get('window').height}
+                    imageWidth={Dimensions.get('window').width}
+                    imageHeight={Dimensions.get('window').height}
                     >
                         <Image
                             style={styles.image}
-                            source={require('../Assets/a2.png')}
+                            source={{ uri: homedata.image }}
                         />
                     </ImageZoom>
                 </View>
@@ -309,24 +352,25 @@ const Home = () => {
                 <TouchableWithoutFeedback onPress={toggleModal}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHandle} />
-                        <Text style={styles.modalTitle}>Botanical Garden</Text>
-                        {isModalVisible && (
-                            <View>
-                                <Text style={{color:'black'}}>
-                                The garden is spread over 274 acres (1.11 km2) of undulating land and have (4) sectors viz., Aesthetic zone, Conservation zone, Virtual Safari and Pala Pitta Cycling Park which consists of (50) Theme Parks, (7) Eco-Systems and (18) Forest Types.
-                                </Text>
-                            </View>
-                        )}
+                        <Text style={styles.modalTitle}>{homedata.name}</Text>
+                        <ScrollView>
+                            {isModalVisible && (
+                                <View>
+                                    <Text style={{ color: 'black', textAlign: 'justify' }}>
+                                        {stripHtmlTags(homedata.description)}
+                                    </Text>
+                                </View>
+                            )}
+                        </ScrollView>
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
 
             {!isModalVisible && (
                 <TouchableWithoutFeedback onPress={toggleModal}>
-                
                     <View style={styles.bottomTitleContainer}>
-                    <View style={styles.modalHandle} />
-                        <Text style={styles.modalTitle}>Botanical Garden</Text>
+                        <View style={styles.modalHandle} />
+                        <Text style={styles.modalTitle}>{homedata.name}</Text>
                     </View>
                 </TouchableWithoutFeedback>
             )}
@@ -341,9 +385,13 @@ const styles = StyleSheet.create({
     zoomContainer: {
         flex: 1,
     },
+    imageZoom: {
+        flex: 1,
+    },
     image: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
+        // resizeMode: 'cover',
     },
     modal: {
         justifyContent: 'flex-end',
@@ -362,13 +410,12 @@ const styles = StyleSheet.create({
         borderRadius: 2.5,
         alignSelf: 'center',
         marginBottom: 10,
-        bottom:10
-       
+        bottom: 10
     },
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color:"black"
+        color: 'black',
     },
     bottomTitleContainer: {
         position: 'absolute',
@@ -380,8 +427,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 10,  // Add shadow for better visibility
-        
+        elevation: 10,
     },
 });
 

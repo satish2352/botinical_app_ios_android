@@ -52,7 +52,7 @@ const OtpScreen = ({ navigation, route }) => {
                 const id = response.data.data.id;
                 console.log('User ID:', id);
                 setid(id);
-                navigation.navigate('Registration');
+                navigation.navigate('Home');
                 setOtp(['', '', '', '']);
             } else {
                 console.error('OTP Verification Error:', response.data.message);

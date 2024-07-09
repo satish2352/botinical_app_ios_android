@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Treecompo from '../src/Componets/Treecompo';
 import PlatsDetails from '../src/Componets/PlatsDetails';
 import Langchange from '../src/Componets/Langchange';
+import Mainmap from '../src/Componets/Mainmap';
 
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,7 @@ function Treesstack() {
         >
             <Stack.Screen name="Treecompo" component={Treecompo} />
             <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
+            <Stack.Screen name="Mainmap" component={Mainmap} />
 
         </Stack.Navigator>
 

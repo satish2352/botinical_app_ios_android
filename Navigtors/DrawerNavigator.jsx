@@ -5,7 +5,7 @@ import HomeStackNavigation from './HomeStackNavigation';
 import AboutStack from './AboutStack';
 import Aminitiesstack from './Aminitiesstack';
 import Treesstack from './Treesstack';
-import flowersstack from './flowersstack';
+
 import Chargesstack from './Chargesstack';
 import Gardenmapstacks from './Gardenmapstacks';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,6 +17,7 @@ import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
 import AddEntityStack from './AddEntityStack';
+import Flowersstack from './Flowersstack';
 
 const Drawer = createDrawerNavigator();
 
@@ -65,7 +66,7 @@ function DrawerNavigator() {
         name="AboutStack"
         component={AboutStack}
         options={{
-          title: 'About',
+          title: 'About Us',
           drawerIcon: ({ focused, size }) => (
             <Icon name="information-circle" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -92,8 +93,8 @@ function DrawerNavigator() {
       }}
     />
     <Drawer.Screen
-    name="flowersstack"
-    component={flowersstack}
+    name="Flowersstack"
+    component={Flowersstack}
     options={{
       title: 'Plants',
       drawerIcon: ({ focused, size }) => (

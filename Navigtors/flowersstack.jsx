@@ -9,10 +9,11 @@ import Treecompo from '../src/Componets/Treecompo';
 import PlatsDetails from '../src/Componets/PlatsDetails';
 import Flowers from '../src/Componets/Flowers';
 import Langchange from '../src/Componets/Langchange';
+import Mainmap from '../src/Componets/Mainmap';
 
 
 const Stack = createNativeStackNavigator();
-function flowersstack() {
+function Flowersstack() {
     const navigation = useNavigation();
     return (
 
@@ -45,10 +46,11 @@ function flowersstack() {
         >
             <Stack.Screen name="Flowers" component={Flowers} />
             <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
+            <Stack.Screen name="Mainmap" component={Mainmap} />
 
         </Stack.Navigator>
 
     );
 }
 
-export default flowersstack;
+export default Flowersstack;

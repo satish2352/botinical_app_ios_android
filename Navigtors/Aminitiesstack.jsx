@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Amenities from '../src/Componets/Amenities';
 import Aminitiesdetails from '../src/Componets/Aminitiesdetails';
 import Langchange from '../src/Componets/Langchange';
+import Mainmap from '../src/Componets/Mainmap';
 
 const Stack = createNativeStackNavigator();
 function Aminitiesstack() {
@@ -43,6 +44,7 @@ function Aminitiesstack() {
         >
             <Stack.Screen name="Amenities" component={Amenities} />
             <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
+            <Stack.Screen name="Mainmap" component={Mainmap} />
 
         </Stack.Navigator>
 

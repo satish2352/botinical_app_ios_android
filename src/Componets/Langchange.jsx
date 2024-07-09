@@ -132,7 +132,7 @@ const Langchange = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity style={styles.languageOption} onPress={() => handleLanguageChange('hindi')}>
-              <Text style={styles.languageText}>Hindi</Text>
+              <Text style={styles.languageText}>తెలుగు</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.languageOption} onPress={() => handleLanguageChange('english')}>
               <Text style={styles.languageText}>English</Text>

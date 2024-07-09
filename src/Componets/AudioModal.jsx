@@ -1,97 +1,48 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View ,Modal,TouchableOpacity,Text} from 'react-native';
-import config from '../../config/config';
-import Slider from "@react-native-community/slider";
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Modal, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
-const AudioModal = ({data,visible ,onClose}) => { 
-    
-   
-    const [sound, setSound] = useState(null);
+
+const AudioModal = ({ data, visible, onClose }) => {
+    const [loading, setLoading] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [sliderValue, setSliderValue] = useState(0);
+    const soundRef = useRef(null);
 
- 
     useEffect(() => {
-        const id = data
-        // console.log("000000000000000000000000000000",data.audio_link);
-      
-        // console.log(id);
-        // const fetchData = async () => {
-        //     const token = await AsyncStorage.getItem('token');
-
-        //     try {
-
-        //         const response = await axios.post(`${config.API_URL}auth/get-tress-list`,
-        //             {
-        //                 tress_id: id
-        //             },
-        //             {
-        //                 headers: {
-        //                     Authorization: `Bearer ${token}`
-        //                 }
-        //             });
-
-        //         setTreedeatils(response.data.data);
-
-        //     } catch (error) {
-        //         console.error('Error fetching tree data:', error);
-        //     }
-        // };
-        // fetchData();
-        if (sound) {
-            sound.getCurrentTime((seconds, isPlaying) => {
-                setCurrentTime(seconds);
-                setIsPlaying(isPlaying);
-                setSliderValue(seconds);
-            });
-            const timer = setInterval(() => {
-                sound.getCurrentTime((seconds, isPlaying) => {
-                    setCurrentTime(seconds);
-                    setIsPlaying(isPlaying);
-                    setSliderValue(seconds);
-                });
-            }, 1000);
-            return () => clearInterval(timer);
-        };
-        
         return () => {
-            console.log('Component will unmount');
+            if (soundRef.current) {
+                soundRef.current.release();
+                soundRef.current = null;
+            }
         };
-    }, [sound]);
-
-
-
- 
-
-    const openAudioModal = () => {
-        setAudioModalVisible(true);
-    };
+    }, []);
 
     const closeAudioModal = () => {
-        if (sound) {
-            sound.stop(); // Stop the audio when closing the modal
+        if (soundRef.current) {
+            soundRef.current.stop();
+            soundRef.current.release();
+            soundRef.current = null;
+            setIsPlaying(false);
         }
-        // setAudioModalVisible(false);
-        onClose()
+        onClose();
     };
 
     const playAudio = () => {
-        if (!sound) {
-            console.log("0000000666666600",data.audio_link);
+        setLoading(true);
+        if (!soundRef.current) {
             const newSound = new Sound(data.audio_link, '', (error) => {
+                setLoading(false);
                 if (error) {
                     console.log('Failed to load the sound', error);
                     return;
                 }
-                setSound(newSound);
+                soundRef.current = newSound;
                 newSound.play(() => {
-                    newSound.release(); // Release the audio player resource when finished playing
-                    setSound(null);
+                    newSound.release();
+                    soundRef.current = null;
                     setIsPlaying(false);
                 });
                 setIsPlaying(true);
@@ -102,116 +53,110 @@ const AudioModal = ({data,visible ,onClose}) => {
                 });
             });
         } else {
-            sound.play(() => setIsPlaying(true));
+            soundRef.current.play(() => setIsPlaying(true));
         }
     };
 
     const pauseAudio = () => {
-        if (sound) {
-            sound.pause(() => setIsPlaying(false));
+        if (soundRef.current) {
+            soundRef.current.pause(() => setIsPlaying(false));
         }
     };
 
     const seekForward = () => {
-        if (sound) {
-            sound.getCurrentTime((seconds) => {
-                sound.setCurrentTime(seconds + 5);
+        if (soundRef.current) {
+            soundRef.current.getCurrentTime((seconds) => {
+                soundRef.current.setCurrentTime(seconds + 5);
             });
         }
     };
 
     const seekBackward = () => {
-        if (sound) {
-            sound.getCurrentTime((seconds) => {
-                sound.setCurrentTime(seconds - 5);
+        if (soundRef.current) {
+            soundRef.current.getCurrentTime((seconds) => {
+                soundRef.current.setCurrentTime(seconds - 5);
             });
         }
     };
 
     const onSliderValueChange = (value) => {
         setSliderValue(value);
-        if (sound) {
-            sound.setCurrentTime(value);
+        if (soundRef.current) {
+            soundRef.current.setCurrentTime(value);
             setCurrentTime(value);
         }
     };
 
-    return (
-        <View style={styles.maincontainer}>
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={visible}
-        onRequestClose={() => onClose()}
-    >
-        <View style={styles.centeredView}>
-            <View style={styles.modalView}>
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (soundRef.current) {
+                soundRef.current.getCurrentTime((seconds, isPlaying) => {
+                    setCurrentTime(seconds);
+                    setIsPlaying(isPlaying);
+                    setSliderValue(seconds);
+                });
+            }
+        }, 1000);
 
-           
-                <View style={styles.controls}>
-                    <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
-                        <Icon name="replay-5" size={30} color="#01595A" />
-                    </TouchableOpacity>
-                    {isPlaying ? (
-                        <TouchableOpacity style={styles.controlButton1} onPress={pauseAudio}>
-                            <Icon name="pause" size={30} color="#fff" />
-                        </TouchableOpacity>
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={visible}
+            onRequestClose={closeAudioModal}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#01595A" />
                     ) : (
-                        <TouchableOpacity style={styles.controlButton1} onPress={playAudio}>
-                            <Icon name="play-arrow" size={30} color="#fff" />
-                        </TouchableOpacity>
+                        <View>
+                            <View style={styles.controls}>
+                                <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
+                                    <Icon name="replay-5" size={30} color="#01595A" />
+                                </TouchableOpacity>
+                                {isPlaying ? (
+                                    <TouchableOpacity style={styles.controlButton1} onPress={pauseAudio}>
+                                        <Icon name="pause" size={30} color="#fff" />
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity style={styles.controlButton1} onPress={playAudio}>
+                                        <Icon name="play-arrow" size={30} color="#fff" />
+                                    </TouchableOpacity>
+                                )}
+                                <TouchableOpacity style={styles.controlButton} onPress={seekForward}>
+                                    <Icon name="forward-5" size={30} color="#01595A" />
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity style={styles.modalButton} onPress={closeAudioModal}>
+                                <Text style={styles.modalButtonText}>
+                                    <Icon name="close" size={30} color="#01595A" />
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     )}
-                    <TouchableOpacity style={styles.controlButton} onPress={seekForward}>
-                        <Icon name="forward-5" size={30} color="#01595A" />
-                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.modalButton} onPress={closeAudioModal}>
-                    <Text style={styles.modalButtonText}><Icon name="close" size={30} color="#01595A" /></Text>
-                </TouchableOpacity>
             </View>
-        </View>
-    </Modal>
-        </View>
+        </Modal>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    maincontainer: {
-        flex: 1,
-
-
-    },
     centeredView: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        backgroundColor: "white",
+        backgroundColor: 'white',
         borderRadius: 20,
         padding: 15,
-        alignItems: "center",
+        alignItems: 'center',
         elevation: 5,
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center",
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
-    modalButton: {
-        marginTop: 10,
-        // backgroundColor: "#01595A",
-        borderRadius: 50,
-        paddingVertical: 5,
-        paddingHorizontal: 5,
-    },
-    modalButtonText: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 16,
     },
     controls: {
         flexDirection: 'row',
@@ -223,15 +168,239 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     controlButton1: {
-        // marginTop: 20,
-        backgroundColor: "#01595A",
+        backgroundColor: '#01595A',
         borderRadius: 50,
         paddingVertical: 5,
         paddingHorizontal: 5,
     },
-})
+    modalButton: {
+        marginTop: 10,
+        borderRadius: 50,
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+    },
+    modalButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 16,
+    },
+});
 
 export default AudioModal;
+
+
+
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import axios from 'axios';
+// import React, { useEffect, useState } from 'react';
+// import { StyleSheet, View ,Modal,TouchableOpacity,Text} from 'react-native';
+// import config from '../../config/config';
+// import Slider from "@react-native-community/slider";
+// import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Sound from 'react-native-sound';
+// const AudioModal = ({data,visible ,onClose}) => { 
+    
+   
+//     const [sound, setSound] = useState(null);
+//     const [isPlaying, setIsPlaying] = useState(false);
+//     const [duration, setDuration] = useState(0);
+//     const [currentTime, setCurrentTime] = useState(0);
+//     const [sliderValue, setSliderValue] = useState(0);
+
+ 
+//     useEffect(() => {
+//         const id = data
+       
+//         if (sound) {
+//             sound.getCurrentTime((seconds, isPlaying) => {
+//                 setCurrentTime(seconds);
+//                 setIsPlaying(isPlaying);
+//                 setSliderValue(seconds);
+//             });
+//             const timer = setInterval(() => {
+//                 sound.getCurrentTime((seconds, isPlaying) => {
+//                     setCurrentTime(seconds);
+//                     setIsPlaying(isPlaying);
+//                     setSliderValue(seconds);
+//                 });
+//             }, 1000);
+//             return () => clearInterval(timer);
+//         };
+        
+//         return () => {
+//             console.log('Component will unmount');
+//         };
+//     }, [sound]);
+
+
+
+ 
+
+//     const openAudioModal = () => {
+//         setAudioModalVisible(true);
+//     };
+
+//     const closeAudioModal = () => {
+//         if (sound) {
+//             sound.stop(); // Stop the audio when closing the modal
+//         }
+//         // setAudioModalVisible(false);
+//         onClose()
+//     };
+
+//     const playAudio = () => {
+//         if (!sound) {
+//             console.log("0000000666666600",data.audio_link);
+//             const newSound = new Sound(data.audio_link, '', (error) => {
+//                 if (error) {
+//                     console.log('Failed to load the sound', error);
+//                     return;
+//                 }
+//                 setSound(newSound);
+//                 newSound.play(() => {
+//                     newSound.release(); // Release the audio player resource when finished playing
+//                     setSound(null);
+//                     setIsPlaying(false);
+//                 });
+//                 setIsPlaying(true);
+//                 newSound.setVolume(1);
+//                 newSound.setNumberOfLoops(-1); // Loop indefinitely
+//                 newSound.getCurrentTime((seconds) => {
+//                     setDuration(seconds);
+//                 });
+//             });
+//         } else {
+//             sound.play(() => setIsPlaying(true));
+//         }
+//     };
+
+//     const pauseAudio = () => {
+//         if (sound) {
+//             sound.pause(() => setIsPlaying(false));
+//         }
+//     };
+
+//     const seekForward = () => {
+//         if (sound) {
+//             sound.getCurrentTime((seconds) => {
+//                 sound.setCurrentTime(seconds + 5);
+//             });
+//         }
+//     };
+
+//     const seekBackward = () => {
+//         if (sound) {
+//             sound.getCurrentTime((seconds) => {
+//                 sound.setCurrentTime(seconds - 5);
+//             });
+//         }
+//     };
+
+//     const onSliderValueChange = (value) => {
+//         setSliderValue(value);
+//         if (sound) {
+//             sound.setCurrentTime(value);
+//             setCurrentTime(value);
+//         }
+//     };
+
+//     return (
+//         <View style={styles.maincontainer}>
+//         <Modal
+//         animationType="slide"
+//         transparent={true}
+//         visible={visible}
+//         onRequestClose={() => onClose()}
+//     >
+//         <View style={styles.centeredView}>
+//             <View style={styles.modalView}>
+
+           
+//                 <View style={styles.controls}>
+//                     <TouchableOpacity style={styles.controlButton} onPress={seekBackward}>
+//                         <Icon name="replay-5" size={30} color="#01595A" />
+//                     </TouchableOpacity>
+//                     {isPlaying ? (
+//                         <TouchableOpacity style={styles.controlButton1} onPress={pauseAudio}>
+//                             <Icon name="pause" size={30} color="#fff" />
+//                         </TouchableOpacity>
+//                     ) : (
+//                         <TouchableOpacity style={styles.controlButton1} onPress={playAudio}>
+//                             <Icon name="play-arrow" size={30} color="#fff" />
+//                         </TouchableOpacity>
+//                     )}
+//                     <TouchableOpacity style={styles.controlButton} onPress={seekForward}>
+//                         <Icon name="forward-5" size={30} color="#01595A" />
+//                     </TouchableOpacity>
+//                 </View>
+//                 <TouchableOpacity style={styles.modalButton} onPress={closeAudioModal}>
+//                     <Text style={styles.modalButtonText}><Icon name="close" size={30} color="#01595A" /></Text>
+//                 </TouchableOpacity>
+//             </View>
+//         </View>
+//     </Modal>
+//         </View>
+//     );
+// }
+
+// const styles = StyleSheet.create({
+//     maincontainer: {
+//         flex: 1,
+
+
+//     },
+//     centeredView: {
+//         flex: 1,
+//         justifyContent: "center",
+//         alignItems: "center",
+//         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//     },
+//     modalView: {
+//         backgroundColor: "white",
+//         borderRadius: 20,
+//         padding: 15,
+//         alignItems: "center",
+//         elevation: 5,
+//     },
+//     modalText: {
+//         marginBottom: 15,
+//         textAlign: "center",
+//         fontWeight: 'bold',
+//         fontSize: 20,
+//     },
+//     modalButton: {
+//         marginTop: 10,
+//         // backgroundColor: "#01595A",
+//         borderRadius: 50,
+//         paddingVertical: 5,
+//         paddingHorizontal: 5,
+//     },
+//     modalButtonText: {
+//         color: "white",
+//         fontWeight: "bold",
+//         textAlign: "center",
+//         fontSize: 16,
+//     },
+//     controls: {
+//         flexDirection: 'row',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         marginTop: 20,
+//     },
+//     controlButton: {
+//         marginHorizontal: 20,
+//     },
+//     controlButton1: {
+//         // marginTop: 20,
+//         backgroundColor: "#01595A",
+//         borderRadius: 50,
+//         paddingVertical: 5,
+//         paddingHorizontal: 5,
+//     },
+// })
+
+// export default AudioModal;
 
 
 

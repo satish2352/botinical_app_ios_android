@@ -216,7 +216,9 @@ const Login = ({ navigation }) => {
             setLoading(false); // Stop loading
         }
     };
-
+    const skipregi = () => {
+        navigation.navigate('Home');
+    }
     return (
         <View style={styles.maincontainer}>
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>
@@ -244,6 +246,7 @@ const Login = ({ navigation }) => {
                         </TouchableOpacity>
                         <View style={styles.regiline}><Text style={{color:'black'}}> Dont have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Regifrom')}>Register now</Text></Text></View>
                     </View>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#01595A', alignSelf: 'flex-end', marginHorizontal: 25}} onPress={skipregi}>SKIP FOR NOW</Text>
                 </ImageBackground>
             </View>
         </View>

@@ -79,7 +79,7 @@ const Flowers = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>PLATS</Text>
+                <Text style={styles.text}>PLANTS</Text>
             </LinearGradient>
             <FlatList
                 data={flowerData}

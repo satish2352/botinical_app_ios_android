@@ -123,10 +123,66 @@ const About = () => {
                     {stripHtmlTags(cardData1.description)}
                     </Text>
                 </View>
-             
+                {
+                    cardData.map((item, index) => {
+                
+                
+                        if (index % 2 === 0) {
+                
+                            return (
+                                <View>
+                                    <View style={styles.cardwrap}>
+                
+                                        <View style={styles.cardhead}>
+                                            <Image
+                                                source={{ uri: item.image }} // Replace with your image source
+                                                style={styles.image2}
+                                            />
+                                        </View>
+                                        <View style={styles.cardtext}>
+                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
+                                        </View>
+                
+                                    </View>
+                                    <Text style={styles.header2}>{item.name}</Text>
+                                </View>
+                            )
+                        }
+                        else {
+                            return (
+                                <View>
+                                    <View style={styles.cardwrap}>
+                
+                
+                                        <View style={styles.cardtext}>
+                                            <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
+                                        </View>
+                                        <View style={styles.cardhead1}>
+                                            <Image
+                                                source={{ uri: item.image }} // Replace with your image source
+                                                style={styles.image3}
+                                            />
+                                        </View>
+                                    </View>
+                                    <Text style={styles.header3}>{item.name}</Text></View>
+                            )
+                        }
+                
+                
+                    })
+                }
+               
 
             </ScrollView>
-          
+            {loading && <ActivityIndicator size="large" color="#01595A" />}
+            {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+            <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+            <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+            <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+            </TouchableOpacity>
         </LinearGradient>
     );
 };
@@ -288,60 +344,3 @@ export default About;
 
 
 
-// {
-//     cardData.map((item, index) => {
-
-
-//         if (index % 2 === 0) {
-
-//             return (
-//                 <View>
-//                     <View style={styles.cardwrap}>
-
-//                         <View style={styles.cardhead}>
-//                             <Image
-//                                 source={{ uri: item.image }} // Replace with your image source
-//                                 style={styles.image2}
-//                             />
-//                         </View>
-//                         <View style={styles.cardtext}>
-//                             <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
-//                         </View>
-
-//                     </View>
-//                     <Text style={styles.header2}>{item.name}</Text>
-//                 </View>
-//             )
-//         }
-//         else {
-//             return (
-//                 <View>
-//                     <View style={styles.cardwrap}>
-
-
-//                         <View style={styles.cardtext}>
-//                             <Text style={styles.text2} numberOfLines={7} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
-//                         </View>
-//                         <View style={styles.cardhead1}>
-//                             <Image
-//                                 source={{ uri: item.image }} // Replace with your image source
-//                                 style={styles.image3}
-//                             />
-//                         </View>
-//                     </View>
-//                     <Text style={styles.header3}>{item.name}</Text></View>
-//             )
-//         }
-
-
-//     })
-// }
-// {loading && <ActivityIndicator size="large" color="#01595A" />}
-// {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-// <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
-// <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-// <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-// </TouchableOpacity>
-// <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-// <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-// </TouchableOpacity>
