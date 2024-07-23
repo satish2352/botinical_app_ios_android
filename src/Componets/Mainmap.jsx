@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
@@ -19,6 +18,7 @@ import VideoModal from './VideoModal';
 import AudioModal from './AudioModal';
 import { DOMParser } from 'xmldom';
 import { kml } from '@tmcw/togeojson';
+import ListModal from './ListModal';
 
 
 
@@ -289,8 +289,9 @@ const Mainmap = ({ route }) => {
   const [audiovideodata, setaudiovideodata] = useState([]);
   const [carouselData, setCarouselData] = useState([]);
   const [anotherpagemodaldata, setanotherpagemodaldata] = useState(null);
-
-
+  const [isTracking, setIsTracking] = useState(false);
+  const [nearbyEntities, setNearbyEntities] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width / screen.height;
   const LATITUDE_DELTA = 0.01;
@@ -311,7 +312,7 @@ const Mainmap = ({ route }) => {
   })
 
   const { coordinateanimated } = state
-  // const updateState = (data) => setState((state) => ({ ...state, ...data }));
+  const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
 
   const mapRef = useRef();
@@ -342,7 +343,17 @@ const Mainmap = ({ route }) => {
     }
   };
 
+  useEffect(() => {
 
+    const timer = setTimeout(() => {
+      livelocation();
+
+    }, 10000); // 60000 milliseconds = 1 minute
+
+    return () => {
+      clearTimeout(timer); // Cleanup timer on unmount
+    };
+  }, [userLocation]);
   const livelocation = () => {
     Geolocation.getCurrentPosition(
       (position) => {
@@ -350,16 +361,17 @@ const Mainmap = ({ route }) => {
         // console.log("after every 6 second call live location function");
         animate(latitude, longitude);
         setUserLocation({ latitude, longitude });
-        // updateState({
+        findNearbyEntities(latitude, longitude);
 
-        //   coordinateanimated: new AnimatedRegion({
-        //     latitude: latitude,
-        //     longitude: longitude,
-        //     // coordinate: { userLocation },
-        //     latitudeDelta: LATITUDE_DELTA,
-        //     longitudeDelta: LONGITUDE_DELTA
-        //   }),
-        // })
+        updateState({
+
+          coordinateanimated: new AnimatedRegion({
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          }),
+        })
 
 
       },
@@ -369,6 +381,50 @@ const Mainmap = ({ route }) => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }
+
+
+  // const findNearbyEntities = (latitude, longitude) => {
+  //   const radius = 0.1; // 100 meters
+  //   const nearby = amenities
+  //     .map(entity => ({
+  //       ...entity,
+  //       distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
+  //     }))
+  //     .filter(entity => entity.distance <= radius)
+  //     .sort((a, b) => a.distance - b.distance)
+  //     .slice(0, 4); // Get only the closest 4 entities
+
+  //   setNearbyEntities(nearby);
+  // };
+  const findNearbyEntities = (latitude, longitude) => {
+    const radius = 0.1; // 100 meters
+    const nearby = amenities
+      .map(entity => ({
+        ...entity,
+        distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
+      }))
+      .filter(entity => entity.distance <= radius)
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 4); // Get only the closest 4 entities
+
+    if (nearby.length > 0) {
+      setNearbyEntities(nearby);
+      setModalVisible(true); // Automatically open the modal if nearby entities are found
+    } else {
+      setModalVisible(false); // Close the modal if no nearby entities are found
+    }
+  };
+  const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
+  };
 
   const fetchData = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -393,18 +449,14 @@ const Mainmap = ({ route }) => {
     }
   };
 
-
   useEffect(() => {
     requestlocationPermission();
-
     livelocation();
-
-  }, []);
-
-  useEffect(() => {
     fetchData();
-    // data()
-    if (markerRef.current) {
+
+    {/*
+      
+          if (markerRef.current) {
       markerRef.current.showCallout();
     }
     const timer = setTimeout(() => {
@@ -415,7 +467,9 @@ const Mainmap = ({ route }) => {
     return () => {
       clearTimeout(timer); // Cleanup timer on unmount
     };
-  }, [start, userLocation, kmlContent]);
+      */}
+
+  }, [start, kmlContent]);
 
 
   useEffect(() => {
@@ -429,24 +483,16 @@ const Mainmap = ({ route }) => {
       ];
       setCarouselData(newCarouselData);
       setSelectedAmenity(deatils)
+      setModalVisible(false);
     }
-
-
-
   }, [deatils])
 
 
   const handleRefresh = () => {
     fetchData();
-
+    livelocation();
     // data()
   }
-
-
-  // Function to fit map to polygons
-  const fitMapToPolygons = (polygonData) => {
-    // Implement logic to fit map to polygons if needed
-  };
 
 
 
@@ -478,6 +524,7 @@ const Mainmap = ({ route }) => {
     setSelectedAmenity(amenity);
     setaudiovideodata(amenity)
     setShowDirections(false);
+    setModalVisible(false);
   };
 
 
@@ -545,23 +592,12 @@ const Mainmap = ({ route }) => {
     );
   };
 
-  //   if(deatils && deatils.length >0){
-  //     const newCarouselData = [
-  //      { image: { uri: deatils.image } },
-  //      { image: { uri: deatils.image_two } },
-  //      { image: { uri: deatils.image_three } },
-  //      { image: { uri: deatils.image_four } },
-  //      { image: { uri: deatils.image_five } },
-  //    ];
 
-  //    setCarouselData(newCarouselData);
-
-  //    setSelectedAmenity(deatils);
-  //  }
 
   const Canceldirection = () => {
     setShowDirections(false)
     setSelectedAmenity(null);
+    setIsTracking(false);
     if (mapRef.current) {
       // Example: animate to a specific region
       mapRef.current.animateToRegion({
@@ -572,6 +608,41 @@ const Mainmap = ({ route }) => {
       }, 1000); // 1000 is the duration in milliseconds
     }
   }
+
+
+
+  const Trackdirection = () => {
+    setShowDirections(false)
+    setSelectedAmenity(null);
+    setIsTracking(true);
+    if (mapRef.current) {
+      // Example: animate to a specific region
+      mapRef.current.animateToRegion({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        latitudeDelta: 0.0003,
+        longitudeDelta: 0.0003,
+      }, 1000); // 1000 is the duration in milliseconds
+    }
+  }
+
+
+  const handleItemSelect = (item) => {
+    if (item) {
+      const newCarouselData = [
+        { image: { uri: item.image } },
+        { image: { uri: item.image_two } },
+        { image: { uri: item.image_three } },
+        { image: { uri: item.image_four } },
+        { image: { uri: item.image_five } },
+      ];
+      setCarouselData(newCarouselData);
+      setSelectedAmenity(item);
+      setModalVisible(false);
+    }
+ 
+   
+  };
 
   return (
     <View style={styles.container}>
@@ -597,36 +668,73 @@ const Mainmap = ({ route }) => {
           strokeColor="rgba(0,0,0,0.5)"
           strokeWidth={2}
         />
+        {/*
+        <Circle
+          center={{
+            latitude: 17.451283262312813,
+            longitude: 78.35628277855845,
+          }}
+          radius={50}
+          strokeWidth={2}
+          strokeColor="rgba(255,0,0,0.5)"
+          fillColor="rgba(255,0,0,0.2)"
+        />
+        */}
+
 
         {amenities.map((amenity, index) => (
 
-          <Marker
-
-            key={index}
-            // coordinate={amenity.coordinate}
-            coordinate={{
-              latitude: parseFloat(amenity.latitude),
-              longitude: parseFloat(amenity.longitude),
-            }}
-            title={amenity.name}
-            onPress={() => handleMarkerPress(amenity)}
-          >
-            <Image style={{ height: 30, width: 30 }} source={{ uri: amenity.icon_image }} />
-          </Marker>
+          <React.Fragment key={index}>
+            <Marker
+              coordinate={{
+                latitude: parseFloat(amenity.latitude),
+                longitude: parseFloat(amenity.longitude),
+              }}
+              title={amenity.name}
+              onPress={() => handleMarkerPress(amenity)}
+            >
+              <Image style={{ height: 30, width: 30 }} source={{ uri: amenity.icon_image }} />
+            </Marker>
+            <Circle
+              center={{
+                latitude: parseFloat(amenity.latitude),
+                longitude: parseFloat(amenity.longitude),
+              }}
+              radius={20} // Radius in meters
+              strokeColor="rgba(255,0,0,0.5)"
+              fillColor="rgba(255,0,0,0.2)"
+            />
+          </React.Fragment>
         ))}
+
+
+        
         {userLocation && (
-          <Marker.Animated
-            ref={markerRef}
-            coordinate={coordinateanimated}
-            title="My Location"
-            pinColor="red"
-          >
-            <Callout>
-              <View>
-                <Text>My Location</Text>
-              </View>
-            </Callout>
-          </Marker.Animated>
+          <View>
+            <Marker.Animated
+              ref={markerRef}
+              coordinate={coordinateanimated}
+              title="Current Location"
+              pinColor="red"
+
+            >
+              <Image
+                source={require('../Assets/man-avatar.png')}
+                style={{ width: 50, height: 50 }}
+                resizeMode="contain"
+              />
+
+            </Marker.Animated>
+            <Circle
+              center={{
+                latitude: parseFloat(userLocation.latitude),
+                longitude: parseFloat(userLocation.longitude),
+              }}
+              radius={10} // Radius in meters
+              strokeColor="rgba(0, 0, 0, 0.5)"
+              fillColor="rgba(135, 206, 250, 0.3)"
+            />
+          </View>
         )}
 
         {showDirections && userLocation && directionsDestination && (
@@ -665,8 +773,26 @@ const Mainmap = ({ route }) => {
       {
         showDirections ? <TouchableOpacity style={styles.directioncloseButton} onPress={() => Canceldirection()}>
           <Text style={styles.btntext}>Cancel Direction</Text>
-        </TouchableOpacity> : null
+        </TouchableOpacity> :
+          <View style={{ justifyContent: 'space-evenly', marginHorizontal: 5 }}>
+            {
+              isTracking ?
+                <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
+                  <Text style={styles.btntext}>Exit Location</Text>
+                </TouchableOpacity>
+
+                :
+                <TouchableOpacity style={styles.trackButton} onPress={() => Trackdirection()}>
+                  <Text style={styles.btntext}>Track Location</Text>
+                </TouchableOpacity>
+            }
+
+
+          </View>
+
       }
+
+
       {selectedAmenity && (
         <Modal
           animationType="slide"
@@ -792,7 +918,7 @@ const Mainmap = ({ route }) => {
           <Icon2 name="refresh" size={35} color="white" />
         </TouchableOpacity>
       </View>
-
+      <ListModal visible={modalVisible} nearbyEntities={nearbyEntities} onItemSelect={handleItemSelect} onClose={() => setModalVisible(false)}/>
     </View>
   );
 };
@@ -801,7 +927,7 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -953,6 +1079,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#01595A',
     margin: 10,
+    
 
   },
   buttonview: {
@@ -960,7 +1087,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginVertical: 20,
     alignSelf: 'center',
-    justifyContent: 'space-between',
+   
 
 
   },
@@ -1073,6 +1200,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
 
+  },
+  trackButton: {
+    position: 'absolute',
+    bottom: 20,
+    // right: 10,
+    backgroundColor: '#01595A',
+    borderRadius: 25,
+    padding: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start'
+  },
+  trackButton1: {
+    position: 'absolute',
+    bottom: 20,
+    // right: 10,
+    backgroundColor: '#01595A',
+    borderRadius: 25,
+    padding: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: "flex-end"
   },
   btntext: {
     fontSize: 16,

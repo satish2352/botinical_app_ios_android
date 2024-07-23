@@ -1,9 +1,5 @@
-
-
-
-
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Modal, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Modal, ActivityIndicator, Alert } from 'react-native';
 import Video from 'react-native-video';
 import Slider from '@react-native-community/slider';
 import Orientation from 'react-native-orientation-locker';
@@ -86,9 +82,14 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
         console.log('Download succeeded:', downloadDest);
         setOfflinePath(downloadDest);
       } else {
+        // Alert.alert("Warning","This video is unavailable")
+   
         console.error('Download failed:', result.statusCode);
+        
       }
     } catch (error) {
+      // Alert.alert("Warning","This video is unavailable")
+      
       console.error('Download error:', error);
     } finally {
       setLoading(false);

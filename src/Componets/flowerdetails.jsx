@@ -38,7 +38,7 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
     );
 };
 
-const flowerdetails = ({ route }) => {
+const Flowerdetails = ({ route }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
     const [videoModalVisible, setvideoModalVisible] = useState(false);
@@ -379,4 +379,4 @@ dibtn: {
   backgroundColor: '#01595A',
 },
 });
-export default flowerdetails
+export default Flowerdetails;

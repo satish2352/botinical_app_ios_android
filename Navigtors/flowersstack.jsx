@@ -10,6 +10,8 @@ import PlatsDetails from '../src/Componets/PlatsDetails';
 import Flowers from '../src/Componets/Flowers';
 import Langchange from '../src/Componets/Langchange';
 import Mainmap from '../src/Componets/Mainmap';
+import Flowerdetails from '../src/Componets/Flowerdetails';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -45,7 +47,7 @@ function Flowersstack() {
             }}
         >
             <Stack.Screen name="Flowers" component={Flowers} />
-            <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
+            <Stack.Screen name="Flowerdetails" component={Flowerdetails} />
             <Stack.Screen name="Mainmap" component={Mainmap} />
 
         </Stack.Navigator>
