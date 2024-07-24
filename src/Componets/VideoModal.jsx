@@ -82,13 +82,13 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
         console.log('Download succeeded:', downloadDest);
         setOfflinePath(downloadDest);
       } else {
-        // Alert.alert("Warning","This video is unavailable")
+        Alert.alert("Warning","This video is unavailable")
    
         console.error('Download failed:', result.statusCode);
         
       }
     } catch (error) {
-      // Alert.alert("Warning","This video is unavailable")
+      Alert.alert("Warning","This video is unavailable")
       
       console.error('Download error:', error);
     } finally {

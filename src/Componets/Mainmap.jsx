@@ -382,20 +382,6 @@ const Mainmap = ({ route }) => {
     );
   }
 
-
-  // const findNearbyEntities = (latitude, longitude) => {
-  //   const radius = 0.1; // 100 meters
-  //   const nearby = amenities
-  //     .map(entity => ({
-  //       ...entity,
-  //       distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
-  //     }))
-  //     .filter(entity => entity.distance <= radius)
-  //     .sort((a, b) => a.distance - b.distance)
-  //     .slice(0, 4); // Get only the closest 4 entities
-
-  //   setNearbyEntities(nearby);
-  // };
   const findNearbyEntities = (latitude, longitude) => {
     const radius = 0.1; // 100 meters
     const nearby = amenities
@@ -468,7 +454,9 @@ const Mainmap = ({ route }) => {
       clearTimeout(timer); // Cleanup timer on unmount
     };
       */}
-
+      return () => {
+        
+      };
   }, [start, kmlContent]);
 
 
@@ -485,6 +473,9 @@ const Mainmap = ({ route }) => {
       setSelectedAmenity(deatils)
       setModalVisible(false);
     }
+    return () => {
+        
+    };
   }, [deatils])
 
 

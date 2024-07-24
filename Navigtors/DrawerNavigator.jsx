@@ -9,37 +9,50 @@ import Treesstack from './Treesstack';
 import Chargesstack from './Chargesstack';
 import Gardenmapstacks from './Gardenmapstacks';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon1 from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Gallerystack from './Gallerystack';
 import Contactstack from './Contactstack';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
 import AddEntityStack from './AddEntityStack';
 import Flowersstack from './Flowersstack';
+import Logout from '../src/Componets/Logout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
+  const insets = useSafeAreaInsets();
+ 
   return (
-    <DrawerContentScrollView {...props}>
+    <View style={{ flex: 1 }}>
+      <DrawerContentScrollView {...props}>
 
-      <View style={styles.drawerHeader}>
-        <Image
-          source={require('../src/Assets/logo.png')} // Replace with your image source
-          style={styles.drawerImage}
-        />
+        <View style={styles.drawerHeader}>
+          <Image
+            source={require('../src/Assets/logo.png')} // Replace with your image source
+            style={styles.drawerImage}
+          />
+        </View>
+
+        <DrawerItemList {...props} />
+        <TouchableOpacity style={styles.info} onPress={() => Alert.alert("Rules and Regulations")}>
+          <Icon1 name="info-with-circle" size={25} color="#ffff" /></TouchableOpacity>
+      </DrawerContentScrollView>
+      <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
+        <Logout />
       </View>
+    </View>
 
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
   );
 }
 
 function DrawerNavigator() {
   return (
-   
+
     <Drawer.Navigator initialRouteName="HomeStack"
       screenOptions={{
         statusBarHidden: true,
@@ -73,35 +86,35 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-      name="Mainmapstack"
-      component={Mainmapstack}
-      options={{
-        title: 'Garden Map',
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
-        ),
-      }}
+        name="Mainmapstack"
+        component={Mainmapstack}
+        options={{
+          title: 'Garden Map',
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+          ),
+        }}
       />
       <Drawer.Screen
-      name="Treesstack"
-      component={Treesstack}
-      options={{
-        title: 'Trees',
-        drawerIcon: ({ focused, size }) => (
-          <Foundation name="trees" size={25} color={focused ? '#fff' : '#ccc'} />
-        ),
-      }}
-    />
-    <Drawer.Screen
-    name="Flowersstack"
-    component={Flowersstack}
-    options={{
-      title: 'Plants',
-      drawerIcon: ({ focused, size }) => (
-        <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
-      ),
-    }}
-  />
+        name="Treesstack"
+        component={Treesstack}
+        options={{
+          title: 'Trees',
+          drawerIcon: ({ focused, size }) => (
+            <Foundation name="trees" size={25} color={focused ? '#fff' : '#ccc'} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Flowersstack"
+        component={Flowersstack}
+        options={{
+          title: 'Plants',
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Aminitiesstack"
         component={Aminitiesstack}
@@ -112,8 +125,8 @@ function DrawerNavigator() {
           ),
         }}
       />
-    
-  
+
+
       <Drawer.Screen
         name="Chargesstack"
         component={Chargesstack}
@@ -124,7 +137,7 @@ function DrawerNavigator() {
           ),
         }}
       />
-  
+
       <Drawer.Screen
         name="Gallerystack"
         component={Gallerystack}
@@ -145,21 +158,22 @@ function DrawerNavigator() {
           ),
         }}
       />
-      
+
 
       <Drawer.Screen
-      name="AddEntityStack"
-      component={AddEntityStack}
-      options={{
-        title: 'Add Entities',
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
-        ),
-      }}
+        name="AddEntityStack"
+        component={AddEntityStack}
+        options={{
+          title: 'Add Entities',
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+          ),
+        }}
       />
-     
+
+
     </Drawer.Navigator>
-  
+
   );
 }
 
@@ -182,6 +196,20 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
 
   },
+  footer: {
+    padding: 5,
+    backgroundColor: '#f6f6f6',
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+    alignItems: 'center',
+
+  },
+  info: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    padding: 15
+  }
+
 });
 
 
