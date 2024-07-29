@@ -81,7 +81,7 @@ const Treecompo = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>TREES</Text>
+                <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'TREES' : 'చెట్లు'}</Text>
             </LinearGradient>
             <FlatList
                 data={treeData}

@@ -5,6 +5,7 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './Navigtors/DrawerNavigator';
 import { MyProvider } from './Navigtors/globlevariable/MyContext';
+import StatusCheck from './src/Componets/StatusCheck';
 
 
 
@@ -13,10 +14,12 @@ import { MyProvider } from './Navigtors/globlevariable/MyContext';
 
 const App = () => {
   return (
-    <MyProvider>
-    <NavigationContainer>
-      <DrawerNavigator />
-    </NavigationContainer>
+   <MyProvider>
+      <NavigationContainer>
+        <StatusCheck>
+          <DrawerNavigator />
+        </StatusCheck>
+      </NavigationContainer>
     </MyProvider>
   );
 }

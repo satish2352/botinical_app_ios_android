@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         backgroundColor: '#ffff',
         borderRadius: 5,
-        color: '#000',
+        color: 'black',
         marginBottom: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

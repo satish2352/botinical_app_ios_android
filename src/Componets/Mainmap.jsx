@@ -1,6 +1,5 @@
-
-import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Dimensions, Button, PermissionsAndroid, Platform, Alert } from 'react-native';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { View, StyleSheet, Image, Modal, Text, TouchableOpacity, ScrollView, Dimensions, ActivityIndicator, PermissionsAndroid, Platform, Alert } from 'react-native';
 import MapView, { Polyline, Marker, Polygon, AnimatedRegion, Circle, Callout } from 'react-native-maps';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -14,16 +13,8 @@ import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import VideoModal from './VideoModal';
-
 import AudioModal from './AudioModal';
-import { DOMParser } from 'xmldom';
-import { kml } from '@tmcw/togeojson';
 import ListModal from './ListModal';
-
-
-
-// import toGeoJSON from 'togeojson';
-
 
 const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -228,9 +219,6 @@ const kmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 </kml>
 
 `;
-
-
-
 const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
   return (
     <View style={{ flex: 1 }}>
@@ -256,8 +244,6 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
 
   );
 };
-
-
 const stripHtmlTags = (str) => {
   if (!str) return '';
   let result = str.replace(/<\/?[^>]+(>|$)/g, "");
@@ -265,18 +251,18 @@ const stripHtmlTags = (str) => {
   result = result.replace(/wikipedia/gi, "");
   return result;
 }
-
 const Mainmap = ({ route }) => {
   const deatils = route.params;
-
   const [selectedAmenity, setSelectedAmenity] = useState(null);
-  const [amenities, setamenities] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [start, setStart] = useState(1);
   const [userLocation, setUserLocation] = useState(null);
   const [transportMode, setTransportMode] = useState('driving');
   const [showDirections, setShowDirections] = useState(false);
   const [directionsDestination, setDirectionsDestination] = useState(null);
+  const [treesData, setTreesData] = useState([]);
+  const [flowersData, setFlowersData] = useState([]);
+  const [amenitiesData, setAmenitiesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -285,10 +271,8 @@ const Mainmap = ({ route }) => {
   const [buttonmodal, setbuttonmodal] = useState(false);
   const [audioModalVisible, setAudioModalVisible] = useState(false);
   const [videoModalVisible, setvideoModalVisible] = useState(false);
-  const [polygons, setPolygons] = useState([]);
   const [audiovideodata, setaudiovideodata] = useState([]);
   const [carouselData, setCarouselData] = useState([]);
-  const [anotherpagemodaldata, setanotherpagemodaldata] = useState(null);
   const [isTracking, setIsTracking] = useState(false);
   const [nearbyEntities, setNearbyEntities] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -297,9 +281,7 @@ const Mainmap = ({ route }) => {
   const LATITUDE_DELTA = 0.01;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const markerRef = useRef()
-
   const [state, setState] = useState({
-
     coordinateanimated: new AnimatedRegion({
       // latitude: 30.7046,
       // longitude: 77.1025,
@@ -307,20 +289,11 @@ const Mainmap = ({ route }) => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     }),
-
-
   })
-
   const { coordinateanimated } = state
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
-
   const mapRef = useRef();
-
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
-
-
-
   const requestlocationPermission = async () => {
     try {
       let permission;
@@ -342,7 +315,6 @@ const Mainmap = ({ route }) => {
       console.warn(err);
     }
   };
-
   useEffect(() => {
 
     const timer = setTimeout(() => {
@@ -384,7 +356,7 @@ const Mainmap = ({ route }) => {
 
   const findNearbyEntities = (latitude, longitude) => {
     const radius = 0.1; // 100 meters
-    const nearby = amenities
+    const nearby = combinedData
       .map(entity => ({
         ...entity,
         distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
@@ -411,12 +383,11 @@ const Mainmap = ({ route }) => {
     const d = R * c; // Distance in km
     return d;
   };
-
   const fetchData = async () => {
     const token = await AsyncStorage.getItem('token');
     setLoading(true);
     try {
-      const response = await axios.post(`${config.API_URL}auth/get-map-data`, {
+      const response = await axios.post(`${config.API_URL}auth/get-map-data-new`, {
         language: SelectedLanguage1,
         start
       }, {
@@ -424,9 +395,11 @@ const Mainmap = ({ route }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      setamenities(response.data.data);
-
+      setTreesData(response.data.treesData);
+      setFlowersData(response.data.flowersData);
+      setAmenitiesData(response.data.amenitiesData);
       setTotalPages(response.data.totalPages);
+
     } catch (error) {
       console.error('Error fetching map data:', error);
     } finally {
@@ -434,7 +407,13 @@ const Mainmap = ({ route }) => {
       setRefreshing(false);
     }
   };
-
+  const combinedData = useMemo(() => {
+    return [
+      ...treesData.map((item) => ({ ...item, type: 'Tree' })),
+      ...flowersData.map((item) => ({ ...item, type: 'Flower' })),
+      ...amenitiesData.map((item) => ({ ...item, type: 'Amenity' })),
+    ];
+  }, [treesData, flowersData, amenitiesData]);
   useEffect(() => {
     requestlocationPermission();
     livelocation();
@@ -454,12 +433,9 @@ const Mainmap = ({ route }) => {
       clearTimeout(timer); // Cleanup timer on unmount
     };
       */}
-      return () => {
-        
-      };
+    return () => {
+    };
   }, [start, kmlContent]);
-
-
   useEffect(() => {
     if (deatils) {
       const newCarouselData = [
@@ -474,19 +450,14 @@ const Mainmap = ({ route }) => {
       setModalVisible(false);
     }
     return () => {
-        
     };
   }, [deatils])
-
-
   const handleRefresh = () => {
     fetchData();
     livelocation();
+    Canceldirection();
     // data()
   }
-
-
-
   const parseCoordinates = (kml) => {
     const coordinates = [];
     const regex = /<coordinates>([\s\S]*?)<\/coordinates>/g;
@@ -509,16 +480,12 @@ const Mainmap = ({ route }) => {
       { image: { uri: amenity.image_four } },
       { image: { uri: amenity.image_five } },
     ];
-
     setCarouselData(newCarouselData);
-
     setSelectedAmenity(amenity);
     setaudiovideodata(amenity)
     setShowDirections(false);
     setModalVisible(false);
   };
-
-
   const closeModal = () => {
     setSelectedAmenity(null);
     setShowDirections(false);
@@ -537,7 +504,6 @@ const Mainmap = ({ route }) => {
     }
   };
   const coordinates = parseCoordinates(kmlData);
-
   const animate = (latitude, longitude) => {
     const newCoordinate = { latitude, longitude };
     if (Platform.OS == "android") {
@@ -549,12 +515,9 @@ const Mainmap = ({ route }) => {
       }
     }
   }
-
-
   const openAudioModal = () => {
     setAudioModalVisible(true);
   };
-
   const openvideoModal = () => {
     setbuttonmodal(true);
   };
@@ -565,7 +528,6 @@ const Mainmap = ({ route }) => {
     setPlayMode('online');
     setvideoModalVisible(true)
   };
-
   const handleDownloadAndPlay = () => {
     // Handle downloading and playing video
     setbuttonmodal(false);
@@ -573,8 +535,6 @@ const Mainmap = ({ route }) => {
     setvideoModalVisible(true)
 
   };
-
-
   const renderItem = ({ item, index }) => {
     return (
       <View style={styles.carouselItem}>
@@ -582,9 +542,6 @@ const Mainmap = ({ route }) => {
       </View>
     );
   };
-
-
-
   const Canceldirection = () => {
     setShowDirections(false)
     setSelectedAmenity(null);
@@ -599,25 +556,29 @@ const Mainmap = ({ route }) => {
       }, 1000); // 1000 is the duration in milliseconds
     }
   }
-
-
-
   const Trackdirection = () => {
-    setShowDirections(false)
-    setSelectedAmenity(null);
-    setIsTracking(true);
-    if (mapRef.current) {
-      // Example: animate to a specific region
-      mapRef.current.animateToRegion({
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-        latitudeDelta: 0.0003,
-        longitudeDelta: 0.0003,
-      }, 1000); // 1000 is the duration in milliseconds
+    if (userLocation && userLocation.latitude && userLocation.longitude) {
+      setShowDirections(false)
+      setSelectedAmenity(null);
+      setIsTracking(true);
+  
+  
+      if (mapRef.current) {
+        // Example: animate to a specific region
+        mapRef.current.animateToRegion({
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0.0003,
+          longitudeDelta: 0.0003,
+        }, 1000); // 1000 is the duration in milliseconds
+      }
     }
+    else{
+      console.log("trun on location");
+      requestlocationPermission();
+    }
+    
   }
-
-
   const handleItemSelect = (item) => {
     if (item) {
       const newCarouselData = [
@@ -631,10 +592,10 @@ const Mainmap = ({ route }) => {
       setSelectedAmenity(item);
       setModalVisible(false);
     }
- 
-   
   };
-
+  if (loading) {
+    return <ActivityIndicator size="large" color="#01595A" />;
+  }
   return (
     <View style={styles.container}>
       <MapView
@@ -671,10 +632,7 @@ const Mainmap = ({ route }) => {
           fillColor="rgba(255,0,0,0.2)"
         />
         */}
-
-
-        {amenities.map((amenity, index) => (
-
+        {combinedData.map((amenity, index) => (
           <React.Fragment key={index}>
             <Marker
               coordinate={{
@@ -692,14 +650,11 @@ const Mainmap = ({ route }) => {
                 longitude: parseFloat(amenity.longitude),
               }}
               radius={20} // Radius in meters
-              strokeColor="rgba(255,0,0,0.5)"
-              fillColor="rgba(255,0,0,0.2)"
+              strokeColor="rgba(0,0,0,0)"
+              fillColor="rgba(0,0,0,0)"
             />
           </React.Fragment>
         ))}
-
-
-        
         {userLocation && (
           <View>
             <Marker.Animated
@@ -727,9 +682,7 @@ const Mainmap = ({ route }) => {
             />
           </View>
         )}
-
         {showDirections && userLocation && directionsDestination && (
-
           <MapViewDirections
             origin={userLocation}
             destination={directionsDestination}
@@ -740,7 +693,6 @@ const Mainmap = ({ route }) => {
             lineDashPattern={transportMode === 'walking' ? [1, 10] : null}
             optimizeWaypoints={true}
             onReady={(result) => {
-
               mapRef.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
                   right: 30,
@@ -751,15 +703,12 @@ const Mainmap = ({ route }) => {
               })
               console.log(`Distance: ${result.distance} km`);
               console.log(`Duration: ${result.duration} min.`);
-
             }}
             onError={(errorMessage) => {
               console.error('Error with directions:', errorMessage);
             }}
           />
-
         )}
-
       </MapView>
       {
         showDirections ? <TouchableOpacity style={styles.directioncloseButton} onPress={() => Canceldirection()}>
@@ -771,19 +720,13 @@ const Mainmap = ({ route }) => {
                 <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
                   <Text style={styles.btntext}>Exit Location</Text>
                 </TouchableOpacity>
-
                 :
                 <TouchableOpacity style={styles.trackButton} onPress={() => Trackdirection()}>
                   <Text style={styles.btntext}>Track Location</Text>
                 </TouchableOpacity>
             }
-
-
           </View>
-
       }
-
-
       {selectedAmenity && (
         <Modal
           animationType="slide"
@@ -819,7 +762,6 @@ const Mainmap = ({ route }) => {
                 <Icon name="close" size={34} color="#01595A" />
               </TouchableOpacity>
               <ScrollView>
-
                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
                   <Text style={styles.title}>{selectedAmenity.name}</Text>
                   <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
@@ -843,7 +785,6 @@ const Mainmap = ({ route }) => {
                     </View>
                   </View>
                 }
-
                 <View style={styles.buttonview}>
                   {
                     selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
@@ -851,14 +792,12 @@ const Mainmap = ({ route }) => {
                       <Icon2 name="multitrack-audio" size={24} color="#fff" />
                     </TouchableOpacity> : null
                   }
-
                   {
                     selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
                       <Text style={styles.buttonText}>Video</Text>
                       <Icon2 name="ondemand-video" size={24} color="#fff" />
                     </TouchableOpacity> : null
                   }
-
                   <View>
                     <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
                   </View>
@@ -875,7 +814,6 @@ const Mainmap = ({ route }) => {
                     playMode={playMode}
                   />
                 </View>
-
               </ScrollView>
               {/* Add buttons to select transportation mode */}
               <View style={styles.transportModeContainer}>
@@ -902,18 +840,21 @@ const Mainmap = ({ route }) => {
           </View>
         </Modal>
       )}
-
-
       <View>
         <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
           <Icon2 name="refresh" size={35} color="white" />
         </TouchableOpacity>
       </View>
-      <ListModal visible={modalVisible} nearbyEntities={nearbyEntities} onItemSelect={handleItemSelect} onClose={() => setModalVisible(false)}/>
+      {
+        isTracking ?
+          <ListModal visible={modalVisible} nearbyEntities={nearbyEntities} onItemSelect={handleItemSelect} onClose={() => setModalVisible(false)} />
+          :
+          null
+      }
+
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -935,12 +876,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingTop: 15,
     paddingVertical: 0,
-
     alignItems: 'center',
     height: '70%',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-
   },
   title: {
     fontSize: 24,
@@ -951,19 +890,14 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 10,
-    // textAlign: 'center',
     color: 'black'
   },
   image: {
     alignSelf: 'center',
     width: '100%',
-    // height: '100%',
     marginBottom: 10,
   },
   closeButton: {
-    // padding: 15,
-
-
     position: 'absolute',
     alignSelf: 'flex-end',
     right: 20
@@ -978,15 +912,12 @@ const styles = StyleSheet.create({
     height: '40%',
     padding: 10,
     resizeMode: "center"
-
   },
   carouselItem: {
-    width: '100%', // Set width to full width
+    width: '100%',
     height: hp(28),
     borderRadius: 10,
     overflow: 'hidden',
-    // marginBottom: 10,
-
   },
   carouselImage: {
     // flex: 1,
@@ -996,8 +927,7 @@ const styles = StyleSheet.create({
   },
   paginationContainer: {
     position: 'absolute',
-    top: hp(17), // Adjust top position as needed
-
+    top: hp(17),
   },
   paginationDot: {
     width: 12,
@@ -1005,11 +935,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#ffff',
     marginHorizontal: 4,
-
   },
   paginationInactiveDot: {
     backgroundColor: '#C4C4C4',
-
   },
   dibtn: {
     width: '25 %',
@@ -1043,8 +971,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#ffff",
-    // backgroundColor: "black"
-
   },
   image1: {
     height: '70%',
@@ -1053,7 +979,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 10,
     backgroundColor: "red"
-
   },
   buttonText: {
     color: '#ffffff',
@@ -1070,17 +995,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#01595A',
     margin: 10,
-    
-
   },
   buttonview: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginVertical: 20,
     alignSelf: 'center',
-   
-
-
   },
   headtext2: {
     fontSize: 18,
@@ -1089,7 +1009,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     padding: 5,
     color: '#01595A'
-
   },
   modalBackground: {
     flex: 1,
@@ -1121,26 +1040,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#01595A',
     margin: 10,
-
   },
   carouselItem: {
-    width: '100%', // Set width to full width
+    width: '100%',
     height: hp(28),
     borderRadius: 10,
     overflow: 'hidden',
-    // marginBottom: 10,
-
   },
   carouselImage: {
-    // flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },
   paginationContainer: {
     position: 'absolute',
-    top: hp(20), // Adjust top position as needed
-
+    top: hp(20),
   },
   paginationDot: {
     width: 12,
@@ -1148,18 +1062,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#ffff',
     marginHorizontal: 4,
-
   },
   paginationInactiveDot: {
     backgroundColor: '#C4C4C4',
-
   },
   carouselwrap: {
     alignItems: "center",
     justifyContent: 'center',
     height: '50%',
     padding: 10
-
   },
   headtext2wrap: {
     marginVertical: 10,
@@ -1168,7 +1079,6 @@ const styles = StyleSheet.create({
   refreshButton: {
     position: 'absolute',
     bottom: 20,
-    // right: 20,
     backgroundColor: '#01595A',
     borderRadius: 30,
     padding: 5,
@@ -1187,7 +1097,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 11,
     alignSelf: 'flex-end',
-
     alignItems: 'center',
     justifyContent: 'center'
 
@@ -1195,7 +1104,6 @@ const styles = StyleSheet.create({
   trackButton: {
     position: 'absolute',
     bottom: 20,
-    // right: 10,
     backgroundColor: '#01595A',
     borderRadius: 25,
     padding: 11,
@@ -1206,7 +1114,6 @@ const styles = StyleSheet.create({
   trackButton1: {
     position: 'absolute',
     bottom: 20,
-    // right: 10,
     backgroundColor: '#01595A',
     borderRadius: 25,
     padding: 11,
@@ -1219,9 +1126,7 @@ const styles = StyleSheet.create({
     color: "#ffff",
     fontWeight: "500"
   }
-
 });
-
 export default Mainmap;
 
 

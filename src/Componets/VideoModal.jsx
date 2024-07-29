@@ -29,6 +29,7 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     if (!visible) {
       Orientation.lockToPortrait(); // Lock to portrait mode when modal is closed
     }
+    return () => {};
   }, [visible]);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     } else {
       setLoadingOnline(true); // Start loading indicator for online playback
     }
+    return () => {};
   }, [playMode]);
 
   const formatTime = (seconds) => {
@@ -88,7 +90,6 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
         
       }
     } catch (error) {
-      Alert.alert("Warning","This video is unavailable")
       
       console.error('Download error:', error);
     } finally {

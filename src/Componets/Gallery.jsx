@@ -244,7 +244,7 @@ const Gallery = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>GALLERY</Text>
+            <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'GALLERY' : 'గ్యాలరీ'}</Text>
             <FlatList
                 data={images}
                 keyExtractor={(item, index) => `${item.id}-${index}`}

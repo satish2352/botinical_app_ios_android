@@ -79,7 +79,7 @@ const Flowers = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>PLANTS</Text>
+                <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'PLANTS' : 'మొక్కలు'}</Text>
             </LinearGradient>
             <FlatList
                 data={flowerData}

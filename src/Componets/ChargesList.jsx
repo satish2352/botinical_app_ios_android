@@ -83,11 +83,11 @@ const ChargesList = () => {
                 style={{ marginTop: 45 }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             >
-                <Text style={styles.header}>BOTANICAL GARDEN TICKETS</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'BOTANICAL GARDEN TICKETS' : 'బొటానికల్ గార్డెన్ టిక్కెట్లు'}</Text>
                 <Text style={styles.text}>
-                Botanical Garden of Hyderabad is also one of the interesting sightseeing places in Hyderabad offering a refreshing setting and rich flora. Having been developed by the Forest Departments, Botanical Garden is situated in Madhapur near the Hi-tech City which is almost 16 km away from centre of the city.
+                    {SelectedLanguage1 === 'english' ? 'Botanical Garden of Hyderabad is also one of the interesting sightseeing places in Hyderabad offering a refreshing setting and rich flora. Having been developed by the Forest Departments, Botanical Garden is situated in Madhapur near the Hi-tech City which is almost 16 km away from centre of the city.' : 'హైదరాబాద్‌లోని బొటానికల్ గార్డెన్ కూడా హైదరాబాద్‌లోని ఆసక్తికరమైన సందర్శనా స్థలాలలో ఒకటి, ఇది రిఫ్రెష్ సెట్టింగ్ మరియు గొప్ప వృక్ష సంపదను అందిస్తుంది. అటవీ శాఖలు అభివృద్ధి చేసినందున, బొటానికల్ గార్డెన్ మాదాపూర్‌లో హైటెక్ సిటీకి సమీపంలో ఉంది, ఇది నగరం                    16 కిమీ దూరంలో ఉంది.'}
                 </Text>
-                <Text style={styles.subHeader}>ENTRY FEE AND OTHER CHARGES</Text>
+                <Text style={styles.subHeader}>{SelectedLanguage1 === 'english' ? 'ENTRY FEE AND OTHER CHARGES' : 'ప్రవేశ రుసుము మరియు ఇతర ఛార్జీలు'}</Text>
 
                 {chargesData.map((item, index) => (
                     <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => openModal(item)}>

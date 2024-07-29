@@ -368,7 +368,7 @@ const Contactus = ({ route }) => {
             </View>
             <View style={styles.contactCardWrap}>
                 <View style={styles.formWrap}>
-                    <Text style={styles.formTitle}>CONTACT US</Text>
+                    <Text style={styles.formTitle}>{SelectedLanguage1 === 'english' ? 'CONTACT US' : 'మమ్మల్ని సంప్రదించండి'}</Text>
                     {['name', 'email', 'address', 'message'].map((field, index) => (
                         <React.Fragment key={index}>
                             <TextInput

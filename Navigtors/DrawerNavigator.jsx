@@ -21,6 +21,7 @@ import AddEntityStack from './AddEntityStack';
 import Flowersstack from './Flowersstack';
 import Logout from '../src/Componets/Logout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { globalvariavle } from './globlevariable/MyContext';
 
 const Drawer = createDrawerNavigator();
 
@@ -51,6 +52,7 @@ function CustomDrawerContent(props) {
 }
 
 function DrawerNavigator() {
+  const { SelectedLanguage1 } = globalvariavle();
   return (
 
     <Drawer.Navigator initialRouteName="HomeStack"
@@ -69,7 +71,7 @@ function DrawerNavigator() {
         name="HomeStack"
         component={HomeStackNavigation}
         options={{
-          title: 'Home',
+          title: SelectedLanguage1 === 'english' ? 'Home' : 'హోమ్',
           drawerIcon: ({ focused, size }) => (
             <Icon name="home" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -79,7 +81,7 @@ function DrawerNavigator() {
         name="AboutStack"
         component={AboutStack}
         options={{
-          title: 'About Us',
+          title:  SelectedLanguage1 === 'english' ? 'About Us' : 'గురించి',
           drawerIcon: ({ focused, size }) => (
             <Icon name="information-circle" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -89,7 +91,7 @@ function DrawerNavigator() {
         name="Mainmapstack"
         component={Mainmapstack}
         options={{
-          title: 'Garden Map',
+          title: SelectedLanguage1 === 'english' ? 'Garden Map' : 'గార్డెన్ మ్యాప్',
           drawerIcon: ({ focused, size }) => (
             <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),
@@ -99,7 +101,7 @@ function DrawerNavigator() {
         name="Treesstack"
         component={Treesstack}
         options={{
-          title: 'Trees',
+          title: SelectedLanguage1 === 'english' ? 'Trees' : 'చెట్లు',
           drawerIcon: ({ focused, size }) => (
             <Foundation name="trees" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -109,7 +111,7 @@ function DrawerNavigator() {
         name="Flowersstack"
         component={Flowersstack}
         options={{
-          title: 'Plants',
+          title: SelectedLanguage1 === 'english' ? 'Plants' : 'మొక్కలు',
           drawerIcon: ({ focused, size }) => (
             <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -119,7 +121,7 @@ function DrawerNavigator() {
         name="Aminitiesstack"
         component={Aminitiesstack}
         options={{
-          title: 'Amenities',
+          title: SelectedLanguage1 === 'english' ? 'Amenities' : 'సౌకర్యాలు',
           drawerIcon: ({ focused, size }) => (
             <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
@@ -131,7 +133,7 @@ function DrawerNavigator() {
         name="Chargesstack"
         component={Chargesstack}
         options={{
-          title: 'Ticket Details',
+          title: SelectedLanguage1 === 'english' ? 'Ticket Details' : 'టికెట్ వివరాలు',
           drawerIcon: ({ focused, size }) => (
             <Icon name="cash" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Charges
           ),
@@ -142,7 +144,7 @@ function DrawerNavigator() {
         name="Gallerystack"
         component={Gallerystack}
         options={{
-          title: 'Gallery',
+          title: SelectedLanguage1 === 'english' ? 'Gallery' : 'గ్యాలరీ',
           drawerIcon: ({ focused, size }) => (
             <Icon name="images" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Gallery
           ),
@@ -152,7 +154,7 @@ function DrawerNavigator() {
         name="Contactstack"
         component={Contactstack}
         options={{
-          title: 'Contact Us',
+          title: SelectedLanguage1 === 'english' ? 'Contact us' : 'మమ్మల్ని సంప్రదించండి',
           drawerIcon: ({ focused, size }) => (
             <Icon name="call" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),
@@ -164,7 +166,7 @@ function DrawerNavigator() {
         name="AddEntityStack"
         component={AddEntityStack}
         options={{
-          title: 'Add Entities',
+          title: SelectedLanguage1 === 'english' ? 'Add Entities' : 'ఎంటిటీలను జోడించండి',
           drawerIcon: ({ focused, size }) => (
             <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),

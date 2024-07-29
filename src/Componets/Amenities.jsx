@@ -319,7 +319,7 @@ const Amenities = ({ navigation }) => {
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
             >
-                <Text style={styles.header}>AMENITIES</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'AMENITIES' : 'సౌకర్యాలు'}</Text>
 
                 {cardData.map((item, index) => {
                     if (index % 2 === 0) {

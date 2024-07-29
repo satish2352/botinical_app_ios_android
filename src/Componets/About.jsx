@@ -113,7 +113,7 @@ const About = () => {
             <ScrollView style={{ marginTop: 40 }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             >
-                <Text style={styles.header}>ABOUT US</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'ABOUT US' : 'గురించి'}</Text>
                 <View style={styles.imageView}>
                     <Image
                     source={{ uri: cardData1.image }} // Replace with your image source
