@@ -30,7 +30,7 @@ const MyContext = createContext();
 
 export const MyProvider = ({ children }) => {
   const [useerid, setid] = useState('');
-  const [SelectedLanguage1, setSelectedLanguage1] = useState();
+  const [SelectedLanguage1, setSelectedLanguage1] = useState('english');
   const [isConnected, setIsConnected] = useState(true);
   const [isGPSOn, setIsGPSOn] = useState(true);
 

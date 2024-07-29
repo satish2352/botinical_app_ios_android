@@ -99,7 +99,7 @@ const AddEntity = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>ADD ENTITIES</Text>
+                <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'ADD ENTITIES' : 'ఎంటిటీలను జోడించండి'}</Text>
             </LinearGradient>
             <FlatList
                 data={data}

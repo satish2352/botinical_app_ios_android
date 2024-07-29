@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import HomeStackNavigation from './HomeStackNavigation';
 import AboutStack from './AboutStack';
@@ -13,7 +13,7 @@ import Icon1 from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Gallerystack from './Gallerystack';
 import Contactstack from './Contactstack';
-import { View, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Alert,StatusBar } from 'react-native';
 import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
@@ -27,11 +27,12 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const insets = useSafeAreaInsets();
- 
+
   return (
     <View style={{ flex: 1 }}>
+    <StatusBar backgroundColor="#01595A" barStyle="light-content" />
       <DrawerContentScrollView {...props}>
-
+        
         <View style={styles.drawerHeader}>
           <Image
             source={require('../src/Assets/logo.png')} // Replace with your image source
@@ -53,11 +54,14 @@ function CustomDrawerContent(props) {
 
 function DrawerNavigator() {
   const { SelectedLanguage1 } = globalvariavle();
+  useEffect(() => {
+    return () => { }
+  }, [SelectedLanguage1])
   return (
 
     <Drawer.Navigator initialRouteName="HomeStack"
       screenOptions={{
-        statusBarHidden: true,
+        statusBarHidden: false,
         headerShown: false,
         drawerActiveBackgroundColor: '#01595A', // Customizing drawer's active background color
         drawerActiveTintColor: '#fff', // Customizing drawer's active text color
@@ -81,7 +85,7 @@ function DrawerNavigator() {
         name="AboutStack"
         component={AboutStack}
         options={{
-          title:  SelectedLanguage1 === 'english' ? 'About Us' : 'గురించి',
+          title: SelectedLanguage1 === 'english' ? 'About Us' : 'గురించి',
           drawerIcon: ({ focused, size }) => (
             <Icon name="information-circle" size={25} color={focused ? '#fff' : '#ccc'} />
           ),

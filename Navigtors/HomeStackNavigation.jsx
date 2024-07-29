@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { NavigationContainer, useNavigation, DrawerActions } from '@react-navigation/native';
+import { NavigationContainer, useNavigation, DrawerActions ,StatusBar} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../src/Componets/Login';
 import Home from '../src/Componets/Home';
@@ -24,6 +24,8 @@ import { View } from 'react-native';
 ;
 import AddEntityStack from './AddEntityStack';
 import Flowerdetails from '../src/Componets/Flowerdetails';
+import Logout from '../src/Componets/Logout';
+import Mainmap from '../src/Componets/Mainmap';
 
 
 const Stack = createNativeStackNavigator();
@@ -33,7 +35,7 @@ function HomeStackNavigation() {
    
     <Stack.Navigator initialRouteName="Login"
       screenOptions={{
-        statusBarHidden: true,
+        statusBarHidden: false,
         translucent:false,
         headerTransparent: true,
         headerTitle: '',
@@ -75,6 +77,7 @@ function HomeStackNavigation() {
       <Stack.Screen name="Contactus" component={Contactus} />
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Aminities2" component={Aminities2} />
+      <Stack.Screen name="logout" component={Logout} />
      
     </Stack.Navigator>
   

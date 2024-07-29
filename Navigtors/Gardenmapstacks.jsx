@@ -15,7 +15,7 @@ function Gardenmapstacks() {
 
         <Stack.Navigator initialRouteName="Home"
             screenOptions={{
-                statusBarHidden: true,
+                statusBarHidden: false,
                 headerTransparent: true,
                 headerTitle: '',
                 headerTintColor: '#fff',
