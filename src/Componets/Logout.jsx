@@ -1,9 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, Modal, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Logout = () => {
+    const navigation = useNavigation();
     const [showAlert, setShowAlert] = React.useState(false);
     const showLogoutAlert = () => {
         setShowAlert(true);
@@ -11,11 +15,13 @@ const Logout = () => {
 
     const hideLogoutAlert = () => {
         setShowAlert(false);
-    };
-
-    const handleLogout = () => {
+    }; 
+    const handleLogout = async () => {
+        
         // Perform logout operations here
         hideLogoutAlert();
+        await AsyncStorage.removeItem('token');
+        navigation.navigate('Login');
         console.log('User logged out');
     };
     return (

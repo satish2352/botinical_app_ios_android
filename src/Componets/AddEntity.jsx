@@ -25,7 +25,7 @@ const AddEntity = ({ navigation }) => {
             image: require('../Assets/Trees/b2.png'), // Assuming b2.png is another image for variety
         },
         {
-            name: 'Add Flowers',
+            name: 'Add Plants',
             image: require('../Assets/Trees/b3.png'), // Assuming b3.png is another image for variety
         },
     ];
@@ -76,17 +76,7 @@ const AddEntity = ({ navigation }) => {
         navigation.navigate('AddEntityform',  data);
     };
 
-    const handleNext = () => {
-        if (start < totalPages) {
-            setStart(start + 1);
-        }
-    };
-
-    const handleBack = () => {
-        if (start > 1) {
-            setStart(start - 1);
-        }
-    };
+  
     // const handleRefresh = () => {
     //     setRefreshing(true);
     //     fetchData();
@@ -108,18 +98,13 @@ const AddEntity = ({ navigation }) => {
                 numColumns={0}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
-                      <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
+                    {/* <Text style={styles.pageIndicator}>{start} / {totalPages}</Text> */} 
                       {loading && <ActivityIndicator size="large" color="#01595A" />}
                     </View>
                   )}
                 // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-            </TouchableOpacity>
+         
             
         </View>
     );

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { NavigationContainer, useNavigation, DrawerActions ,StatusBar} from '@react-navigation/native';
+import { NavigationContainer, useNavigation, DrawerActions, StatusBar } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../src/Componets/Login';
 import Home from '../src/Componets/Home';
@@ -32,11 +32,11 @@ const Stack = createNativeStackNavigator();
 function HomeStackNavigation() {
   const navigation = useNavigation();
   return (
-   
+
     <Stack.Navigator initialRouteName="Login"
       screenOptions={{
         statusBarHidden: false,
-        translucent:false,
+        translucent: false,
         headerTransparent: true,
         headerTitle: '',
         headerTintColor: '#01595A',
@@ -54,17 +54,17 @@ function HomeStackNavigation() {
         headerLeft: () => {
           return (
             <View >
-              <Langchange/>
+              <Langchange />
 
             </View>
           )
         }
       }}
     >
-      <Stack.Screen name="Login" component={Login}  />
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="Otpscreen" component={Otpscreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }}  />
-      <Stack.Screen name="Regifrom" component={Regifrom}  />
+      <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />
+      <Stack.Screen name="Regifrom" component={Regifrom} />
       <Stack.Screen name="ChargesList" component={ChargesList} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Home" component={Home} />
@@ -78,9 +78,9 @@ function HomeStackNavigation() {
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Aminities2" component={Aminities2} />
       <Stack.Screen name="logout" component={Logout} />
-     
+
     </Stack.Navigator>
-  
+
   );
 }
 

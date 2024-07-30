@@ -355,14 +355,14 @@ const Contactus = ({ route }) => {
                 </View>
             </View>
             <View style={styles.contentContainer}>
-                <Text style={styles.location}>Location<Text style={styles.normalText}>{'\n'}{contactDetails.address}</Text></Text>
-                <Text style={styles.location}>Phone{'\n'}
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Location' : 'స్థానం'}<Text style={styles.normalText}>{'\n'}{contactDetails.address}</Text></Text>
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Phone' : 'ఫోన్'}{'\n'}
                     <Text style={styles.normalText}>
-                        Assit Director: {contactDetails.director_number} {'\n'}
-                        Estate Officer: {contactDetails.officer_number}
+                    {SelectedLanguage1 === 'english' ? 'Assit Director' : 'అసిస్టెంట్ డైరెక్టర్'}: {contactDetails.director_number} {'\n'}
+                    {SelectedLanguage1 === 'english' ? 'Estate Officer' : 'ఎస్టేట్ అధికారి'}: {contactDetails.officer_number}
                     </Text>
                 </Text>
-                <Text style={styles.location}>Email{'\n'}
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Email' : 'ఇమెయిల్'}{'\n'}
                     <Text style={styles.normalText}>{contactDetails.email}</Text>
                 </Text>
             </View>

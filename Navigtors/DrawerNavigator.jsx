@@ -13,7 +13,7 @@ import Icon1 from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Gallerystack from './Gallerystack';
 import Contactstack from './Contactstack';
-import { View, Image, StyleSheet, TouchableOpacity, Alert,StatusBar } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Alert,StatusBar,Linking } from 'react-native';
 import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
@@ -27,6 +27,23 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const insets = useSafeAreaInsets();
+  const showAlert = () => {
+    Alert.alert(
+      "Rules and Regulations",
+      "For more information, click .",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "KNOW MORE",
+          onPress: () => Linking.openURL("https://www.google.com"),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -41,7 +58,7 @@ function CustomDrawerContent(props) {
         </View>
 
         <DrawerItemList {...props} />
-        <TouchableOpacity style={styles.info} onPress={() => Alert.alert("Rules and Regulations")}>
+        <TouchableOpacity style={styles.info} onPress={() => showAlert()}>
           <Icon1 name="info-with-circle" size={25} color="#ffff" /></TouchableOpacity>
       </DrawerContentScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
@@ -127,7 +144,7 @@ function DrawerNavigator() {
         options={{
           title: SelectedLanguage1 === 'english' ? 'Amenities' : 'సౌకర్యాలు',
           drawerIcon: ({ focused, size }) => (
-            <Icon name="leaf" size={25} color={focused ? '#fff' : '#ccc'} />
+            <Icon name="logo-apple-ar" size={25} color={focused ? '#fff' : '#ccc'} />
           ),
         }}
       />
@@ -213,7 +230,8 @@ const styles = StyleSheet.create({
   info: {
     position: 'absolute',
     alignSelf: 'flex-end',
-    padding: 15
+    padding: 15,
+    top:10
   }
 
 });
