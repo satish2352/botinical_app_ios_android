@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#73A986', // 50% transparent black background
   },
   text: {
-    fontSize: 25,
+    fontSize: 20,
     textAlign: 'center',
     color: '#FFFF'
   },
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   image: {
-    width: 240,
-    height: 220,
+    width: 210,
+    height: 210,
     marginBottom: 10,
     // top: 20
   },
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   image2: {
-    width: 240,
-    height: 300,
+    width: 210,
+    height: 220,
 
   },
   image3: {
-    width: 260,
+    width: 210,
     height: 210,
     top: 100
   },
