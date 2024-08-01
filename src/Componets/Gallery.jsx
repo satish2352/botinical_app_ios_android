@@ -163,7 +163,8 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-const Gallery = () => {
+const Gallery = ({ route }) => {
+    const id = route.params;
     const [images, setGalleryData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
@@ -186,6 +187,7 @@ const Gallery = () => {
             const response = await axios.post(`${config.API_URL}auth/get-gallery`, {
                 start: startValue,
                 language: language,
+                gallery_category_id:id
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`

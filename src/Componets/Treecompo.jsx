@@ -12,16 +12,24 @@ import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons
 
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
-    const { SelectedLanguage1 } = globalvariavle();
+    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
+
     useEffect(() => {
         fetchData();
-        
-    }, [SelectedLanguage1, start]);
-
+        const unsubscribe = navigation.addListener('focus', () => {
+          if (!isLoggedIn) {
+            showLoginPrompt(navigation);
+          }
+        });
+        return unsubscribe;
+      }, [navigation, isLoggedIn,SelectedLanguage1, start]);
+ 
+      
+  
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);

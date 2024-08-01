@@ -246,11 +246,22 @@ const Amenities = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const { SelectedLanguage1 } = globalvariavle();
+    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
 
     useEffect(() => {
         fetchData();
-    }, [SelectedLanguage1, start]);
+        const unsubscribe = navigation.addListener('focus', () => {
+          if (!isLoggedIn) {
+            showLoginPrompt(navigation);
+          }
+        });
+        return unsubscribe;
+      }, [navigation, isLoggedIn,SelectedLanguage1, start]);
+
+    // useEffect(() => {
+        
+    //     return()=>{}
+    // }, []);
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');

@@ -7,20 +7,26 @@ import axios from 'axios';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
-
-const ChargesList = () => {
+import Icon from 'react-native-vector-icons/AntDesign';
+const ChargesList = ({navigation}) => {
     const [chargesData, setChargesData] = useState([]);
-    const { SelectedLanguage1 } = globalvariavle();
+    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [start, setStart] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-
     useEffect(() => {
         fetchData();
-    }, [start, SelectedLanguage1]);
+        const unsubscribe = navigation.addListener('focus', () => {
+          if (!isLoggedIn) {
+            showLoginPrompt(navigation);
+          }
+        });
+        return unsubscribe;
+      }, [navigation, isLoggedIn,start, SelectedLanguage1]);
+ 
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -113,7 +119,7 @@ const ChargesList = () => {
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={closeModal}
+                onRequestClose={closeModal}                                                                                                                                                                                                                                                                                                                                        
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -122,8 +128,8 @@ const ChargesList = () => {
                             <View style={styles.modalDetailsContainer}>
 
                                 <View style={styles.modaldata}>
-                                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                                        <FontAwesomeIcon icon={faTimes} size={25} style={styles.closeIcon} />
+                                    <TouchableOpacity style={styles.closeButton} onPress={()=>closeModal()}>
+                                        <FontAwesomeIcon icon={faTimes} size={35} style={styles.closeIcon} />
                                     </TouchableOpacity>
                                     <Text style={styles.modalTitle}>{selectedItem.name}</Text>
 
@@ -252,13 +258,15 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         alignSelf: 'flex-end',
-        position: "absolute",
+        // position: "absolute",
         margin: 5,
-        right: 10
+        // 
     },
     closeIcon: {
         color: '#fff',
         fontSize: 27,
+        position:'absolute',
+        right: 10
     },
     modalDetailsContainer: {
         // alignItems: 'center',

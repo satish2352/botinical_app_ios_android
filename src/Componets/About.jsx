@@ -20,19 +20,16 @@ const About = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-
-      
         fetchData();
         fetchData1();
         return () => { console.log('Component will unmount') }
-
     }, [SelectedLanguage1, start]);
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
 
-            const response = await axios.post(`${config.API_URL}auth/get-aboutus-element-list`, {
+            const response = await axios.post(`${config.API_URL}get-aboutus-element-list`, {
                 start,
                 language: SelectedLanguage1,
             }, {
@@ -67,9 +64,6 @@ const About = () => {
             });
 
             setaboutData1(response.data.data[0]);
-           
-           
-
         } catch (error) {
             console.error('Error fetching about data:', error);
         } finally {
@@ -82,20 +76,16 @@ const About = () => {
         fetchData();
         fetchData1();
     };
-
     const handleNext = () => {
         if (start < totalPages) {
             setStart(start + 1);
         }
     };
-
     const handleBack = () => {
         if (start > 1) {
             setStart(start - 1);
         }
     };
-   
-
     const stripHtmlTags = (str) => {
         if (!str) return '';
         let result= str.replace(/<\/?[^>]+(>|$)/g, "");
@@ -167,12 +157,8 @@ const About = () => {
                                     <Text style={styles.header3}>{item.name}</Text></View>
                             )
                         }
-                
-                
                     })
                 }
-               
-
             </ScrollView>
             {loading && <ActivityIndicator size="large" color="#01595A" />}
             {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
@@ -186,14 +172,12 @@ const About = () => {
         </LinearGradient>
     );
 };
-
 // Styles for the component
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
     },
-
     header: {
         fontSize: 22,
         fontWeight: 'bold',

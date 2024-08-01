@@ -289,7 +289,7 @@ const Home = () => {
             const token = await AsyncStorage.getItem('token');
     
             axios.post(
-                `${config.API_URL}auth/get-home-data`,
+                `${config.API_URL}get-home-data`,
                 {
                     language: SelectedLanguage1,
                 },

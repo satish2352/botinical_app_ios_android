@@ -294,7 +294,7 @@ const Contactus = ({ route }) => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const response = await axios.post(
-                    `${config.API_URL}auth/get-contact-information`,
+                    `${config.API_URL}get-contact-information`,
                     { language: SelectedLanguage1 },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -328,7 +328,7 @@ const Contactus = ({ route }) => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const response = await axios.post(
-                    `${config.API_URL}auth/add-contactus-form`,
+                    `${config.API_URL}add-contactus-form`,
                     {
                         full_name: formData.name,
                         email: formData.email,

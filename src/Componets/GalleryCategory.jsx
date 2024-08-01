@@ -1,87 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator,RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
-const Flowers = ({ navigation }) => {
-    const [flowerData, setFlowerData] = useState([]);
-    const [start, setStart] = useState(1);
+
+
+
+const GalleryCategory = ({ navigation }) => {
+
+
+    const [Data, setData] = useState([]);
+    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
-    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
 
     useEffect(() => {
-        fetchData();
+        fetchData(); 
         const unsubscribe = navigation.addListener('focus', () => {
           if (!isLoggedIn) {
             showLoginPrompt(navigation);
           }
         });
-        return unsubscribe;
-      }, [navigation, isLoggedIn,SelectedLanguage1, start]);
+        return  unsubscribe;
+      }, [navigation, isLoggedIn,SelectedLanguage1]);
 
-    useEffect(() => {
-       
-        return()=>{}
-    }, []);
+ 
+ 
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
-            const response = await axios.post(`${config.API_URL}auth/get-flowers-list`, {
+            const response = await axios.post(`${config.API_URL}auth/get-gallery-category`, {
+               
                 language: SelectedLanguage1,
-                start
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setFlowerData(response.data.data);
-            setTotalPages(response.data.totalPages);
+
+            setData(response.data.data);
         } catch (error) {
-            console.error('Error fetching flowers data:', error);
+            console.error('Error fetching tree data:', error);
         } finally {
             setLoading(false);
             setRefreshing(false);
         }
     };
 
-    const renderFlowerItem = ({ item }) => (
-        <TouchableOpacity style={styles.card} onPress={() => viewDetails(item)}>
-            <View><Image source={{ uri: item.image }} style={styles.image} /></View>
-            <View style={styles.textWrap}>
+    const renderItem = ({ item }) => (
+        <TouchableOpacity style={styles.card} onPress={() => viewdetails(item.id)}>
+          
+            <View style={styles.textwrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
 
-    const viewDetails = (data) => {
-        navigation.navigate('Flowerdetails', data);
+    const viewdetails = (id) => {
+        navigation.navigate('Gallery',  id);
     };
 
-    const handleNext = () => {
-        setStart(start + 1);
-    };
-
-    const handleBack = () => {
-        if (start > 1) {
-            setStart(start - 1);
-        }
-    };
-
+  
     const handleRefresh = () => {
         setRefreshing(true);
-        setStart(1);
         fetchData();
     };
-
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -90,29 +82,23 @@ const Flowers = ({ navigation }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             >
-                <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'PLANTS' : 'మొక్కలు'}</Text>
+                <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'Gallery' : 'గ్యాలరీ'}</Text>
             </LinearGradient>
             <FlatList
-                data={flowerData}
-                renderItem={renderFlowerItem}
-                keyExtractor={item => item.id.toString()}
-                numColumns={2}
+                data={Data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.name.toString()}
+                numColumns={0}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
-                     
+                    {/* <Text style={styles.pageIndicator}>{start} / {totalPages}</Text> */} 
                       {loading && <ActivityIndicator size="large" color="#01595A" />}
-                      <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
                     </View>
                   )}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
+         
             
-            <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
-                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-            </TouchableOpacity>
         </View>
     );
 };
@@ -120,22 +106,26 @@ const Flowers = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         paddingHorizontal: 5,
+        backgroundColor: '#ffff',
+      
     },
     card: {
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        elevation: 3,
-        shadowOffset: { width: 1, height: 1 },
-        shadowColor: '#333',
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
+     
         margin: 8,
-        width: '46%',
+        elevation: 10,
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 5,
+        shadowRadius: 12,
+        backgroundColor: '#01595A',
+        borderRadius:10,
+        height:100,
+       alignItems:"center",
+       justifyContent:"center"
     },
     title: {
-        fontSize: 18,
+        fontSize: 28,
         paddingVertical: 10,
         textAlign: 'center',
         color: '#fff'
@@ -147,17 +137,14 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         resizeMode: "cover",
     },
-    textWrap: {
+    textwrap: {
         alignItems: 'center',
-        backgroundColor: '#01595A',
-        width: '100%',
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
+
     },
     text: {
         fontSize: 20,
         fontWeight: "bold",
-        color: '#fff'
+        color: '#fff',
     },
     gradient: {
         width: '60%',
@@ -190,21 +177,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    footer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 10,
-      },
-      pageIndicator: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#01595A',
-      },
     icon: {
         color: '#fff',
         fontSize: 20,
     },
+    pageIndicator: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        alignSelf: 'center',
+        color: '#000000',
+    },
 });
 
-export default Flowers;
-
+export default GalleryCategory;

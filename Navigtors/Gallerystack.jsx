@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Gallery from '../src/Componets/Gallery';
 import Langchange from '../src/Componets/Langchange';
+import GalleryCategory from '../src/Componets/GalleryCategory';
 
 
 const Stack = createNativeStackNavigator();
@@ -14,7 +15,7 @@ function Gallerystack() {
     const navigation = useNavigation();
     return (
 
-        <Stack.Navigator initialRouteName="Gallery"
+        <Stack.Navigator initialRouteName="GalleryCategory"
             screenOptions={{
                 statusBarHidden: true,
                 headerTransparent: true,
@@ -41,6 +42,7 @@ function Gallerystack() {
                   }
             }}
         >
+            <Stack.Screen name="GalleryCategory" component={GalleryCategory} />
             <Stack.Screen name="Gallery" component={Gallery} />
        
 

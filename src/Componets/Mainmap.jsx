@@ -251,7 +251,7 @@ const stripHtmlTags = (str) => {
   result = result.replace(/wikipedia/gi, "");
   return result;
 }
-const Mainmap = ({ route }) => {
+const Mainmap = ({ route, navigation }) => {
   const deatils = route.params;
   const [selectedAmenity, setSelectedAmenity] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -266,7 +266,7 @@ const Mainmap = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
-  const { SelectedLanguage1 } = globalvariavle();
+  const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
   const [playMode, setPlayMode] = useState(null);
   const [buttonmodal, setbuttonmodal] = useState(false);
   const [audioModalVisible, setAudioModalVisible] = useState(false);
@@ -294,6 +294,20 @@ const Mainmap = ({ route }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const mapRef = useRef();
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+
+  useEffect(() => {
+    requestlocationPermission();
+    livelocation();
+    fetchData();
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (!isLoggedIn) {
+        showLoginPrompt(navigation);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, isLoggedIn,start, kmlContent]);
+
+
   const requestlocationPermission = async () => {
     try {
       let permission;
@@ -414,28 +428,28 @@ const Mainmap = ({ route }) => {
       ...amenitiesData.map((item) => ({ ...item, type: 'Amenity' })),
     ];
   }, [treesData, flowersData, amenitiesData]);
-  useEffect(() => {
-    requestlocationPermission();
-    livelocation();
-    fetchData();
+  // useEffect(() => {
+  //   requestlocationPermission();
+  //   livelocation();
+  //   fetchData();
 
-    {/*
+  //   {/*
       
-          if (markerRef.current) {
-      markerRef.current.showCallout();
-    }
-    const timer = setTimeout(() => {
-      fetchData();
-      // data() 
-    }, 60000); // 60000 milliseconds = 1 minute
+  //         if (markerRef.current) {
+  //     markerRef.current.showCallout();
+  //   }
+  //   const timer = setTimeout(() => {
+  //     fetchData();
+  //     // data() 
+  //   }, 60000); // 60000 milliseconds = 1 minute
 
-    return () => {
-      clearTimeout(timer); // Cleanup timer on unmount
-    };
-      */}
-    return () => {
-    };
-  }, [start, kmlContent]);
+  //   return () => {
+  //     clearTimeout(timer); // Cleanup timer on unmount
+  //   };
+  //     */}
+  //   return () => {
+  //   };
+  // }, [start, kmlContent]);
   useEffect(() => {
     if (deatils) {
       const newCarouselData = [
@@ -501,6 +515,7 @@ const Mainmap = ({ route }) => {
       });
       setShowDirections(true);
       setSelectedAmenity(null);
+      setIsTracking(false);
     }
   };
   const coordinates = parseCoordinates(kmlData);
@@ -561,23 +576,23 @@ const Mainmap = ({ route }) => {
       setShowDirections(false)
       setSelectedAmenity(null);
       setIsTracking(true);
-  
-  
+
+
       if (mapRef.current) {
         // Example: animate to a specific region
         mapRef.current.animateToRegion({
           latitude: userLocation.latitude,
           longitude: userLocation.longitude,
-          latitudeDelta: 0.0003,
-          longitudeDelta: 0.0003,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
         }, 1000); // 1000 is the duration in milliseconds
       }
     }
-    else{
+    else {
       console.log("trun on location");
       requestlocationPermission();
     }
-    
+
   }
   const handleItemSelect = (item) => {
     if (item) {
@@ -591,6 +606,7 @@ const Mainmap = ({ route }) => {
       setCarouselData(newCarouselData);
       setSelectedAmenity(item);
       setModalVisible(false);
+
     }
   };
   if (loading) {
@@ -677,8 +693,8 @@ const Mainmap = ({ route }) => {
                 longitude: parseFloat(userLocation.longitude),
               }}
               radius={10} // Radius in meters
-              strokeColor="rgba(0, 0, 0, 0.5)"
-              fillColor="rgba(135, 206, 250, 0.3)"
+              strokeColor="rgba(0,0,0,0)"
+              fillColor="rgba(0,0,0,0)"
             />
           </View>
         )}
