@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
@@ -17,6 +17,8 @@ const Regifrom = ({ navigation }) => {
     const [dob, setDob] = useState('');
     const [address, setAddress] = useState('');
     const [occupation, setOccupation] = useState('');
+    const [password, setpassword] = useState('');
+    const [confirmpassword, setconfirmpassword] = useState('');
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [mobileError, setMobileError] = useState('');
@@ -24,6 +26,8 @@ const Regifrom = ({ navigation }) => {
     const [dobError, setDobError] = useState('');
     const [addressError, setAddressError] = useState('');
     const [occupationError, setOccupationError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const { SelectedLanguage1 } = globalvariavle();
     const handleRegistration = async () => {
         // Validate fields
@@ -80,7 +84,26 @@ const Regifrom = ({ navigation }) => {
             valid = false;
         } else {
             setOccupationError('');
+        } // Password validation
+        if (!password.trim()) {
+            setPasswordError('Password is required');
+            valid = false;
+        } else {
+            setPasswordError('');
         }
+
+        // Confirm Password validation
+        if (!confirmpassword.trim()) {
+            setConfirmPasswordError('Confirm Password is required');
+            valid = false;
+        } else if (password !== confirmpassword) {
+            setConfirmPasswordError('Passwords do not match');
+            valid = false;
+        } else {
+            setConfirmPasswordError('');
+        }
+
+
         if (!valid) {
             return;
         }
@@ -130,7 +153,7 @@ const Regifrom = ({ navigation }) => {
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
-                <Image style={styles.Image} source={require('../Assets/simplelogo.png')} />
+                <Image style={styles.Image} source={require('../Assets/logo.png')} />
             </View>
             <LinearGradient
                 colors={['#015A4A', '#89CE9B', '#89CE9B']}
@@ -138,72 +161,93 @@ const Regifrom = ({ navigation }) => {
                 start={{ x: 1, y: 1 }} // Top left
                 end={{ x: 1, y: 0 }}   // Bottom left
                 style={styles.contentContainer}>
+
                 <View style={styles.fromwrap}>
 
                     <Text style={{ fontSize: 25, fontWeight: '500', color: '#01595A', margin: 15, alignSelf: 'flex-start', marginHorizontal: 35 }}>REGISTRATION</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="NAME"
-                        placeholderTextColor="black"
-                        onChangeText={setName}
-                    />
-                    {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="EMAIL"
-                        placeholderTextColor="black"
-                        onChangeText={setEmail}
-                    />
-                    {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="MOBILE"
-                        placeholderTextColor="black"
-                        keyboardType="numeric"
-                        onChangeText={setMobile}
-                    />
-                    {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
-                    <View style={styles.inputwrap}>
+                    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
                         <TextInput
-                            style={styles.input2}
-                            placeholder="GENDER"
+                            style={styles.input}
+                            placeholder="NAME"
                             placeholderTextColor="black"
-                            onChangeText={setGender}
+                            onChangeText={setName}
                         />
+                        {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="EMAIL"
+                            placeholderTextColor="black"
+                            onChangeText={setEmail}
+                        />
+                        {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="MOBILE"
+                            placeholderTextColor="black"
+                            keyboardType="numeric"
+                            onChangeText={setMobile}
+                            maxLength={10}
+                        />
+                        {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
+                        <View style={styles.inputwrap}>
+                            <TextInput
+                                style={styles.input2}
+                                placeholder="GENDER"
+                                placeholderTextColor="black"
+                                onChangeText={setGender}
+                            />
 
-                        <TextInput
-                            style={styles.input2}
-                            placeholder="DOB "
-                            placeholderTextColor="black"
-                            onChangeText={setDob}
-                        />
-                        <View style={{ flexDirection: 'row', }}>
-                            {genderError ? <Text style={styles.error}>{genderError}</Text> : null}
-                            {dobError ? <Text style={styles.error}>{dobError}</Text> : null}
+                            <TextInput
+                                style={styles.input2}
+                                placeholder="DOB "
+                                placeholderTextColor="black"
+                                onChangeText={setDob}
+                            />
+                            <View style={{ flexDirection: 'row', }}>
+                                {genderError ? <Text style={styles.error}>{genderError}</Text> : null}
+                                {dobError ? <Text style={styles.error}>{dobError}</Text> : null}
+                            </View>
+
                         </View>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="ADDRESS"
+                            placeholderTextColor="black"
+                            onChangeText={setAddress}
+                        />
+                        {addressError ? <Text style={styles.error}>{addressError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="OCCUPATION"
+                            placeholderTextColor="black"
+                            onChangeText={setOccupation}
+                        />
+                        {occupationError ? <Text style={styles.error}>{occupationError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="PASSWORD"
+                            placeholderTextColor="black"
+                            onChangeText={setpassword}
+                            keyboardType='visible-password'
+                        />
+                        {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="CONFIRM PASSWORD"
+                            placeholderTextColor="black"
+                            onChangeText={setconfirmpassword}
+                            keyboardType='visible-password'
 
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="ADDRESS"
-                        placeholderTextColor="black"
-                        onChangeText={setAddress}
-                    />
-                    {addressError ? <Text style={styles.error}>{addressError}</Text> : null}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="OCCUPATION"
-                        placeholderTextColor="black"
-                        onChangeText={setOccupation}
-                    />
-                    {occupationError ? <Text style={styles.error}>{occupationError}</Text> : null}
-                    <TouchableOpacity style={styles.button} onPress={handleRegistration} >
-                        <Text style={styles.buttonText} >SUBMIT </Text>
-                    </TouchableOpacity>
-                    <View style={styles.regiline}><Text style={{color:"#ffff"}}> Already have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Login')}>Login</Text></Text></View>
-              
-                    </View>
-                    <Text style={{ fontSize: 15, fontWeight: '500', color: '#ffff', alignSelf: 'flex-end', marginHorizontal: 25, marginBottom:20}} onPress={skipregi}>SKIP FOR NOW</Text>
+
+                        />
+                        {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+                        <TouchableOpacity style={styles.button} onPress={handleRegistration} >
+                            <Text style={styles.buttonText} >SUBMIT </Text>
+                        </TouchableOpacity>
+                        <View style={styles.regiline}><Text style={{ color: "#ffff" }}> Already have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Login')}>Login</Text></Text></View>
+                    </ScrollView>
+                </View>
+                <Text style={{ fontSize: 15, fontWeight: '500', color: '#ffff', alignSelf: 'flex-end', marginHorizontal: 25, marginBottom: 20 }} onPress={skipregi}>SKIP FOR NOW</Text>
             </LinearGradient>
         </View>
     )
@@ -307,7 +351,7 @@ const styles = StyleSheet.create({
         height: 35,
     },
     fromwrap: {
-        alignItems: 'center',
+        // alignItems: 'center',
         margin: 10,
         flex: 1
     },
@@ -323,7 +367,7 @@ const styles = StyleSheet.create({
     },
     regiline: {
         margin: 5
-        
+
     }
 })
 export default Regifrom

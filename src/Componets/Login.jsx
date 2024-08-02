@@ -1,19 +1,21 @@
 
 
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ActivityIndicator, Modal, Button } from 'react-native';
 import React, { useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import config from '../../config/config';
 import ListModal from './ListModal';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const Login = ({ navigation }) => {
     const [data, setdata] = useState();
     const [mobile, setmobile] = useState('');
+    const [password, setpassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false); // Loading state
-   
+    const [modalVisible, setModalVisible] = useState(false);
 
     const handleLogin = async () => {
         const URL = config.API_URL;
@@ -26,7 +28,7 @@ const Login = ({ navigation }) => {
             setError('Please enter a valid 10-digit mobile number');
             return;
         }
- 
+
         try {
             setLoading(true); // Start loading
             // Make API call to request OTP
@@ -39,7 +41,7 @@ const Login = ({ navigation }) => {
             if (response.data && response.data.status === 'true') {
                 // Handle successful OTP request
                 console.log('OTP Sent Successfully:', response.data.message);
-                navigation.navigate('Otpscreen', { mobile_number: mobile});
+                navigation.navigate('Otpscreen', { mobile_number: mobile });
             } else {
                 // Handle unsuccessful OTP request
                 setError(response.data.message);
@@ -65,14 +67,25 @@ const Login = ({ navigation }) => {
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Mobile No" 
+                            placeholder="Mobile No"
                             placeholderTextColor="black"
                             onChangeText={setmobile}
                             value={mobile}
                             keyboardType="numeric"
                             maxLength={10}
                         />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor="black"
+                            onChangeText={setpassword}
+                            value={password}
+                            secureTextEntry
+
+                        />
                         {error ? <Text style={styles.error}>{error}</Text> : null}
+                        <TouchableOpacity onPress={() => setModalVisible(true)}><Text style={styles.underlineText}>Forgot Password?</Text></TouchableOpacity>
+
                         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
                             {loading ? (
                                 <ActivityIndicator size="small" color="#ffffff" />
@@ -80,15 +93,116 @@ const Login = ({ navigation }) => {
                                 <Text style={styles.buttonText}>Log In</Text>
                             )}
                         </TouchableOpacity>
-                        <View style={styles.regiline}><Text style={{color:'black'}}> Dont have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Regifrom')}>Register now</Text></Text></View>
+                        <View style={styles.regiline}><Text style={{ color: 'black' }}> Dont have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Regifrom')}>Register now</Text></Text></View>
                     </View>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#01595A', alignSelf: 'flex-end', marginHorizontal: 25}} onPress={skipregi}>SKIP FOR NOW</Text>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#01595A', alignSelf: 'flex-end', marginHorizontal: 25 }} onPress={skipregi}>SKIP FOR NOW</Text>
                 </ImageBackground>
             </View>
-           
+            <ForgotPass modalVisible={modalVisible} setModalVisible={setModalVisible} />
         </View>
     );
 };
+
+
+//forgot modal
+const ForgotPass = ({ modalVisible, setModalVisible }) => {
+    const [otp, setOtp] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [otpError, setOtpError] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
+    const validateInputs = () => {
+        let valid = true;
+
+        if (!otp.trim()) {
+            setOtpError('OTP is required');
+            valid = false;
+        } else {
+            setOtpError('');
+        }
+
+        if (!newPassword.trim()) {
+            setNewPasswordError('New password is required');
+            valid = false;
+        } else {
+            setNewPasswordError('');
+        }
+
+        if (!confirmPassword.trim()) {
+            setConfirmPasswordError('Confirm password is required');
+            valid = false;
+        } else if (newPassword !== confirmPassword) {
+            setConfirmPasswordError('Passwords do not match');
+            valid = false;
+        } else {
+            setConfirmPasswordError('');
+        }
+
+        return valid;
+    };
+    const handleSubmit = () => {
+        if (validateInputs()) {
+          // Handle password reset logic here
+          alert('Password reset successfully!');
+          setModalVisible(false);
+        }
+    }
+    return (
+        <View style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Reset Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter OTP"
+                            placeholderTextColor="black"
+                            // value={otp}
+                            onChangeText={setOtp}
+                            keyboardType="numeric"
+                        />
+                        {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="New Password"
+                            placeholderTextColor="black"
+                            // value={newPassword}
+                            onChangeText={setNewPassword}
+                            secureTextEntry
+                        />
+                        {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Confirm Password"
+                            placeholderTextColor="black"
+                            // value={confirmPassword}
+                            onChangeText={setConfirmPassword}
+                            secureTextEntry
+                        />
+                        {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+                        <TouchableOpacity style={styles.button} onPress={()=>handleSubmit()} >
+
+                            <Text style={styles.buttonText}>Submit</Text>
+
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                            <Icon name="close" size={30} color="#01595A" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
 
 const styles = StyleSheet.create({
     maincontainer: {
@@ -159,7 +273,39 @@ const styles = StyleSheet.create({
     },
     regiline: {
         margin: 8
-    }
+    },
+    underlineText: {
+        textDecorationLine: 'underline',
+        color: 'gray',
+        margin: 4
+    },
+
+
+
+
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        width: 300,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#01595A'
+    },
+    closeButton: {
+        color: 'blue',
+        marginTop: 15,
+    },
 });
 
 export default Login;
