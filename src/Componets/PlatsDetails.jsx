@@ -37,7 +37,7 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
   );
 };
 
-const PlatsDetails = ({ route }) => {
+const PlatsDetails = ({ route,navigation }) => {
   const data = route.params;
   const [audioModalVisible, setAudioModalVisible] = useState(false);
 
@@ -165,7 +165,7 @@ const PlatsDetails = ({ route }) => {
         <View style={styles.headingwrap}>
         <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}> 
         <Text style={styles.headtext}>{treeData.name}</Text>
-        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap(about)}>Show On Map</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap()}>Show On Map</Text></TouchableOpacity>
         </View>
          
           <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
@@ -373,13 +373,14 @@ padding:10
 
 },
 dibtn: {
-  width: '34%',
+  width: '25%',
   height: 40,
   borderRadius: 10,
   alignItems: 'center',
   justifyContent: 'center',
   flexDirection: 'row',
   backgroundColor: '#01595A',
+  marginLeft:20
 },
 });
 

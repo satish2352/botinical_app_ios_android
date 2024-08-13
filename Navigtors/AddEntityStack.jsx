@@ -9,7 +9,8 @@ import Langchange from '../src/Componets/Langchange';
 import Mainmap from '../src/Componets/Mainmap';
 import AddEntity from '../src/Componets/AddEntity';
 import AddEntityform from '../src/Componets/AddEntityform';
-AddEntityform
+import Addamenities from '../src/Componets/Addamenities';
+
 const Stack = createNativeStackNavigator();
 function AddEntityStack() {
     const navigation = useNavigation();
@@ -44,6 +45,7 @@ function AddEntityStack() {
         >
             <Stack.Screen name="AddEntity" component={AddEntity} />
             <Stack.Screen name="AddEntityform" component={AddEntityform} />
+            <Stack.Screen name="Addamenities" component={Addamenities} />
 
         </Stack.Navigator>
 

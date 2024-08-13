@@ -21,11 +21,13 @@ import Aminities2 from '../src/Componets/Aminities2';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Entypo';
 import { View } from 'react-native';
-;
-import AddEntityStack from './AddEntityStack';
+
 import Flowerdetails from '../src/Componets/Flowerdetails';
 import Logout from '../src/Componets/Logout';
-import Mainmap from '../src/Componets/Mainmap';
+import AddEntity from '../src/Componets/AddEntity';
+import AddEntityform from '../src/Componets/AddEntityform';
+import Addamenities from '../src/Componets/Addamenities';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -78,6 +80,10 @@ function HomeStackNavigation() {
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Aminities2" component={Aminities2} />
       <Stack.Screen name="logout" component={Logout} />
+      <Stack.Screen name="AddEntity" component={AddEntity} /> 
+      <Stack.Screen name="AddEntityform" component={AddEntityform} /> 
+      <Stack.Screen name="Addamenities" component={Addamenities} /> 
+      
 
     </Stack.Navigator>
 

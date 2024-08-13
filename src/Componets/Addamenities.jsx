@@ -14,7 +14,8 @@ import axios from 'axios';
 
 
 
-const AddEntityform = ({ navigation, route }) => {
+const Addamenities = ({ navigation, route }) => {
+
     const item = route.params;
     const id = item.id
 
@@ -23,32 +24,25 @@ const AddEntityform = ({ navigation, route }) => {
     const [selectedField, setSelectedField] = useState(null);
     const [selectedTree, setSelectedTree] = useState(null);
     const [selectedicons, setselectedicons] = useState(null);
-    const [selectedhieghttype, setselectedhieghttype] = useState('');
-    const [selectedcanopyttype, setselectedcanopyttype] = useState('');
-    const [selectedgirthtype, setselectedgirthtype] = useState('');
-    const [english_botnical_name, setenglish_botnical_name] = useState(null);
-    const [hindi_botnical_name, sethindi_botnical_name] = useState(null);
-    const [english_common_name, setenglish_common_name] = useState(null);
-    const [hindi_name, sethindi_name] = useState(null);
-    const [hindi_common_name, sethindi_common_name] = useState(null);
-    const [treeplantid, settreeplantid] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [pickerError, setPickerError] = useState('');
     const [iconError, seticonError] = useState('');
-    const [dropdowndata, setdropdowndata] = useState([]);
+
+
+
+    const [loading, setLoading] = useState(false);
+
+    const [amenitydata, setamenitydata] = useState([]);
     const [icons, seticons] = useState([]);
-
-
     const initialFormState = {
         latitude: '',
         longitude: '',
-        height: '',
-        height_type: '',
-        canopy: '',
-        canopy_type: '',
-        girth: '',
+        english_name: '',
+        hindi_name: '',
+        open_time_first: '',
+        close_time_first: '',
+        open_time_second: '',
+        close_time_second: '',
         english_description: '',
-        girth_type: '',
         hindi_description: '',
         image: '',
         image_two: '',
@@ -67,13 +61,13 @@ const AddEntityform = ({ navigation, route }) => {
     const [errorState, setErrorState] = useState({
         errorlatitude: '',
         errorlongitude: '',
-        errorheight: '',
-        errorheight_type: '',
-        errorcanopy: '',
-        errorcanopy_type: '',
-        errorgirth: '',
+        errorenglish_name: '',
+        errorhindi_name: '',
+        erroropen_time_first: '',
+        errorclose_time_first: '',
+        erroropen_time_second: '',
         errorenglish_description: '',
-        errorgirth_type: '',
+        errorclose_time_second: '',
         errorhindi_description: '',
         errorimage: '',
         image2: '',
@@ -85,7 +79,7 @@ const AddEntityform = ({ navigation, route }) => {
         errorenglish_video_upload: '',
         errorhindi_video_upload: '',
     });
-    console.log('6666', formState);
+
 
     useEffect(() => {
         const id = item.id
@@ -94,7 +88,7 @@ const AddEntityform = ({ navigation, route }) => {
         const fetchData = async () => {
             const token = await AsyncStorage.getItem('token');
             try {
-                const response = await axios.post(`${config.API_URL}auth/get-tree-plant`,
+                const response = await axios.post(`${config.API_URL}auth/get-amenities-category`,
                     {
                         // tree_plant_id: id,
                         language: SelectedLanguage1,
@@ -104,7 +98,7 @@ const AddEntityform = ({ navigation, route }) => {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                setdropdowndata(response.data.data);
+                setamenitydata(response.data.data);
             } catch (error) {
                 console.error('Error fetching tree data:', error);
             }
@@ -138,18 +132,9 @@ const AddEntityform = ({ navigation, route }) => {
     const handleInputChange = (field, value) => {
 
         setFormState(prevState => ({ ...prevState, [field]: value }));
-
-
         if (field === "name") {
             setSelectedTree(value)
-            const selectedItem = dropdowndata.find(item => item.english_name === value);
-            setenglish_botnical_name(selectedItem.english_botnical_name)
-            sethindi_botnical_name(selectedItem.hindi_botnical_name)
-            setenglish_common_name(selectedItem.english_common_name)
-            sethindi_common_name(selectedItem.hindi_common_name)
-            sethindi_name(selectedItem.hindi_name)
-            settreeplantid(selectedItem.id)
-            setPickerError('')
+           
         }
     };
 
@@ -255,7 +240,7 @@ const AddEntityform = ({ navigation, route }) => {
 
     const handleRegistration = async () => {
         if (!selectedTree) {
-            setPickerError('Please select a tree or plant.');
+            setPickerError('Please select a Categories.');
             return;
         }
         if (!selectedicons) {
@@ -275,12 +260,6 @@ const AddEntityform = ({ navigation, route }) => {
         const requiredFields = [
             { field: 'latitude', message: 'Latitude is required' },
             { field: 'longitude', message: 'Longitude is required' },
-            { field: 'height', message: 'Height is required' },
-            { field: 'height_type', message: 'Height type is required' },
-            { field: 'canopy', message: 'Canopy is required' },
-            { field: 'canopy_type', message: 'Canopy type is required' },
-            { field: 'girth', message: 'Girth is required' },
-            { field: 'girth_type', message: 'Girth type is required' },
             { field: 'english_description', message: 'English description is required' },
             { field: 'hindi_description', message: 'Hindi description is required' },
             { field: 'image', message: 'Image is required' },
@@ -288,6 +267,12 @@ const AddEntityform = ({ navigation, route }) => {
             { field: 'hindi_audio_link', message: 'Hindi audio link is required' },
             { field: 'english_video_upload', message: 'English video upload is required' },
             { field: 'hindi_video_upload', message: 'Hindi video upload is required' },
+            { field: 'english_name', message: 'English name is required' },
+            { field: 'hindi_name', message: 'Hindi name is required' },
+            { field: 'open_time_first', message: 'Open time first is required' },
+            { field: 'close_time_first', message: 'Close time first is required' },
+            { field: 'open_time_second', message: 'Open time second is required' },
+            { field: 'close_time_second', message: 'Close time second is required' },
         ];
 
         requiredFields.forEach(({ field, message }) => {
@@ -311,26 +296,66 @@ const AddEntityform = ({ navigation, route }) => {
             return;
         }
 
+        // try {
+        //     setLoading(true);
+        //     // Retrieve the token from storage
+        //     const token = await AsyncStorage.getItem('token');
+        //     console.log('icon Id', selectedicons);
+
+        //     // Make the API call
+        //     const response = await axios.post(
+        //         `${config.API_URL}auth/add-tree-plant-aminities?type=${id}`,
+        //         formData,
+        //         {
+        //             params: { icon_id: selectedicons },
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`,
+        //                 'Content-Type': 'multipart/form-data',
+        //             },
+        //         }
+        //     );
+
+        //     // Handle the response message
+        //     const messageString = Array.isArray(response.data.message)
+        //         ? response.data.message.join('\n') // Join array items with line breaks
+        //         : response.data.message;
+
+        //     console.log('Registration successful:', response.data);
+        //     Alert.alert('Message', messageString);
+        //     setFormState(initialFormState);
+        //     navigation.navigate('AddEntity');
+
+        // } catch (error) {
+        //     console.error('Error during registration:', error);
+        //     Alert.alert('Error', 'Registration failed. Please try again.');
+        // } finally {
+        //     setLoading(false);
+        // }
         try {
             setLoading(true);
+        
             // Retrieve the token from storage
             const token = await AsyncStorage.getItem('token');
-            console.log('icon Id', selectedicons);
-
+            if (!token) {
+                throw new Error('Token not found');
+            }
+        
+            console.log('Selected icon ID:', selectedicons);
+        
             // Make the API call
             const response = await axios.post(
                 `${config.API_URL}auth/add-tree-plant-aminities?type=${id}`,
                 formData,
                 {
-                    params: { tree_plant_id: treeplantid, icon_id: selectedicons },
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
                     },
+                    params: { icon_id: selectedicons },
                 }
             );
-
-            // Handle the response message
+        
+            // Handle the response
             if (response.data.status === 'false') {
                 const messageString = Array.isArray(response.data.message)
                     ? response.data.message.join('\n') // Join array items with line breaks
@@ -346,7 +371,7 @@ const AddEntityform = ({ navigation, route }) => {
         } catch (error) {
             console.error('Error during registration:', error);
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
-            Alert.alert('Error', 'Registration failed. Please try again');
+            Alert.alert('Error', errorMessage);
         } finally {
             setLoading(false);
         }
@@ -367,11 +392,11 @@ const AddEntityform = ({ navigation, route }) => {
                         <Picker
                             selectedValue={selectedTree}
                             style={styles.pickervalue}
-                            onValueChange={(itemValue) => { handleInputChange('name', itemValue) }}
+                            onValueChange={(itemValue) => { handleInputChange('name', itemValue) ,setPickerError('')}}
                         >
-                            <Picker.Item label="Name" value={selectedTree} />
-                            {dropdowndata.map((data, index) => (
-                                <Picker.Item key={index} label={data.english_name} value={data.english_name} />
+                            <Picker.Item label="Categories" value={selectedTree} />
+                            {amenitydata.map((data, index) => (
+                                <Picker.Item key={index} label={data.name} value={data.id} />
                             ))}
                         </Picker>
                     </View>
@@ -380,7 +405,7 @@ const AddEntityform = ({ navigation, route }) => {
                         <Picker
                             selectedValue={selectedicons}
                             style={styles.pickervalue}
-                            onValueChange={(itemValue) => { setselectedicons(itemValue),seticonError('') }}
+                            onValueChange={(itemValue) => { setselectedicons(itemValue), seticonError('') }}
                         >
                             <Picker.Item label="Icons" value={selectedicons} />
                             {icons.map((data, index) => (
@@ -391,54 +416,36 @@ const AddEntityform = ({ navigation, route }) => {
                     {iconError ? <Text style={styles.error}>{iconError}</Text> : null}
                     <TextInput
                         style={styles.input}
-                        placeholder="नाम"
+                        placeholder="NAME"
                         placeholderTextColor="black"
+                        onChangeText={(value) => handleInputChange('english_name', value)}
+                        value={formState.english_name}
 
-                        value={hindi_name}
-                        editable={false}
                     />
-
+                    {errorState.errorenglish_name ? <Text style={styles.error}>{errorState.errorenglish_name}</Text> : null}
                     <TextInput
                         style={styles.input}
-                        placeholder="BOTANICAL NAME"
+                        placeholder="हिन्दी नाम"
                         placeholderTextColor="black"
-                        value={english_botnical_name}
-                        editable={false}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="वानस्पतिक नाम"
-                        placeholderTextColor="black"
-                        value={hindi_botnical_name}
-                        editable={false}
+                        value={formState.hindi_name}
+                        onChangeText={(value) => handleInputChange('hindi_name', value)}
                     />
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="COMMON NAME"
-                        placeholderTextColor="black"
-                        value={english_common_name}
-                        editable={false}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="साधारण नाम"
-                        placeholderTextColor="black"
-                        value={hindi_common_name}
-                        editable={false}
-                    />
+                    {errorState.errorhindi_name ? <Text style={styles.error}>{errorState.errorhindi_name}</Text> : null}
 
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input2}
                             placeholder="LATITUDE"
                             placeholderTextColor="black"
+                            value={formState.latitude}
                             onChangeText={(value) => handleInputChange('latitude', value)}
                         />
                         <TextInput
                             style={styles.input2}
                             placeholder="LONGITUDE "
                             placeholderTextColor="black"
+                            value={formState.longitude}
                             onChangeText={(value) => handleInputChange('longitude', value)}
                         />
                     </View>
@@ -450,77 +457,46 @@ const AddEntityform = ({ navigation, route }) => {
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input2}
-                            placeholder="HEIGHT "
+                            placeholder="OPEN TIME FIRST "
                             placeholderTextColor="black"
-                            onChangeText={(value) => handleInputChange('height', value)}
+                            value={formState.open_time_first}
+                            onChangeText={(value) => handleInputChange('open_time_first', value)}
                         />
-                        <View style={styles.inputpicker}>
-                            <Picker
-                                selectedValue={selectedhieghttype}
-                                style={styles.pickervalue}
-                                onValueChange={(itemValue) => {
-                                    setselectedhieghttype(itemValue);
-                                    handleInputChange('height_type', itemValue); // Update form state with selected value
-                                }}
-                            >
-                                <Picker.Item label="HEIGHT TYPE" value="" />
-                                <Picker.Item label="CM" value="CM" />
-                                <Picker.Item label="FEET" value="FEET" />
-                            </Picker></View>
+                        <TextInput
+                            style={styles.input2}
+                            placeholder="CLOSE TIME FIRST "
+                            placeholderTextColor="black"
+                            value={formState.close_time_first}
+                            onChangeText={(value) => handleInputChange('close_time_first', value)}
+                        />
+
 
                     </View>
                     <View style={styles.errorwrap}>
-                        {errorState.errorheight ? <Text style={styles.error}>{errorState.errorheight}</Text> : null}
-                        {errorState.errorheight_type ? <Text style={styles.error}>{errorState.errorheight_type}</Text> : null}
+                        {errorState.erroropen_time_first ? <Text style={styles.error}>{errorState.erroropen_time_first}</Text> : null}
+                        {errorState.errorclose_time_first ? <Text style={styles.error}>{errorState.errorclose_time_first}</Text> : null}
                     </View>
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input2}
-                            placeholder="CANOPY "
+                            placeholder="OPEN TIME SECOND "
                             placeholderTextColor="black"
-                            onChangeText={(value) => handleInputChange('canopy', value)}
+                            value={formState.open_time_second}
+                            onChangeText={(value) => handleInputChange('open_time_second', value)}
                         />
-
-                        <View style={styles.inputpicker}>
-                            <Picker
-                                selectedValue={selectedcanopyttype}
-                                style={styles.pickervalue}
-                                onValueChange={(itemValue) => {
-                                    setselectedcanopyttype(itemValue);
-                                    handleInputChange('canopy_type', itemValue); // Update form state with selected value
-                                }}
-                            >
-                                <Picker.Item label="CANOPY TYPE" value="" />
-                                <Picker.Item label="CM" value="CM" />
-                                <Picker.Item label="FEET" value="FEET" />
-                            </Picker></View>
-                    </View>
-                    <View style={styles.errorwrap}>
-                        {errorState.errorcanopy ? <Text style={styles.error}>{errorState.errorcanopy}</Text> : null}
-                        {errorState.errorcanopy_type ? <Text style={styles.error}>{errorState.errorcanopy_type}</Text> : null}
-                    </View>
-                    <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input2}
-                            placeholder="GIRTH "
+                            placeholder="CLOSE TIME SECOND "
                             placeholderTextColor="black"
-                            onChangeText={(value) => handleInputChange('girth', value)}
+                            value={formState.close_time_second}
+                            onChangeText={(value) => handleInputChange('close_time_second', value)}
                         />
-
-                        <View style={styles.inputpicker}>
-                            <Picker
-                                selectedValue={selectedgirthtype}
-                                style={styles.pickervalue}
-                                onValueChange={(itemValue) => {
-                                    setselectedgirthtype(itemValue);
-                                    handleInputChange('girth_type', itemValue); // Update form state with selected value
-                                }}
-                            >
-                                <Picker.Item label="GIRTH TYPE" value="" />
-                                <Picker.Item label="CM" value="CM" />
-                                <Picker.Item label="FEET" value="FEET" />
-                            </Picker></View>
                     </View>
+                    <View style={styles.errorwrap}>
+                        {errorState.erroropen_time_second ? <Text style={styles.error}>{errorState.erroropen_time_second}</Text> : null}
+                        {errorState.errorclose_time_second ? <Text style={styles.error}>{errorState.errorclose_time_second}</Text> : null}
+                    </View>
+
                     <View style={styles.errorwrap}>
                         {errorState.errorgirth ? <Text style={styles.error}>{errorState.errorgirth}</Text> : null}
                         {errorState.errorgirth_type ? <Text style={styles.error}>{errorState.errorgirth_type}</Text> : null}
@@ -893,5 +869,5 @@ const styles = StyleSheet.create({
 
     }
 })
-export default AddEntityform
+export default Addamenities
 

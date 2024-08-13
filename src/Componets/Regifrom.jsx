@@ -7,7 +7,8 @@ import { globalvariavle, useMyData } from '../../Navigtors/globlevariable/MyCont
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
-
+import { Picker} from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 const Regifrom = ({ navigation }) => {
     const { useerid } = globalvariavle();
     const [name, setName] = useState('');
@@ -29,6 +30,8 @@ const Regifrom = ({ navigation }) => {
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const { SelectedLanguage1 } = globalvariavle();
+    
+    const [show, setShow] = useState(false);
     const handleRegistration = async () => {
         // Validate fields
         let valid = true;
@@ -110,7 +113,7 @@ const Regifrom = ({ navigation }) => {
 
         const token = await AsyncStorage.getItem('token');
         console.log(token);
-        axios.post(`${config.API_URL}auth/update-user-form?id=${useerid}`, {
+        axios.post(`${config.API_URL}user-registration`, {
             full_name: name,
             email: email,
             gender: gender,
@@ -118,6 +121,7 @@ const Regifrom = ({ navigation }) => {
             address: address,
             occupation: occupation,
             language: SelectedLanguage1,
+            password:confirmpassword
         },
             {
                 headers: {
@@ -137,6 +141,14 @@ const Regifrom = ({ navigation }) => {
 
     }
 
+    const showDatepicker = () => {
+        setShow(true);
+    };
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || dob;
+        setShow(Platform.OS === 'ios');
+        setDob(currentDate);
+    };
     const validateEmail = (email) => {
         // Email validation regex
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -190,19 +202,32 @@ const Regifrom = ({ navigation }) => {
                         />
                         {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
                         <View style={styles.inputwrap}>
-                            <TextInput
-                                style={styles.input2}
-                                placeholder="GENDER"
-                                placeholderTextColor="black"
-                                onChangeText={setGender}
-                            />
-
-                            <TextInput
-                                style={styles.input2}
-                                placeholder="DOB "
-                                placeholderTextColor="black"
-                                onChangeText={setDob}
-                            />
+                       
+                            <View style={styles.input2}>
+                            <Picker
+                            selectedValue={gender}
+                            style={styles.pickervalue}
+                            onValueChange={(itemValue) => {
+                                setGender(itemValue);
+                            
+                            }}
+                          >
+                            <Picker.Item label="GENDER" value="" />
+                            <Picker.Item label="FEMALE" value="FEMALE" />
+                            <Picker.Item label="MALE" value="MALE" />
+                            <Picker.Item label="OTHER" value="OTHER" />
+                          </Picker></View>
+                           
+                            <TouchableOpacity style={styles.input2} onPress={showDatepicker}><Text style={styles.dobbutton}>{dob ? dob.toLocaleDateString() : 'DOB'}</Text></TouchableOpacity>
+                            {show && (
+                                <DateTimePicker
+                                    value={dob || new Date()}
+                                    mode="date"
+                                    display="default"
+                                    onChange={onChange}
+                                    maximumDate={new Date()} // Optional: Prevent selecting a future date
+                                />
+                            )}
                             <View style={{ flexDirection: 'row', }}>
                                 {genderError ? <Text style={styles.error}>{genderError}</Text> : null}
                                 {dobError ? <Text style={styles.error}>{dobError}</Text> : null}
@@ -368,6 +393,19 @@ const styles = StyleSheet.create({
     regiline: {
         margin: 5
 
+    },
+    pickervalue:{
+        color:'#000',
+        // fontSize:20,
+        bottom:5
+        
+    },
+    dobbutton:{
+        fontSize: 16,
+        color:'#000',
+        fontWeight: '400',
+        // alignSelf:'center',
+        padding:10
     }
 })
 export default Regifrom
