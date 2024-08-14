@@ -8,24 +8,32 @@ import axios from 'axios';
 import config from '../../config/config';
 import ListModal from './ListModal';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Icon1 from 'react-native-vector-icons/Ionicons';
 
 const Login = ({ navigation }) => {
     const [data, setdata] = useState();
-    const [mobile, setmobile] = useState('');
+    const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false); // Loading state
     const [modalVisible, setModalVisible] = useState(false);
-
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const handleLogin = async () => {
         const URL = config.API_URL;
-
+        setError('');
         // Validate mobile number
-        if (mobile === '') {
-            setError('Please fill in your mobile number');
+        if (email === '') {
+            setError('Please fill in your email address');
             return;
-        } else if (!/^\d{10}$/.test(mobile)) {
-            setError('Please enter a valid 10-digit mobile number');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+        if (password === '') {
+            setError('Please fill in your password');
+            return;
+        } else if (password.length < 8) {
+            setError('Password must be at least 8 characters long');
             return;
         }
 
@@ -33,15 +41,21 @@ const Login = ({ navigation }) => {
             setLoading(true); // Start loading
             // Make API call to request OTP
             const response = await axios.post(`${URL}login`, {
-                mobile_number: mobile,
+                email: email,
+                password: password
             });
             console.log('Response from API:', response.data);
             setdata(response.data);
 
-            if (response.data && response.data.status === 'true') {
+            if (response.data && response.data.status === 'True') {
                 // Handle successful OTP request
                 console.log('OTP Sent Successfully:', response.data.message);
-                navigation.navigate('Otpscreen', { mobile_number: mobile });
+                setError(response.data.message)
+                // navigation.navigate('Otpscreen', { mobile_number: mobile });
+                navigation.navigate('Home');
+                setError('');
+                setemail('');
+                setpassword('')
             } else {
                 // Handle unsuccessful OTP request
                 setError(response.data.message);
@@ -57,6 +71,9 @@ const Login = ({ navigation }) => {
     const skipregi = () => {
         navigation.navigate('Home');
     }
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
     return (
         <View style={styles.maincontainer}>
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>
@@ -67,22 +84,30 @@ const Login = ({ navigation }) => {
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Mobile No"
+                            placeholder="Email Id"
                             placeholderTextColor="black"
-                            onChangeText={setmobile}
-                            value={mobile}
-                            keyboardType="numeric"
-                            maxLength={10}
+                            onChangeText={setemail}
+                            value={email}
+                            keyboardType='email-address'
+
                         />
+                        <View style={styles.passwordContainer}>
                         <TextInput
-                            style={styles.input}
+                            style={styles.passwordInput}
                             placeholder="Password"
                             placeholderTextColor="black"
                             onChangeText={setpassword}
                             value={password}
-                            secureTextEntry
-
+                            secureTextEntry={!isPasswordVisible} 
                         />
+                        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
+                            <Icon1
+                                name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on state
+                                size={24}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                        </View>
                         {error ? <Text style={styles.error}>{error}</Text> : null}
                         <TouchableOpacity onPress={() => setModalVisible(true)}><Text style={styles.underlineText}>Forgot Password?</Text></TouchableOpacity>
 
@@ -144,9 +169,9 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
     };
     const handleSubmit = () => {
         if (validateInputs()) {
-          // Handle password reset logic here
-          alert('Password reset successfully!');
-          setModalVisible(false);
+            // Handle password reset logic here
+            alert('Password reset successfully!');
+            setModalVisible(false);
         }
     }
     return (
@@ -188,7 +213,7 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
                             secureTextEntry
                         />
                         {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
-                        <TouchableOpacity style={styles.button} onPress={()=>handleSubmit()} >
+                        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()} >
 
                             <Text style={styles.buttonText}>Submit</Text>
 
@@ -305,6 +330,31 @@ const styles = StyleSheet.create({
     closeButton: {
         color: 'blue',
         marginTop: 15,
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '70%',
+        height: 47,
+        borderColor: '#477E56',
+        borderWidth: 0.5,
+        borderRadius: 25,
+        paddingHorizontal: 15,
+        marginBottom: 11,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 10,
+        backgroundColor: '#ffff',
+      
+    },
+    passwordInput: {
+        flex: 1,
+        fontSize: 16,
+        fontWeight: '400',
+        color: '#000',
+        
     },
 });
 

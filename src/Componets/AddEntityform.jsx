@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import { globalvariavle, useMyData } from '../../Navigtors/globlevariable/MyContext';
-
+import ImageResizer from 'react-native-image-resizer';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
@@ -62,6 +62,8 @@ const AddEntityform = ({ navigation, route }) => {
     };
 
     const [formState, setFormState] = useState(initialFormState);
+console.log('imagesssssselected',formState.image);
+console.log('imagesssssselected3',formState.image_three);
 
 
     const [errorState, setErrorState] = useState({
@@ -175,72 +177,147 @@ const AddEntityform = ({ navigation, route }) => {
             }
         }
     };
+    const compressImage = async (uri, width, height, quality = 80) => {
+        try {
+            const resizedImage = await ImageResizer.createResizedImage(uri, width, height, 'JPEG', quality);
+            return {
+                uri: resizedImage.uri,
+                name: resizedImage.name,
+                filename: resizedImage.name,
+                type: 'image/jpeg', // or response.assets[0].type if you have it
+            };
+        } catch (err) {
+            console.warn('Image Resizing Error: ', err);
+            throw err; // Re-throw error if needed
+        }
+    };
 
-    const selectImage = (field) => {
+    // const selectImage = (field) => {
+    //     const mediaType = field === 'audio' ? 'audio' : field === 'video' ? 'video' : 'photo';
+    //     if (field === "video") {
+    //         setSelectedField(field);
+    //     }
+    //     launchImageLibrary({
+    //         mediaType: mediaType,
+    //         includeBase64: false, // or true if you want base64 encoding
+    //         quality: 1, // Set this as needed (for images)
+    //     }, (response) => {
+    //         if (response.didCancel) {
+    //             console.warn('User cancelled file picker');
+    //         } else if (response.errorCode) {
+    //             console.warn('FilePicker Error: ', response.errorMessage);
+    //         } else if (response.assets && response.assets.length > 0) {
+
+
+    //             imageses = {
+    //                 uri: response.assets[0].uri,
+    //                 name: response.assets[0].fileName,
+    //                 filename: response.assets[0].fileName,
+    //                 type: response.assets[0].type,
+    //             }
+
+    //             handleInputChange(selectedField, imageses)
+    //             console.log('raviii', response.assets[0]);
+    //             setModalVisible(false);
+
+
+    //         } else {
+    //             console.warn('No assets found in the response');
+    //         }
+    //     });
+    // };
+
+    const selectImage = async (field) => {
         const mediaType = field === 'audio' ? 'audio' : field === 'video' ? 'video' : 'photo';
+    
         if (field === "video") {
             setSelectedField(field);
         }
+    
         launchImageLibrary({
             mediaType: mediaType,
-            includeBase64: false, // or true if you want base64 encoding
-            quality: 1, // Set this as needed (for images)
-        }, (response) => {
+            includeBase64: false,
+            quality: 1,
+        }, async (response) => {
             if (response.didCancel) {
                 console.warn('User cancelled file picker');
             } else if (response.errorCode) {
                 console.warn('FilePicker Error: ', response.errorMessage);
             } else if (response.assets && response.assets.length > 0) {
-
-
-                imageses = {
-                    uri: response.assets[0].uri,
-                    name: response.assets[0].fileName,
-                    filename: response.assets[0].fileName,
-                    type: response.assets[0].type,
+                const asset = response.assets[0];
+                const originalUri = asset.uri;
+                const originalWidth = asset.width;
+                const originalHeight = asset.height;
+    
+                try {
+                    const compressedImageUri = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
+                    handleInputChange(selectedField, compressedImageUri);
+                    console.log('Compressed Image URI', compressedImageUri);
+                    setModalVisible(false);
+                } catch (err) {
+                    console.warn('Failed to compress image', err);
                 }
-
-                handleInputChange(selectedField, imageses)
-                console.log('raviii', response.assets[0]);
-                setModalVisible(false);
-
-
             } else {
                 console.warn('No assets found in the response');
             }
         });
     };
+    
     const handleFileSelection = (field) => {
         setSelectedField(field);
         setModalVisible(true);
     };
+    // const captureImage = (mediaType) => {
+    //     launchCamera({
+    //         mediaType,
+    //         includeBase64: false,
+    //     }, (response) => {
+    //         if (response.didCancel) {
+    //             console.warn('User cancelled camera picker');
+    //         } else if (response.errorCode) {
+    //             console.warn('Camera Error: ', response.errorMessage);
+    //         } else {
+    //             const formData = new FormData();
+
+    //             imageses = {
+    //                 uri: response.assets[0].uri,
+    //                 name: response.assets[0].fileName,
+    //                 filename: response.assets[0].fileName,
+    //                 type: response.assets[0].type,
+    //             }
+
+    //             handleInputChange(selectedField, imageses)
+    //             console.log('raviii', formData);
+    //             setModalVisible(false);
+
+    //         }
+    //     });
+    // };
     const captureImage = (mediaType) => {
         launchCamera({
             mediaType,
             includeBase64: false,
-        }, (response) => {
+        }, async (response) => {
             if (response.didCancel) {
                 console.warn('User cancelled camera picker');
             } else if (response.errorCode) {
                 console.warn('Camera Error: ', response.errorMessage);
             } else {
-                const formData = new FormData();
-
-                imageses = {
-                    uri: response.assets[0].uri,
-                    name: response.assets[0].fileName,
-                    filename: response.assets[0].fileName,
-                    type: response.assets[0].type,
+                const originalUri = response.assets[0].uri;
+                const originalWidth = response.assets[0].width;
+                const originalHeight = response.assets[0].height;
+                console.warn('No valid URI found in the capture',originalUri);
+                try {
+                    const compressedImage = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
+                    handleInputChange(selectedField, compressedImage);
+                    console.log('Compressed Image Data', compressedImage);
+                    setModalVisible(false);
+                } catch (err) {
+                    console.warn('Failed to compress image');
                 }
-
-                handleInputChange(selectedField, imageses)
-                console.log('raviii', formData);
-                setModalVisible(false);
-
             }
         });
     };
-
     const convertStateToFormData = (state) => {
         const formData = new FormData();
 
@@ -346,7 +423,7 @@ const AddEntityform = ({ navigation, route }) => {
         } catch (error) {
             console.error('Error during registration:', error);
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
-            Alert.alert('Error', 'Registration failed. Please try again');
+            Alert.alert('Error', errorMessage);
         } finally {
             setLoading(false);
         }
@@ -580,11 +657,12 @@ const AddEntityform = ({ navigation, route }) => {
                         {errorState.errorhindi_video_upload ? <Text style={styles.error}>{errorState.errorhindi_video_upload}</Text> : null}
                     </View>
                     <TouchableOpacity style={[styles.buttonImageselect, { backgroundColor: '#01595A' }]} onPress={() => handleFileSelection('image')}>
-
+                        {console.log('inside ui',formState.image.uri)}
                         {formState.image.uri ? (
                             <Image source={{ uri: formState.image.uri }} style={styles.image} />
                         ) : (
                             <Text style={[styles.buttonText1, { color: '#ffff' }]}>IMAGE 1</Text>
+                            
                         )}
                     </TouchableOpacity>
                     {errorState.errorimage ? <Text style={styles.error}>{errorState.errorimage}</Text> : null}

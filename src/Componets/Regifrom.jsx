@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
 import LinearGradient from 'react-native-linear-gradient';
@@ -7,10 +7,16 @@ import { globalvariavle, useMyData } from '../../Navigtors/globlevariable/MyCont
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
-import { Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-const Regifrom = ({ navigation }) => {
+import { useNavigation} from '@react-navigation/native';
+const Regifrom = () => {
+    const navigation = useNavigation();
     const { useerid } = globalvariavle();
+    const [rolldata, setrolldata] = useState([]);
+    const [rollvalue, setrollvalue] = useState('');
+
+    
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [mobile, setMobile] = useState('');
@@ -30,7 +36,30 @@ const Regifrom = ({ navigation }) => {
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const { SelectedLanguage1 } = globalvariavle();
-    
+
+    useEffect(() => {
+        fetchData();
+        return (() => { })
+    }, [])
+    const fetchData = async () => {
+        const token = await AsyncStorage.getItem('token');
+        try {
+            const response = await axios.post(`${config.API_URL}auth/get-role`,
+                {
+                    // tree_plant_id: id,
+                    language: SelectedLanguage1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            setrolldata(response.data.data);
+        } catch (error) {
+            console.error('Error fetching tree data:', error);
+        }
+    };
+
     const [show, setShow] = useState(false);
     const handleRegistration = async () => {
         // Validate fields
@@ -67,11 +96,8 @@ const Regifrom = ({ navigation }) => {
         } else {
             setGenderError('');
         }
-        if (!dob.trim()) {
+        if (!dob) {
             setDobError('Date of Birth is required');
-            valid = false;
-        } else if (!validateDate(dob.trim())) {
-            setDobError('format (DD/MM/YYYY)');
             valid = false;
         } else {
             setDobError('');
@@ -116,27 +142,49 @@ const Regifrom = ({ navigation }) => {
         axios.post(`${config.API_URL}user-registration`, {
             full_name: name,
             email: email,
+            mobile_number: mobile,
             gender: gender,
             date_of_birth: dob,
             address: address,
             occupation: occupation,
             language: SelectedLanguage1,
-            password:confirmpassword
+            password: confirmpassword,
+            role_id:rolldata
         },
             {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
+            }
+        )
             .then(response => {
-                console.log('Registration successful:', response.data.message);
-                Alert.alert('Registration successful:', response.data.message);
-                navigation.navigate('Home');
+                if (response.data.status === 'false') {
+                    Alert.alert('Registration Failed', response.data.message);
+                } else {
+                    Alert.alert('Registration Successful', response.data.message);
+                    // Optionally navigate to the home screen after successful registration
+                    navigation.navigate('Login');
+                }
             })
             .catch(error => {
-                console.error('Error:', error);
-                Alert.alert('Error', 'Failed to register. Please try again later.');
-                // Handle error here
+                console.error('Registration Error:', error);
+
+                let errorMessage = 'An unexpected error occurred. Please try again later.';
+
+                if (error.response) {
+                    // Server responded with a status other than 200 range
+                    console.error('Server Response:', error.response.data);
+                    errorMessage = error.response.data.message || errorMessage;
+                } else if (error.request) {
+                    // Request was made but no response received
+                    console.error('Request Error:', error.request);
+                    errorMessage = 'No response from server. Please check your internet connection.';
+                } else {
+                    // Something else happened in setting up the request
+                    console.error('Error:', error.message);
+                }
+
+                Alert.alert('Registration Error', errorMessage);
             });
 
     }
@@ -145,9 +193,11 @@ const Regifrom = ({ navigation }) => {
         setShow(true);
     };
     const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || dob;
-        setShow(Platform.OS === 'ios');
-        setDob(currentDate);
+        setShow(Platform.OS === 'ios'); // Keep picker open for iOS, close it for Android
+
+        if (selectedDate) {
+            setDob(selectedDate); // Set selected date if it's available
+        }
     };
     const validateEmail = (email) => {
         // Email validation regex
@@ -162,6 +212,13 @@ const Regifrom = ({ navigation }) => {
     const skipregi = () => {
         navigation.navigate('Home');
     }
+    const formatDate = (date) => {
+        if (!date || !(date instanceof Date)) return ''; // Ensure date is valid
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
@@ -178,6 +235,21 @@ const Regifrom = ({ navigation }) => {
 
                     <Text style={{ fontSize: 25, fontWeight: '500', color: '#01595A', margin: 15, alignSelf: 'flex-start', marginHorizontal: 35 }}>REGISTRATION</Text>
                     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+                        <View style={styles.picker}>
+                            <Picker
+                                selectedValue={rollvalue}
+                                style={styles.pickervalue}
+                                onValueChange={(itemValue) => {
+                                    setrollvalue(itemValue);
+
+                                }}
+                            >
+                                <Picker.Item label="SELECT ROLE" value={rollvalue} />
+                                {rolldata.map((data, index) => (
+                                    <Picker.Item key={index} label={data.role_name} value={data.id} />
+                                ))}
+                            </Picker></View>
+
                         <TextInput
                             style={styles.input}
                             placeholder="NAME"
@@ -202,26 +274,26 @@ const Regifrom = ({ navigation }) => {
                         />
                         {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
                         <View style={styles.inputwrap}>
-                       
+
                             <View style={styles.input2}>
-                            <Picker
-                            selectedValue={gender}
-                            style={styles.pickervalue}
-                            onValueChange={(itemValue) => {
-                                setGender(itemValue);
-                            
-                            }}
-                          >
-                            <Picker.Item label="GENDER" value="" />
-                            <Picker.Item label="FEMALE" value="FEMALE" />
-                            <Picker.Item label="MALE" value="MALE" />
-                            <Picker.Item label="OTHER" value="OTHER" />
-                          </Picker></View>
-                           
-                            <TouchableOpacity style={styles.input2} onPress={showDatepicker}><Text style={styles.dobbutton}>{dob ? dob.toLocaleDateString() : 'DOB'}</Text></TouchableOpacity>
+                                <Picker
+                                    selectedValue={gender}
+                                    style={styles.pickervalue}
+                                    onValueChange={(itemValue) => {
+                                        setGender(itemValue);
+
+                                    }}
+                                >
+                                    <Picker.Item label="GENDER" value="" />
+                                    <Picker.Item label="FEMALE" value="FEMALE" />
+                                    <Picker.Item label="MALE" value="MALE" />
+                                    <Picker.Item label="OTHER" value="OTHER" />
+                                </Picker></View>
+
+                            <TouchableOpacity style={styles.input2} onPress={showDatepicker}><Text style={styles.dobbutton}>{dob ? formatDate(dob) : 'DOB'}</Text></TouchableOpacity>
                             {show && (
                                 <DateTimePicker
-                                    value={dob || new Date()}
+                                    value={dob || new Date()} // Use current date if dob is not set
                                     mode="date"
                                     display="default"
                                     onChange={onChange}
@@ -394,19 +466,37 @@ const styles = StyleSheet.create({
         margin: 5
 
     },
-    pickervalue:{
-        color:'#000',
-        // fontSize:20,
-        bottom:5
-        
-    },
-    dobbutton:{
+
+    dobbutton: {
         fontSize: 16,
-        color:'#000',
+        color: '#000',
         fontWeight: '400',
         // alignSelf:'center',
-        padding:10
-    }
+        padding: 10
+    },
+    pickervalue: {
+        color: '#000',
+        // fontSize:20,
+        bottom: 5
+
+    },
+    picker: {
+
+        width: '85%',
+        height: 45,
+        // borderWidth: 0.5,
+        borderRadius: 25,
+        marginBottom: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 10,
+        backgroundColor: '#ffff',
+       
+
+
+    },
 })
 export default Regifrom
 

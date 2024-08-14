@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import { globalvariavle, useMyData } from '../../Navigtors/globlevariable/MyContext';
-
+import ImageResizer from 'react-native-image-resizer';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config';
@@ -109,7 +109,21 @@ const Addamenities = ({ navigation, route }) => {
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
-
+    const compressImage = async (uri, width, height, quality = 80) => {
+        try {
+            const resizedImage = await ImageResizer.createResizedImage(uri, width, height, 'JPEG', quality);
+            return {
+                uri: resizedImage.uri,
+                name: resizedImage.name,
+                filename: resizedImage.name,
+                type: 'image/jpeg', // or response.assets[0].type if you have it
+            };
+        } catch (err) {
+            console.warn('Image Resizing Error: ', err);
+            throw err; // Re-throw error if needed
+        }
+    };
+ 
     const Geticons = async () => {
         const token = await AsyncStorage.getItem('token');
         try {
@@ -160,7 +174,6 @@ const Addamenities = ({ navigation, route }) => {
             }
         }
     };
-
     const selectImage = (field) => {
         const mediaType = field === 'audio' ? 'audio' : field === 'video' ? 'video' : 'photo';
         if (field === "video") {
@@ -168,28 +181,26 @@ const Addamenities = ({ navigation, route }) => {
         }
         launchImageLibrary({
             mediaType: mediaType,
-            includeBase64: false, // or true if you want base64 encoding
-            quality: 1, // Set this as needed (for images)
-        }, (response) => {
+            includeBase64: false,
+            quality: 1, 
+        }, async (response) => {
             if (response.didCancel) {
                 console.warn('User cancelled file picker');
             } else if (response.errorCode) {
                 console.warn('FilePicker Error: ', response.errorMessage);
             } else if (response.assets && response.assets.length > 0) {
-
-
-                imageses = {
-                    uri: response.assets[0].uri,
-                    name: response.assets[0].fileName,
-                    filename: response.assets[0].fileName,
-                    type: response.assets[0].type,
+                const originalUri = response.assets[0].uri;
+                const originalWidth = response.assets[0].width;
+                const originalHeight = response.assets[0].height;
+    
+                try {
+                    const compressedImage = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
+                    handleInputChange(selectedField, compressedImage);
+                    console.log('Compressed Image Data', compressedImage);
+                    setModalVisible(false);
+                } catch (err) {
+                    console.warn('Failed to compress image');
                 }
-
-                handleInputChange(selectedField, imageses)
-                console.log('raviii', response.assets[0]);
-                setModalVisible(false);
-
-
             } else {
                 console.warn('No assets found in the response');
             }
@@ -203,29 +214,27 @@ const Addamenities = ({ navigation, route }) => {
         launchCamera({
             mediaType,
             includeBase64: false,
-        }, (response) => {
+        }, async (response) => {
             if (response.didCancel) {
                 console.warn('User cancelled camera picker');
             } else if (response.errorCode) {
                 console.warn('Camera Error: ', response.errorMessage);
             } else {
-                const formData = new FormData();
-
-                imageses = {
-                    uri: response.assets[0].uri,
-                    name: response.assets[0].fileName,
-                    filename: response.assets[0].fileName,
-                    type: response.assets[0].type,
+                const originalUri = response.assets[0].uri;
+                const originalWidth = response.assets[0].width;
+                const originalHeight = response.assets[0].height;
+    
+                try {
+                    const compressedImage = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
+                    handleInputChange(selectedField, compressedImage);
+                    console.log('Compressed Image Data', compressedImage);
+                    setModalVisible(false);
+                } catch (err) {
+                    console.warn('Failed to compress image');
                 }
-
-                handleInputChange(selectedField, imageses)
-                console.log('raviii', formData);
-                setModalVisible(false);
-
             }
         });
     };
-
     const convertStateToFormData = (state) => {
         const formData = new FormData();
 
@@ -263,10 +272,10 @@ const Addamenities = ({ navigation, route }) => {
             { field: 'english_description', message: 'English description is required' },
             { field: 'hindi_description', message: 'Hindi description is required' },
             { field: 'image', message: 'Image is required' },
-            { field: 'english_audio_link', message: 'English audio link is required' },
-            { field: 'hindi_audio_link', message: 'Hindi audio link is required' },
-            { field: 'english_video_upload', message: 'English video upload is required' },
-            { field: 'hindi_video_upload', message: 'Hindi video upload is required' },
+            // { field: 'english_audio_link', message: 'English audio link is required' },
+            // { field: 'hindi_audio_link', message: 'Hindi audio link is required' },
+            // { field: 'english_video_upload', message: 'English video upload is required' },
+            // { field: 'hindi_video_upload', message: 'Hindi video upload is required' },
             { field: 'english_name', message: 'English name is required' },
             { field: 'hindi_name', message: 'Hindi name is required' },
             { field: 'open_time_first', message: 'Open time first is required' },
