@@ -9,7 +9,7 @@ import config from '../../config/config';
 import ListModal from './ListModal';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/Ionicons';
-
+import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 const Login = ({ navigation }) => {
     const [data, setdata] = useState();
     const [email, setemail] = useState('');
@@ -18,6 +18,7 @@ const Login = ({ navigation }) => {
     const [loading, setLoading] = useState(false); // Loading state
     const [modalVisible, setModalVisible] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const { setid } = globalvariavle();
     const handleLogin = async () => {
         const URL = config.API_URL;
         setError('');
@@ -51,6 +52,10 @@ const Login = ({ navigation }) => {
                 // Handle successful OTP request
                 console.log('OTP Sent Successfully:', response.data.message);
                 setError(response.data.message)
+                await AsyncStorage.setItem('token', response.data.token);
+                const id = response.data.data.id;
+                console.log('User ID:', id);
+                setid(id);
                 // navigation.navigate('Otpscreen', { mobile_number: mobile });
                 navigation.navigate('Home');
                 setError('');

@@ -139,7 +139,7 @@ const Regifrom = () => {
 
         const token = await AsyncStorage.getItem('token');
         console.log(token);
-        axios.post(`${config.API_URL}user-registration`, {
+        axios.post(`${config.API_URL}user-regs`, {
             full_name: name,
             email: email,
             mobile_number: mobile,
