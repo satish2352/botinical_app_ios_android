@@ -80,6 +80,7 @@ function DrawerNavigator() {
       screenOptions={{
         statusBarHidden: false,
         headerShown: false,
+        headerTransparent: true,
         drawerActiveBackgroundColor: '#01595A', // Customizing drawer's active background color
         drawerActiveTintColor: '#fff', // Customizing drawer's active text color
         drawerPosition: 'right', // Setting the drawer to slide from the right side
@@ -129,7 +130,7 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-        name="Flowersstack"
+        name="Flowersstack" 
         component={Flowersstack}
         options={{
           title: SelectedLanguage1 === 'english' ? 'Plants' : 'మొక్కలు',

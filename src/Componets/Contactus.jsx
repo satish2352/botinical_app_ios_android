@@ -454,6 +454,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginVertical: 4,
+        color:'#000'
     },
     button: {
         width: '50%',

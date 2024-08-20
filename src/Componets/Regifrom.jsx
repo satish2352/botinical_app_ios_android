@@ -15,6 +15,7 @@ const Regifrom = () => {
     const { useerid } = globalvariavle();
     const [rolldata, setrolldata] = useState([]);
     const [rollvalue, setrollvalue] = useState('');
+console.log('value',rollvalue,'data',rolldata );
 
     
     const [name, setName] = useState('');
@@ -44,7 +45,7 @@ const Regifrom = () => {
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
         try {
-            const response = await axios.post(`${config.API_URL}auth/get-role`,
+            const response = await axios.post(`${config.API_URL}get-role`,
                 {
                     // tree_plant_id: id,
                     language: SelectedLanguage1,
@@ -149,7 +150,7 @@ const Regifrom = () => {
             occupation: occupation,
             language: SelectedLanguage1,
             password: confirmpassword,
-            role_id:rolldata
+            role_id:rollvalue
         },
             {
                 headers: {

@@ -8,9 +8,9 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/AntDesign';
-const ChargesList = ({navigation}) => {
+const ChargesList = ({ navigation }) => {
     const [chargesData, setChargesData] = useState([]);
-    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
+    const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [start, setStart] = useState(1);
@@ -20,13 +20,13 @@ const ChargesList = ({navigation}) => {
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
-          if (!isLoggedIn) {
-            showLoginPrompt(navigation);
-          }
+            if (!isLoggedIn) {
+                showLoginPrompt(navigation);
+            }
         });
         return unsubscribe;
-      }, [navigation, isLoggedIn,start, SelectedLanguage1]);
- 
+    }, [navigation, isLoggedIn, start, SelectedLanguage1]);
+
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -119,7 +119,7 @@ const ChargesList = ({navigation}) => {
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={closeModal}                                                                                                                                                                                                                                                                                                                                        
+                onRequestClose={closeModal}
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -128,10 +128,11 @@ const ChargesList = ({navigation}) => {
                             <View style={styles.modalDetailsContainer}>
 
                                 <View style={styles.modaldata}>
-                                    <TouchableOpacity style={styles.closeButton} onPress={()=>closeModal()}>
+
+                                    <Text style={styles.modalTitle}>{selectedItem.name}</Text>
+                                    <TouchableOpacity style={styles.closeButton} onPress={() => closeModal()}>
                                         <FontAwesomeIcon icon={faTimes} size={35} style={styles.closeIcon} />
                                     </TouchableOpacity>
-                                    <Text style={styles.modalTitle}>{selectedItem.name}</Text>
 
                                 </View>
                                 <Text style={styles.modalDetails}> {selectedItem.rules_terms}</Text>
@@ -258,14 +259,14 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         alignSelf: 'flex-end',
-        // position: "absolute",
+        position: "absolute",
         margin: 5,
         // 
     },
     closeIcon: {
         color: '#fff',
         fontSize: 27,
-        position:'absolute',
+        position: 'absolute',
         right: 10
     },
     modalDetailsContainer: {
