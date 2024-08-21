@@ -1,7 +1,7 @@
 
 
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ActivityIndicator, Modal, Button } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -10,7 +10,9 @@ import ListModal from './ListModal';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
-const Login = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native';
+const Login = () => {
+    const navigation = useNavigation();
     const [data, setdata] = useState();
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
@@ -97,21 +99,21 @@ const Login = ({ navigation }) => {
 
                         />
                         <View style={styles.passwordContainer}>
-                        <TextInput
-                            style={styles.passwordInput}
-                            placeholder="Password"
-                            placeholderTextColor="black"
-                            onChangeText={setpassword}
-                            value={password}
-                            secureTextEntry={!isPasswordVisible} 
-                        />
-                        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
-                            <Icon1
-                                name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on state
-                                size={24}
-                                color="black"
+                            <TextInput
+                                style={styles.passwordInput}
+                                placeholder="Password"
+                                placeholderTextColor="black"
+                                onChangeText={setpassword}
+                                value={password}
+                                secureTextEntry={!isPasswordVisible}
                             />
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
+                                <Icon1
+                                    name={isPasswordVisible ? "eye-off" : "eye"} // Change icon based on state
+                                    size={24}
+                                    color="black"
+                                />
+                            </TouchableOpacity>
                         </View>
                         {error ? <Text style={styles.error}>{error}</Text> : null}
                         <TouchableOpacity onPress={() => setModalVisible(true)}><Text style={styles.underlineText}>Forgot Password?</Text></TouchableOpacity>
@@ -136,48 +138,94 @@ const Login = ({ navigation }) => {
 
 //forgot modal
 const ForgotPass = ({ modalVisible, setModalVisible }) => {
-    const [otp, setOtp] = useState('');
+    const navigation = useNavigation();
+    const [email, setemail] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [oldPassword, setoldPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [otpError, setOtpError] = useState('');
     const [newPasswordError, setNewPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [changepassmodal, setchangepassmodal] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
 
     const validateInputs = () => {
         let valid = true;
 
-        if (!otp.trim()) {
-            setOtpError('OTP is required');
+        if (!email.trim()) {
+            setOtpError('Email is required');
             valid = false;
-        } else {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setOtpError('Please enter a valid email address');
+            return;
+        }
+        else {
             setOtpError('');
         }
 
-        if (!newPassword.trim()) {
-            setNewPasswordError('New password is required');
-            valid = false;
-        } else {
-            setNewPasswordError('');
-        }
+        // if (!newPassword.trim()) {
+        //     setNewPasswordError('New password is required');
+        //     valid = false;
+        // } else {
+        //     setNewPasswordError('');
+        // }
 
-        if (!confirmPassword.trim()) {
-            setConfirmPasswordError('Confirm password is required');
-            valid = false;
-        } else if (newPassword !== confirmPassword) {
-            setConfirmPasswordError('Passwords do not match');
-            valid = false;
-        } else {
-            setConfirmPasswordError('');
-        }
+        // if (!confirmPassword.trim()) {
+        //     setConfirmPasswordError('Confirm password is required');
+        //     valid = false;
+        // } else if (newPassword !== confirmPassword) {
+        //     setConfirmPasswordError('Passwords do not match');
+        //     valid = false;
+        // } else {
+        //     setConfirmPasswordError('');
+        // }
 
         return valid;
     };
+
+    const getrandompass = async () => {
+        const token = await AsyncStorage.getItem('token');
+        try {
+            setLoading(true);
+            const response = await axios.post(`${config.API_URL}reset-password-byemail`,
+                {
+                    // tree_plant_id: id,
+                    email: email
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            if (response.data.status === 'true') {
+                setOtpError(response.data.message);
+                Alert.alert('Registration Successful', response.data.message);
+                setchangepassmodal(true)
+                // alert('Password reset successfully!');
+                // setModalVisible(false);
+               
+            }
+            else {
+                setOtpError(response.data.message);
+            }
+
+        } catch (error) {
+            console.error('Error fetching tree data:', error);
+        }finally{
+            setLoading(false);
+        }
+    };
     const handleSubmit = () => {
         if (validateInputs()) {
-            // Handle password reset logic here
-            alert('Password reset successfully!');
-            setModalVisible(false);
+            getrandompass();
+
         }
+    }
+    const closemodal =()=>{
+        setModalVisible(false),
+         setchangepassmodal(false)
+         setemail('')
+         setOtpError('')
     }
     return (
         <View style={styles.container}>
@@ -190,40 +238,68 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Reset Password</Text>
-                        <TextInput
+                        {changepassmodal === false ? <>
+                            <TextInput
                             style={styles.input}
-                            placeholder="Enter OTP"
+                            placeholder="Enter Email"
                             placeholderTextColor="black"
                             // value={otp}
-                            onChangeText={setOtp}
-                            keyboardType="numeric"
-                        />
+                            onChangeText={setemail}
+                            keyboardType="email-address"
+                        />  
                         {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
+                        <TouchableOpacity style={[styles.button, { width: '50%' }]} onPress={() => handleSubmit()} disabled={loading}>
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#ffffff" />
+                        ) : (
+                            <Text style={styles.buttonText}>Submit</Text>
+                        )}
 
+                       
+
+                    </TouchableOpacity>
+                        </> : null}
+
+                        
+                        {changepassmodal ? 
+                        <> 
+                        
                         <TextInput
                             style={styles.input}
-                            placeholder="New Password"
+                            placeholder="Temporary Password"
                             placeholderTextColor="black"
                             // value={newPassword}
-                            onChangeText={setNewPassword}
+                            onChangeText={setoldPassword}
                             secureTextEntry
                         />
-                        {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Confirm Password"
-                            placeholderTextColor="black"
-                            // value={confirmPassword}
-                            onChangeText={setConfirmPassword}
-                            secureTextEntry
-                        />
-                        {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
-                        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()} >
+                            <TextInput
+                                style={styles.input}
+                                placeholder="New Password"
+                                placeholderTextColor="black"
+                                // value={newPassword}
+                                onChangeText={setNewPassword}
+                                secureTextEntry
+                            />
+                            {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Confirm Password"
+                                placeholderTextColor="black"
+                                // value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                secureTextEntry
+                            />
+                            {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+                            <TouchableOpacity style={[styles.button, { width: '50%' }]} onPress={() => handleSubmit()} >
+                                <Text style={styles.buttonText}>Change Password</Text>
 
-                            <Text style={styles.buttonText}>Submit</Text>
+                            </TouchableOpacity>
+                        </>
+                            : null
+                            }
 
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+
+                        <TouchableOpacity style={styles.closeButton} onPress={() => closemodal()}>
                             <Icon name="close" size={30} color="#01595A" />
                         </TouchableOpacity>
                     </View>
@@ -320,7 +396,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        width: 300,
+        width: 400,
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
@@ -352,15 +428,136 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 10,
         backgroundColor: '#ffff',
-      
+
     },
     passwordInput: {
         flex: 1,
         fontSize: 16,
         fontWeight: '400',
         color: '#000',
-        
+
     },
 });
 
 export default Login;
+
+
+
+// const ForgotPass = ({ modalVisible, setModalVisible }) => {
+//     const [email, setemail] = useState('');
+//     const [newPassword, setNewPassword] = useState('');
+//     const [confirmPassword, setConfirmPassword] = useState('');
+//     const [otpError, setOtpError] = useState('');
+//     const [newPasswordError, setNewPasswordError] = useState('');
+//     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+//     const [emailresponse, setemailresponse] = useState([]);
+// console.log(emailresponse);
+
+//     const validateInputs = () => {
+//         let valid = true;
+
+//         if (!otp.trim()) {
+//             setOtpError('Email is required');
+//             valid = false;
+//         } else {
+//             setOtpError('');
+//         }
+
+//         if (!newPassword.trim()) {
+//             setNewPasswordError('New password is required');
+//             valid = false;
+//         } else {
+//             setNewPasswordError('');
+//         }
+
+//         if (!confirmPassword.trim()) {
+//             setConfirmPasswordError('Confirm password is required');
+//             valid = false;
+//         } else if (newPassword !== confirmPassword) {
+//             setConfirmPasswordError('Passwords do not match');
+//             valid = false;
+//         } else {
+//             setConfirmPasswordError('');
+//         }
+
+//         return valid;
+//     };
+
+//     const getrandompass = async () => {
+//         const token = await AsyncStorage.getItem('token');
+//         try {
+//             const response = await axios.post(`${config.API_URL}reset-password-byemail`,
+//                 {
+//                     // tree_plant_id: id,
+//                     email:email
+//                 },
+//                 {
+//                     headers: {
+//                         Authorization: `Bearer ${token}`
+//                     }
+//                 });
+//             setemailresponse(response.data);
+//         } catch (error) {
+//             console.error('Error fetching tree data:', error);
+//         }
+//     };
+//     const handleSubmit = () => {
+//         // if (validateInputs()) {
+//         //     // Handle password reset logic here
+//         //     alert('Password reset successfully!');
+//         //     setModalVisible(false);
+//         // }
+//     }
+//     return (
+//         <View style={styles.container}>
+//             <Modal
+//                 animationType="slide"
+//                 transparent={true}
+//                 visible={modalVisible}
+//                 onRequestClose={() => setModalVisible(false)}
+//             >
+//                 <View style={styles.modalContainer}>
+//                     <View style={styles.modalContent}>
+//                         <Text style={styles.modalTitle}>Reset Password</Text>
+//                         <TextInput
+//                             style={styles.input}
+//                             placeholder="Enter Email"
+//                             placeholderTextColor="black"
+//                             // value={otp}
+//                             onChangeText={setemail}
+//                             keyboardType="email-address"
+//                         />
+//                         {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
+
+//                         <TextInput
+//                             style={styles.input}
+//                             placeholder="New Password"
+//                             placeholderTextColor="black"
+//                             // value={newPassword}
+//                             onChangeText={setNewPassword}
+//                             secureTextEntry
+//                         />
+//                         {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
+//                         <TextInput
+//                             style={styles.input}
+//                             placeholder="Confirm Password"
+//                             placeholderTextColor="black"
+//                             // value={confirmPassword}
+//                             onChangeText={setConfirmPassword}
+//                             secureTextEntry
+//                         />
+//                         {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
+//                         <TouchableOpacity style={styles.button} onPress={() => handleSubmit()} >
+
+//                             <Text style={styles.buttonText}>Submit</Text>
+
+//                         </TouchableOpacity>
+//                         <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+//                             <Icon name="close" size={30} color="#01595A" />
+//                         </TouchableOpacity>
+//                     </View>
+//                 </View>
+//             </Modal>
+//         </View>
+//     )
+// }

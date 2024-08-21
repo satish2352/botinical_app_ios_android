@@ -6,12 +6,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './Navigtors/DrawerNavigator';
 import { MyProvider,globalvariavle } from './Navigtors/globlevariable/MyContext';
 import StatusCheck from './src/Componets/StatusCheck';
-
-
-
-
-
-
 const App = () => {
   // const { isLoggedIn } = globalvariavle();
   return (
@@ -24,6 +18,5 @@ const App = () => {
     </MyProvider>
   );
 }
-
 export default App 
 
