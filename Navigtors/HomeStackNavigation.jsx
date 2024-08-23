@@ -27,6 +27,7 @@ import Logout from '../src/Componets/Logout';
 import AddEntity from '../src/Componets/AddEntity';
 import AddEntityform from '../src/Componets/AddEntityform';
 import Addamenities from '../src/Componets/Addamenities';
+import ChangePass from '../src/Componets/ChangePass';
 
 
 
@@ -69,7 +70,7 @@ function HomeStackNavigation() {
       <Stack.Screen name="Regifrom" component={Regifrom} />
       <Stack.Screen name="ChargesList" component={ChargesList} />
       <Stack.Screen name="About" component={About} />
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={Home}  />
       <Stack.Screen name="Amenities" component={Amenities} />
       <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
       <Stack.Screen name="Treecompo" component={Treecompo} />
@@ -83,6 +84,7 @@ function HomeStackNavigation() {
       <Stack.Screen name="AddEntity" component={AddEntity} /> 
       <Stack.Screen name="AddEntityform" component={AddEntityform} /> 
       <Stack.Screen name="Addamenities" component={Addamenities} /> 
+      <Stack.Screen name="ChangePass" component={ChangePass} /> 
       
 
     </Stack.Navigator>

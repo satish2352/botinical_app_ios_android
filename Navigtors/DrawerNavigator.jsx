@@ -22,6 +22,7 @@ import Flowersstack from './Flowersstack';
 import Logout from '../src/Componets/Logout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { globalvariavle } from './globlevariable/MyContext';
+import ChangepassStack from './ChangepassStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -191,6 +192,16 @@ function DrawerNavigator() {
           title: SelectedLanguage1 === 'english' ? 'Add Entities' : 'ఎంటిటీలను జోడించండి',
           drawerIcon: ({ focused, size }) => (
             <Icon name="map" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="ChangepassStack"
+        component={ChangepassStack}
+        options={{
+          title: SelectedLanguage1 === 'english' ? 'Change Password' : 'పాస్‌వర్డ్ మార్చండి',
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="lock-closed" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),
         }}
       />

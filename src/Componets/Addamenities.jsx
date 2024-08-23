@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import { log } from 'react-native-reanimated';
 import axios from 'axios';
+import Getcordinates from '../Reusablecompoent/Getcordinates';
 
 
 
@@ -26,8 +27,8 @@ const Addamenities = ({ navigation, route }) => {
     const [selectedicons, setselectedicons] = useState(null);
     const [pickerError, setPickerError] = useState('');
     const [iconError, seticonError] = useState('');
-
-
+    const [showmap, setshowmap] = useState(false);
+    const [marker, setMarker] = useState(null); // State to store a single marker
 
     const [loading, setLoading] = useState(false);
 
@@ -385,7 +386,28 @@ const Addamenities = ({ navigation, route }) => {
             setLoading(false);
         }
     };
+    const handleLongPress = (event) => {
+        const { coordinate } = event.nativeEvent;
+        setMarker(coordinate); // Set the marker to the new coordinate
+        setFormState((prevState) => ({
+            ...prevState,
+            latitude: coordinate.latitude.toString(), // Convert to string if needed
+            longitude: coordinate.longitude.toString(), // Convert to string if needed
+        }));
+    };
 
+    const handleDragEnd = (event) => {
+        const { coordinate } = event.nativeEvent;
+        setMarker(coordinate); // Update marker position after dragging
+        setFormState((prevState) => ({
+            ...prevState,
+            latitude: coordinate.latitude.toString(), // Convert to string if needed
+            longitude: coordinate.longitude.toString(), // Convert to string if needed
+        }));
+    };
+    const handleCloseMap = () => {
+        setshowmap(false); // Hide the map
+    };
     return (
         <LinearGradient
             colors={['#015A4A', '#89CE9B', '#89CE9B']}
@@ -458,6 +480,9 @@ const Addamenities = ({ navigation, route }) => {
                             onChangeText={(value) => handleInputChange('longitude', value)}
                         />
                     </View>
+                    <TouchableOpacity style={[styles.button,{width:'40%',marginVertical:10}]} onPress={() => setshowmap(true)} >
+                    <Text style={styles.buttonText}>Select On Map</Text>
+                </TouchableOpacity>
                     <View style={styles.errorwrap}>
                         {errorState.errorlatitude ? <Text style={styles.error}>{errorState.errorlatitude}</Text> : null}
                         {errorState.errorlongitude ? <Text style={styles.error}>{errorState.errorlongitude}</Text> : null}
@@ -638,6 +663,8 @@ const Addamenities = ({ navigation, route }) => {
                     </View>
                 </Modal>
             </ScrollView>
+            {showmap ? <Getcordinates marker={marker}
+                handleLongPress={handleLongPress} handleDragEnd={handleDragEnd} handleCloseMap={handleCloseMap} /> : null}
         </LinearGradient>
     );
 }

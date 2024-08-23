@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import { log } from 'react-native-reanimated';
 import axios from 'axios';
+import Getcordinates from '../Reusablecompoent/Getcordinates';
 
 
 
@@ -21,8 +22,8 @@ const AddEntityform = ({ navigation, route }) => {
     const { useerid, SelectedLanguage1 } = globalvariavle();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedField, setSelectedField] = useState(null);
-    const [selectedTree, setSelectedTree] = useState(null);
-    const [selectedicons, setselectedicons] = useState(null);
+    const [selectedTree, setSeletedTree] = useState(null);
+    const [selectedicons, setselecctedicons] = useState(null);
     const [selectedhieghttype, setselectedhieghttype] = useState('');
     const [selectedcanopyttype, setselectedcanopyttype] = useState('');
     const [selectedgirthtype, setselectedgirthtype] = useState('');
@@ -33,11 +34,13 @@ const AddEntityform = ({ navigation, route }) => {
     const [hindi_common_name, sethindi_common_name] = useState(null);
     const [treeplantid, settreeplantid] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showmap, setshowmap] = useState(false);
     const [pickerError, setPickerError] = useState('');
     const [iconError, seticonError] = useState('');
     const [dropdowndata, setdropdowndata] = useState([]);
     const [icons, seticons] = useState([]);
-
+    const [marker, setMarker] = useState(null); // State to store a single marker
+    console.log('mmmmmmmm', marker);
 
     const initialFormState = {
         latitude: '',
@@ -62,8 +65,7 @@ const AddEntityform = ({ navigation, route }) => {
     };
 
     const [formState, setFormState] = useState(initialFormState);
-console.log('imagesssssselected',formState.image);
-console.log('imagesssssselected3',formState.image_three);
+
 
 
     const [errorState, setErrorState] = useState({
@@ -91,8 +93,7 @@ console.log('imagesssssselected3',formState.image_three);
 
     useEffect(() => {
         const id = item.id
-        console.log('iddddddddd', id);
-        console.log(id);
+
         const fetchData = async () => {
             const token = await AsyncStorage.getItem('token');
             try {
@@ -162,7 +163,7 @@ console.log('imagesssssselected3',formState.image_three);
                 type: mediaType,
             });
             const data = (result[0]);
-            console.log('setSelectedFielddddd', data);
+
             setFormState((prevState) => ({
                 ...prevState,
                 [fieldname]: data,
@@ -192,48 +193,14 @@ console.log('imagesssssselected3',formState.image_three);
         }
     };
 
-    // const selectImage = (field) => {
-    //     const mediaType = field === 'audio' ? 'audio' : field === 'video' ? 'video' : 'photo';
-    //     if (field === "video") {
-    //         setSelectedField(field);
-    //     }
-    //     launchImageLibrary({
-    //         mediaType: mediaType,
-    //         includeBase64: false, // or true if you want base64 encoding
-    //         quality: 1, // Set this as needed (for images)
-    //     }, (response) => {
-    //         if (response.didCancel) {
-    //             console.warn('User cancelled file picker');
-    //         } else if (response.errorCode) {
-    //             console.warn('FilePicker Error: ', response.errorMessage);
-    //         } else if (response.assets && response.assets.length > 0) {
-
-
-    //             imageses = {
-    //                 uri: response.assets[0].uri,
-    //                 name: response.assets[0].fileName,
-    //                 filename: response.assets[0].fileName,
-    //                 type: response.assets[0].type,
-    //             }
-
-    //             handleInputChange(selectedField, imageses)
-    //             console.log('raviii', response.assets[0]);
-    //             setModalVisible(false);
-
-
-    //         } else {
-    //             console.warn('No assets found in the response');
-    //         }
-    //     });
-    // };
 
     const selectImage = async (field) => {
         const mediaType = field === 'audio' ? 'audio' : field === 'video' ? 'video' : 'photo';
-    
+
         if (field === "video") {
             setSelectedField(field);
         }
-    
+
         launchImageLibrary({
             mediaType: mediaType,
             includeBase64: false,
@@ -248,7 +215,7 @@ console.log('imagesssssselected3',formState.image_three);
                 const originalUri = asset.uri;
                 const originalWidth = asset.width;
                 const originalHeight = asset.height;
-    
+
                 try {
                     const compressedImageUri = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
                     handleInputChange(selectedField, compressedImageUri);
@@ -262,37 +229,12 @@ console.log('imagesssssselected3',formState.image_three);
             }
         });
     };
-    
+
     const handleFileSelection = (field) => {
         setSelectedField(field);
         setModalVisible(true);
     };
-    // const captureImage = (mediaType) => {
-    //     launchCamera({
-    //         mediaType,
-    //         includeBase64: false,
-    //     }, (response) => {
-    //         if (response.didCancel) {
-    //             console.warn('User cancelled camera picker');
-    //         } else if (response.errorCode) {
-    //             console.warn('Camera Error: ', response.errorMessage);
-    //         } else {
-    //             const formData = new FormData();
 
-    //             imageses = {
-    //                 uri: response.assets[0].uri,
-    //                 name: response.assets[0].fileName,
-    //                 filename: response.assets[0].fileName,
-    //                 type: response.assets[0].type,
-    //             }
-
-    //             handleInputChange(selectedField, imageses)
-    //             console.log('raviii', formData);
-    //             setModalVisible(false);
-
-    //         }
-    //     });
-    // };
     const captureImage = (mediaType) => {
         launchCamera({
             mediaType,
@@ -306,7 +248,7 @@ console.log('imagesssssselected3',formState.image_three);
                 const originalUri = response.assets[0].uri;
                 const originalWidth = response.assets[0].width;
                 const originalHeight = response.assets[0].height;
-                console.warn('No valid URI found in the capture',originalUri);
+                console.warn('No valid URI found in the capture', originalUri);
                 try {
                     const compressedImage = await compressImage(originalUri, originalWidth * 0.5, originalHeight * 0.5);
                     handleInputChange(selectedField, compressedImage);
@@ -412,7 +354,7 @@ console.log('imagesssssselected3',formState.image_three);
                 const messageString = Array.isArray(response.data.message)
                     ? response.data.message.join('\n') // Join array items with line breaks
                     : response.data.message;
-        
+
                 Alert.alert('Message', messageString);
             } else {
                 console.log('Registration successful:', response.data.message);
@@ -428,7 +370,28 @@ console.log('imagesssssselected3',formState.image_three);
             setLoading(false);
         }
     };
+    const handleLongPress = (event) => {
+        const { coordinate } = event.nativeEvent;
+        setMarker(coordinate); // Set the marker to the new coordinate
+        setFormState((prevState) => ({
+            ...prevState,
+            latitude: coordinate.latitude.toString(), // Convert to string if needed
+            longitude: coordinate.longitude.toString(), // Convert to string if needed
+        }));
+    };
 
+    const handleDragEnd = (event) => {
+        const { coordinate } = event.nativeEvent;
+        setMarker(coordinate); // Update marker position after dragging
+        setFormState((prevState) => ({
+            ...prevState,
+            latitude: coordinate.latitude.toString(), // Convert to string if needed
+            longitude: coordinate.longitude.toString(), // Convert to string if needed
+        }));
+    };
+    const handleCloseMap = () => {
+        setshowmap(false); // Hide the map
+    };
     return (
         <LinearGradient
             colors={['#015A4A', '#89CE9B', '#89CE9B']}
@@ -457,7 +420,7 @@ console.log('imagesssssselected3',formState.image_three);
                         <Picker
                             selectedValue={selectedicons}
                             style={styles.pickervalue}
-                            onValueChange={(itemValue) => { setselectedicons(itemValue),seticonError('') }}
+                            onValueChange={(itemValue) => { setselecctedicons(itemValue), seticonError('') }}
                         >
                             <Picker.Item label="Icons" value={selectedicons} />
                             {icons.map((data, index) => (
@@ -510,15 +473,20 @@ console.log('imagesssssselected3',formState.image_three);
                             style={styles.input2}
                             placeholder="LATITUDE"
                             placeholderTextColor="black"
+                            value={formState.latitude}
                             onChangeText={(value) => handleInputChange('latitude', value)}
                         />
                         <TextInput
                             style={styles.input2}
                             placeholder="LONGITUDE "
                             placeholderTextColor="black"
+                            value={formState.longitude}
                             onChangeText={(value) => handleInputChange('longitude', value)}
                         />
                     </View>
+                    <TouchableOpacity style={[styles.button,{width:'40%',marginVertical:10}]} onPress={() => setshowmap(true)} >
+                        <Text style={styles.buttonText}>Select On Map</Text>
+                    </TouchableOpacity>
                     <View style={styles.errorwrap}>
                         {errorState.errorlatitude ? <Text style={styles.error}>{errorState.errorlatitude}</Text> : null}
                         {errorState.errorlongitude ? <Text style={styles.error}>{errorState.errorlongitude}</Text> : null}
@@ -657,12 +625,12 @@ console.log('imagesssssselected3',formState.image_three);
                         {errorState.errorhindi_video_upload ? <Text style={styles.error}>{errorState.errorhindi_video_upload}</Text> : null}
                     </View>
                     <TouchableOpacity style={[styles.buttonImageselect, { backgroundColor: '#01595A' }]} onPress={() => handleFileSelection('image')}>
-                        {console.log('inside ui',formState.image.uri)}
+
                         {formState.image.uri ? (
                             <Image source={{ uri: formState.image.uri }} style={styles.image} />
                         ) : (
                             <Text style={[styles.buttonText1, { color: '#ffff' }]}>IMAGE 1</Text>
-                            
+
                         )}
                     </TouchableOpacity>
                     {errorState.errorimage ? <Text style={styles.error}>{errorState.errorimage}</Text> : null}
@@ -708,6 +676,7 @@ console.log('imagesssssselected3',formState.image_three);
 
 
                     </TouchableOpacity>
+
                 </View>
                 {/* Modal for file selection */}
                 <Modal
@@ -731,6 +700,8 @@ console.log('imagesssssselected3',formState.image_three);
                     </View>
                 </Modal>
             </ScrollView>
+            {showmap ? <Getcordinates marker={marker}
+                handleLongPress={handleLongPress} handleDragEnd={handleDragEnd} handleCloseMap={handleCloseMap} /> : null}
         </LinearGradient>
     );
 }
@@ -768,7 +739,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 25,
         paddingHorizontal: 15,
-        marginBottom: 5,
+        // marginBottom: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,

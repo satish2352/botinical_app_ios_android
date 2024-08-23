@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 const Login = () => {
     const navigation = useNavigation();
     const [data, setdata] = useState();
@@ -86,7 +87,9 @@ const Login = () => {
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>
                 <Image style={styles.Image} source={require('../Assets/logo.png')} />
             </ImageBackground>
+            
             <View style={styles.underview}>
+            <ScrollView >
                 <ImageBackground style={styles.bottombgImage} source={require('../Assets/animal.png')}>
                     <View style={styles.inputwrap}>
                         <TextInput
@@ -129,7 +132,9 @@ const Login = () => {
                     </View>
                     <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#01595A', alignSelf: 'flex-end', marginHorizontal: 25 }} onPress={skipregi}>SKIP FOR NOW</Text>
                 </ImageBackground>
+                </ScrollView>
             </View>
+            
             <ForgotPass modalVisible={modalVisible} setModalVisible={setModalVisible} />
         </View>
     );
@@ -162,24 +167,6 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
         else {
             setOtpError('');
         }
-
-        // if (!newPassword.trim()) {
-        //     setNewPasswordError('New password is required');
-        //     valid = false;
-        // } else {
-        //     setNewPasswordError('');
-        // }
-
-        // if (!confirmPassword.trim()) {
-        //     setConfirmPasswordError('Confirm password is required');
-        //     valid = false;
-        // } else if (newPassword !== confirmPassword) {
-        //     setConfirmPasswordError('Passwords do not match');
-        //     valid = false;
-        // } else {
-        //     setConfirmPasswordError('');
-        // }
-
         return valid;
     };
 
@@ -202,16 +189,14 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
                 Alert.alert('Registration Successful', response.data.message);
                 setchangepassmodal(true)
                 // alert('Password reset successfully!');
-                // setModalVisible(false);
-               
+                setModalVisible(false);
             }
             else {
                 setOtpError(response.data.message);
             }
-
         } catch (error) {
             console.error('Error fetching tree data:', error);
-        }finally{
+        } finally {
             setLoading(false);
         }
     };
@@ -221,14 +206,14 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
 
         }
     }
-    const closemodal =()=>{
+    const closemodal = () => {
         setModalVisible(false),
-         setchangepassmodal(false)
-         setemail('')
-         setOtpError('')
+            setchangepassmodal(false)
+        setemail('')
+        setOtpError('')
     }
     return (
-        <View style={styles.container}>
+        <View style={{flex:1,padding:20}}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -238,67 +223,22 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Reset Password</Text>
-                        {changepassmodal === false ? <>
-                            <TextInput
+                        <TextInput
                             style={styles.input}
                             placeholder="Enter Email"
                             placeholderTextColor="black"
                             // value={otp}
                             onChangeText={setemail}
                             keyboardType="email-address"
-                        />  
+                        />
                         {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
                         <TouchableOpacity style={[styles.button, { width: '50%' }]} onPress={() => handleSubmit()} disabled={loading}>
-                        {loading ? (
-                            <ActivityIndicator size="small" color="#ffffff" />
-                        ) : (
-                            <Text style={styles.buttonText}>Submit</Text>
-                        )}
-
-                       
-
-                    </TouchableOpacity>
-                        </> : null}
-
-                        
-                        {changepassmodal ? 
-                        <> 
-                        
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Temporary Password"
-                            placeholderTextColor="black"
-                            // value={newPassword}
-                            onChangeText={setoldPassword}
-                            secureTextEntry
-                        />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="New Password"
-                                placeholderTextColor="black"
-                                // value={newPassword}
-                                onChangeText={setNewPassword}
-                                secureTextEntry
-                            />
-                            {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Confirm Password"
-                                placeholderTextColor="black"
-                                // value={confirmPassword}
-                                onChangeText={setConfirmPassword}
-                                secureTextEntry
-                            />
-                            {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
-                            <TouchableOpacity style={[styles.button, { width: '50%' }]} onPress={() => handleSubmit()} >
-                                <Text style={styles.buttonText}>Change Password</Text>
-
-                            </TouchableOpacity>
-                        </>
-                            : null
-                            }
-
-
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#ffffff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Submit</Text>
+                            )}
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton} onPress={() => closemodal()}>
                             <Icon name="close" size={30} color="#01595A" />
                         </TouchableOpacity>
@@ -394,16 +334,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)',
+        // padding:20
     },
     modalContent: {
         width: 400,
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 20,
+        padding: 10,
         alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 15,
         color: '#01595A'
@@ -442,122 +383,3 @@ const styles = StyleSheet.create({
 export default Login;
 
 
-
-// const ForgotPass = ({ modalVisible, setModalVisible }) => {
-//     const [email, setemail] = useState('');
-//     const [newPassword, setNewPassword] = useState('');
-//     const [confirmPassword, setConfirmPassword] = useState('');
-//     const [otpError, setOtpError] = useState('');
-//     const [newPasswordError, setNewPasswordError] = useState('');
-//     const [confirmPasswordError, setConfirmPasswordError] = useState('');
-//     const [emailresponse, setemailresponse] = useState([]);
-// console.log(emailresponse);
-
-//     const validateInputs = () => {
-//         let valid = true;
-
-//         if (!otp.trim()) {
-//             setOtpError('Email is required');
-//             valid = false;
-//         } else {
-//             setOtpError('');
-//         }
-
-//         if (!newPassword.trim()) {
-//             setNewPasswordError('New password is required');
-//             valid = false;
-//         } else {
-//             setNewPasswordError('');
-//         }
-
-//         if (!confirmPassword.trim()) {
-//             setConfirmPasswordError('Confirm password is required');
-//             valid = false;
-//         } else if (newPassword !== confirmPassword) {
-//             setConfirmPasswordError('Passwords do not match');
-//             valid = false;
-//         } else {
-//             setConfirmPasswordError('');
-//         }
-
-//         return valid;
-//     };
-
-//     const getrandompass = async () => {
-//         const token = await AsyncStorage.getItem('token');
-//         try {
-//             const response = await axios.post(`${config.API_URL}reset-password-byemail`,
-//                 {
-//                     // tree_plant_id: id,
-//                     email:email
-//                 },
-//                 {
-//                     headers: {
-//                         Authorization: `Bearer ${token}`
-//                     }
-//                 });
-//             setemailresponse(response.data);
-//         } catch (error) {
-//             console.error('Error fetching tree data:', error);
-//         }
-//     };
-//     const handleSubmit = () => {
-//         // if (validateInputs()) {
-//         //     // Handle password reset logic here
-//         //     alert('Password reset successfully!');
-//         //     setModalVisible(false);
-//         // }
-//     }
-//     return (
-//         <View style={styles.container}>
-//             <Modal
-//                 animationType="slide"
-//                 transparent={true}
-//                 visible={modalVisible}
-//                 onRequestClose={() => setModalVisible(false)}
-//             >
-//                 <View style={styles.modalContainer}>
-//                     <View style={styles.modalContent}>
-//                         <Text style={styles.modalTitle}>Reset Password</Text>
-//                         <TextInput
-//                             style={styles.input}
-//                             placeholder="Enter Email"
-//                             placeholderTextColor="black"
-//                             // value={otp}
-//                             onChangeText={setemail}
-//                             keyboardType="email-address"
-//                         />
-//                         {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
-
-//                         <TextInput
-//                             style={styles.input}
-//                             placeholder="New Password"
-//                             placeholderTextColor="black"
-//                             // value={newPassword}
-//                             onChangeText={setNewPassword}
-//                             secureTextEntry
-//                         />
-//                         {newPasswordError ? <Text style={styles.error}>{newPasswordError}</Text> : null}
-//                         <TextInput
-//                             style={styles.input}
-//                             placeholder="Confirm Password"
-//                             placeholderTextColor="black"
-//                             // value={confirmPassword}
-//                             onChangeText={setConfirmPassword}
-//                             secureTextEntry
-//                         />
-//                         {confirmPasswordError ? <Text style={styles.error}>{confirmPasswordError}</Text> : null}
-//                         <TouchableOpacity style={styles.button} onPress={() => handleSubmit()} >
-
-//                             <Text style={styles.buttonText}>Submit</Text>
-
-//                         </TouchableOpacity>
-//                         <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-//                             <Icon name="close" size={30} color="#01595A" />
-//                         </TouchableOpacity>
-//                     </View>
-//                 </View>
-//             </Modal>
-//         </View>
-//     )
-// }

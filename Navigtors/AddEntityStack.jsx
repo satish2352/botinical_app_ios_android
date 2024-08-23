@@ -10,6 +10,7 @@ import Mainmap from '../src/Componets/Mainmap';
 import AddEntity from '../src/Componets/AddEntity';
 import AddEntityform from '../src/Componets/AddEntityform';
 import Addamenities from '../src/Componets/Addamenities';
+import Getcordinates from '../src/Reusablecompoent/Getcordinates';
 
 const Stack = createNativeStackNavigator();
 function AddEntityStack() {
@@ -46,6 +47,7 @@ function AddEntityStack() {
             <Stack.Screen name="AddEntity" component={AddEntity} />
             <Stack.Screen name="AddEntityform" component={AddEntityform} />
             <Stack.Screen name="Addamenities" component={Addamenities} />
+            <Stack.Screen name="Getcordinates" component={Getcordinates} options={{ headerShown: false }}/>
 
         </Stack.Navigator>
 
