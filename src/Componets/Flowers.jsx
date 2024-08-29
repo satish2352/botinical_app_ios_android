@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl,Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,7 +7,7 @@ import config from '../../config/config';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-
+import Editcordinates from '../Reusablecompoent/Editcordinates';
 const Flowers = ({ navigation }) => {
     const [flowerData, setFlowerData] = useState([]);
     const [start, setStart] = useState(1);
@@ -15,7 +15,9 @@ const Flowers = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
-
+    const [lat, setlat] = useState(null);
+    const [long, setlong] = useState(null);
+    const [treeid, settreeid] = useState(null);
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -30,6 +32,37 @@ const Flowers = ({ navigation }) => {
        
         return()=>{}
     }, []);
+    const Updatecordinates = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setLoading(true);
+        try {
+            const response = await axios.post(`${config.API_URL}auth/update-tree-plant-aminities`, {
+                start,
+                language: SelectedLanguage1,
+                latitude: lat,
+                longitude: long,
+                type: 2,
+                tree_plant_id: treeid
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.data.status === 'true') {
+                Alert.alert("Data Update", response.data.message)
+            }
+            else {
+                Alert.alert("Error", response.data.message)
+            }
+            console.log('data update', response.data);
+        } catch (error) {
+            console.error('Error updating data:', error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    }
+
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -59,6 +92,9 @@ const Flowers = ({ navigation }) => {
             <View style={styles.textWrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
+            <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
+            <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
+        </TouchableOpacity>
         </TouchableOpacity>
     );
 

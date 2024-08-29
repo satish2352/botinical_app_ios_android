@@ -28,6 +28,9 @@ import AddEntity from '../src/Componets/AddEntity';
 import AddEntityform from '../src/Componets/AddEntityform';
 import Addamenities from '../src/Componets/Addamenities';
 import ChangePass from '../src/Componets/ChangePass';
+import Editcordinates from '../src/Reusablecompoent/Editcordinates';
+import Arvramenities from '../src/Componets/Arvramenities';
+import Arvrdetails from '../src/Componets/Arvrdetails';
 
 
 
@@ -85,6 +88,9 @@ function HomeStackNavigation() {
       <Stack.Screen name="AddEntityform" component={AddEntityform} /> 
       <Stack.Screen name="Addamenities" component={Addamenities} /> 
       <Stack.Screen name="ChangePass" component={ChangePass} /> 
+      <Stack.Screen name="Editcordinates" component={Editcordinates} /> 
+      <Stack.Screen name="Arvramenities" component={Arvramenities} /> 
+      <Stack.Screen name="Arvrdetails" component={Arvrdetails} /> 
       
 
     </Stack.Navigator>

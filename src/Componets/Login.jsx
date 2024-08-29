@@ -71,7 +71,7 @@ const Login = () => {
         } catch (error) {
             // Handle error response from API
             console.error('Error requesting OTP:', error.message);
-            setError(error.message);
+            setError('Something went wrong please try again');
         } finally {
             setLoading(false); // Stop loading
         }

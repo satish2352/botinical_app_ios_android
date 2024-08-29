@@ -23,6 +23,7 @@ import Logout from '../src/Componets/Logout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { globalvariavle } from './globlevariable/MyContext';
 import ChangepassStack from './ChangepassStack';
+import ARVRamenitiesStack from './ARVRamenitiesStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -150,7 +151,16 @@ function DrawerNavigator() {
           ),
         }}
       />
-
+      <Drawer.Screen
+      name="ARVRamenitiesStack"
+      component={ARVRamenitiesStack}
+      options={{
+        title: SelectedLanguage1 === 'english' ? 'ARVR Amenities ' : 'ARVR సౌకర్యాలు',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="logo-apple-ar" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+        ),
+      }}
+    />
 
       <Drawer.Screen
         name="Chargesstack"
@@ -205,6 +215,7 @@ function DrawerNavigator() {
           ),
         }}
       />
+     
 
 
     </Drawer.Navigator>

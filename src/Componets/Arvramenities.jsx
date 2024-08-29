@@ -2,7 +2,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl,Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
 
-const Amenities = ({ navigation }) => {
+const Arvramenities = ({ navigation }) => {
     const [cardData, setAmenitiesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [start, setStart] = useState(1);
@@ -20,9 +20,7 @@ const Amenities = ({ navigation }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
-    const [lat, setlat] = useState(null);
-    const [long, setlong] = useState(null);
-    const [treeid, settreeid] = useState(null);
+
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -42,7 +40,7 @@ const Amenities = ({ navigation }) => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
-            const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+            const response = await axios.post(`${config.API_URL}auth/get-ar-vr-amenities-list`, {
                 start,
                 language: SelectedLanguage1,
             }, {
@@ -61,7 +59,7 @@ const Amenities = ({ navigation }) => {
     };
 
     const handleLogin = (data) => {
-        navigation.navigate('Aminitiesdetails', data);
+        navigation.navigate('Arvrdetails', data);
     };
 
     const handleNext = () => {
@@ -92,37 +90,6 @@ const Amenities = ({ navigation }) => {
         result = result.replace(/wikipedia/gi, "");
         return result;
     }
-
-    const Updatecordinates = async () => {
-        const token = await AsyncStorage.getItem('token');
-        setLoading(true);
-        try {
-            const response = await axios.post(`${config.API_URL}auth/update-tree-plant-aminities`, {
-                start,
-                language: SelectedLanguage1,
-                latitude: lat,
-                longitude: long,
-                type: 3,
-               aminities_id: treeid
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (response.data.status === 'true') {
-                Alert.alert("Data Update", response.data.message)
-            }
-            else {
-                Alert.alert("Error", response.data.message)
-            }
-            console.log('data update', response.data);
-        } catch (error) {
-            console.error('Error fetching tree data:', error);
-        } finally {
-            setLoading(false);
-            setRefreshing(false);
-        }
-    }
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -136,7 +103,7 @@ const Amenities = ({ navigation }) => {
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
             >
-                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'AMENITIES' : 'సౌకర్యాలు'}</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? ' ARVR AMENITIES' : 'ARVR సౌకర్యాలు'}</Text>
 
                 {cardData.map((item, index) => {
                     if (index % 2 === 0) {
@@ -155,7 +122,6 @@ const Amenities = ({ navigation }) => {
                                     <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>{stripHtmlTags(item.description)}</Text>
 
                                 </View>
-                                <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-start", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', zIndex: 1 ,right:0 }}><Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} /></TouchableOpacity>
                             </TouchableOpacity>
                         );
                     } else {
@@ -173,7 +139,6 @@ const Amenities = ({ navigation }) => {
                                         style={styles.image3}
                                     />
                                 </View>
-                                <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-start", borderToprightRadius: 10, borderBottomRightRadius: 10, backgroundColor: '#01595A', zIndex: 1}}><Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} /></TouchableOpacity>
 
                             </TouchableOpacity>
                         );
@@ -306,5 +271,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Amenities;
+export default Arvramenities;
 
