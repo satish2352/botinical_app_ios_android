@@ -12,8 +12,7 @@ import axios from 'axios';
 import AudioModal from './AudioModal';
 import VideoModal from './VideoModal';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { useNavigation } from '@react-navigation/native';
-useNavigation
+
 
 const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
     return (
@@ -41,8 +40,7 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
     );
 };
 
-const Arvrdetails = ({ route }) => {
-    const navigation = useNavigation();
+const Zonesdetails = ({ route ,navigation}) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
     const [videoModalVisible, setvideoModalVisible] = useState(false);
@@ -60,9 +58,9 @@ const Arvrdetails = ({ route }) => {
 
             try {
 
-                const response = await axios.post(`${config.API_URL}auth/get-ar-vr-amenities-list`, {
+                const response = await axios.post(`${config.API_URL}auth/get-zone-area`, {
 
-                    amenities_id: data.id,
+                    zone_id: data.id,
                     language: SelectedLanguage1
                 }, {
                     headers: {
@@ -119,7 +117,7 @@ const goOnMap=()=>{
 
     };
     const carouselData = [
-        { image: source = { uri: about.image } },
+        { image: source = { uri: about.image} },
         { image: source = { uri: about.image_two } },
         { image: source = { uri: about.image_three } },
         { image: source = { uri: about.image_four } },
@@ -176,25 +174,6 @@ const goOnMap=()=>{
                         
                         <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
 
-                        <View style={styles.headtext2wrap}>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
-                            </View>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
-                            </View>
-
-
-
-                        </View>
-
-
-
-                        
                              <View  >
                             <View style={styles.buttonview}>
                          
@@ -447,5 +426,5 @@ const styles = StyleSheet.create({
       },
 });
 
-export default Arvrdetails;
+export default Zonesdetails;
 

@@ -12,6 +12,7 @@ import Icon1 from 'react-native-vector-icons/Ionicons';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+
 const Login = () => {
     const navigation = useNavigation();
     const [data, setdata] = useState();
@@ -21,7 +22,31 @@ const Login = () => {
     const [loading, setLoading] = useState(false); // Loading state
     const [modalVisible, setModalVisible] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const { setid } = globalvariavle();
+    const { setid,setroleid } = globalvariavle();
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+    // useEffect(() => {
+    //     const checkUserToken = async () => {
+    //         try {
+    //             const token = await AsyncStorage.getItem('token');
+    //             if (token) {
+    //                 setIsLoggedIn(true);
+    //                 navigation.navigate('Home');
+    //             } else {
+    //                 setIsLoggedIn(false);
+                 
+    //             }
+    //         } catch (error) {
+    //             console.error('Error checking user token:', error);
+    //             setIsLoggedIn(false);
+    //         } finally {
+    //             setLoading(false); // Loading is done whether token is found or not
+    //         }
+    //     };
+
+    //     checkUserToken();
+    // }, []);
+
     const handleLogin = async () => {
         const URL = config.API_URL;
         setError('');
@@ -57,8 +82,10 @@ const Login = () => {
                 setError(response.data.message)
                 await AsyncStorage.setItem('token', response.data.token);
                 const id = response.data.data.id;
-                console.log('User ID:', id);
+                const role_id = response.data.data.role_id;
+                console.log('User ID:', id,role_id);
                 setid(id);
+                setroleid(role_id);
                 // navigation.navigate('Otpscreen', { mobile_number: mobile });
                 navigation.navigate('Home');
                 setError('');
@@ -82,6 +109,7 @@ const Login = () => {
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
+   
     return (
         <View style={styles.maincontainer}>
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>

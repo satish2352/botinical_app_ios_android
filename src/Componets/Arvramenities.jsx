@@ -1,6 +1,4 @@
 
-
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -50,6 +48,7 @@ const Arvramenities = ({ navigation }) => {
             });
             setAmenitiesData(response.data.data);
             setTotalPages(response.data.totalPages);
+   
         } catch (error) {
             console.error('Error fetching amenities data:', error);
         } finally {

@@ -272,7 +272,7 @@ const Mainmap = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
-  const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
+  const { SelectedLanguage1, isLoggedIn, showLoginPrompt ,roleid} = globalvariavle();
   const [playMode, setPlayMode] = useState(null);
   const [buttonmodal, setbuttonmodal] = useState(false);
   const [audioModalVisible, setAudioModalVisible] = useState(false);
@@ -737,7 +737,7 @@ const Mainmap = ({ route, navigation }) => {
             />
           </View>
         )}
-       {/* {polygons.map((item, index) => {
+     {polygons.map((item, index) => {
           if (item.type === 'Polygon') {
             return (
               <Polygon
@@ -770,7 +770,7 @@ const Mainmap = ({ route, navigation }) => {
           }
           return null;
         })}
-          */}
+    
         {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
@@ -803,7 +803,10 @@ const Mainmap = ({ route, navigation }) => {
         showDirections ? <TouchableOpacity style={styles.directioncloseButton} onPress={() => Canceldirection()}>
           <Text style={styles.btntext}>Cancel Direction</Text>
         </TouchableOpacity> :
+        
           <View style={{ justifyContent: 'space-evenly', marginHorizontal: 5 }}>
+          {roleid === '2' ||roleid === '1'?
+            <View>
             {
               isTracking ?
                 <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
@@ -814,6 +817,9 @@ const Mainmap = ({ route, navigation }) => {
                   <Text style={styles.btntext}>Track Location</Text>
                 </TouchableOpacity>
             }
+            </View>
+            :null}
+           
           </View>
       }
       {selectedAmenity && (

@@ -11,7 +11,7 @@ import Editcordinates from '../Reusablecompoent/Editcordinates';
 
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
-    const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
+    const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);
@@ -94,9 +94,13 @@ const Treecompo = ({ navigation }) => {
             <View style={styles.textwrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
-            <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
-                <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
-            </TouchableOpacity>
+            {roleid === '1' ?
+
+                <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
+                    <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
+                </TouchableOpacity>
+                : null
+            }
         </TouchableOpacity>
     );
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl,Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,23 +14,23 @@ const Flowers = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
-    const { SelectedLanguage1 ,isLoggedIn, showLoginPrompt} = globalvariavle();
+    const { SelectedLanguage1, isLoggedIn, showLoginPrompt ,roleid} = globalvariavle();
     const [lat, setlat] = useState(null);
     const [long, setlong] = useState(null);
     const [treeid, settreeid] = useState(null);
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
-          if (!isLoggedIn) {
-            showLoginPrompt(navigation);
-          }
+            if (!isLoggedIn) {
+                showLoginPrompt(navigation);
+            }
         });
         return unsubscribe;
-      }, [navigation, isLoggedIn,SelectedLanguage1, start]);
+    }, [navigation, isLoggedIn, SelectedLanguage1, start]);
 
     useEffect(() => {
-       
-        return()=>{}
+
+        return () => { }
     }, []);
     const Updatecordinates = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -92,9 +92,14 @@ const Flowers = ({ navigation }) => {
             <View style={styles.textWrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
-            <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
-            <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
-        </TouchableOpacity>
+            {roleid === '1' ?
+                <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
+                    <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
+                </TouchableOpacity>
+
+                : null
+            }
+
         </TouchableOpacity>
     );
 
@@ -135,14 +140,14 @@ const Flowers = ({ navigation }) => {
                 numColumns={2}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
-                     
-                      {loading && <ActivityIndicator size="large" color="#01595A" />}
-                      <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
+
+                        {loading && <ActivityIndicator size="large" color="#01595A" />}
+                        <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
                     </View>
-                  )}
+                )}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
-            
+
             <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
                 <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
             </TouchableOpacity>
@@ -230,12 +235,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 10,
-      },
-      pageIndicator: {
+    },
+    pageIndicator: {
         fontSize: 16,
         fontWeight: 'bold',
         color: '#01595A',
-      },
+    },
     icon: {
         color: '#fff',
         fontSize: 20,

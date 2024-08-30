@@ -14,7 +14,7 @@ const Regifrom = () => {
     const navigation = useNavigation();
     const { useerid } = globalvariavle();
     const [rolldata, setrolldata] = useState([]);
-    const [rollvalue, setrollvalue] = useState('');
+    const [rollvalue, setrollvalue] = useState(3);
 console.log('value',rollvalue,'data',rolldata );
 
     
@@ -118,7 +118,11 @@ console.log('value',rollvalue,'data',rolldata );
         if (!password.trim()) {
             setPasswordError('Password is required');
             valid = false;
-        } else {
+        } else if(password.length < 8) {
+            setPasswordError('Password must be at least 8 characters long');
+            valid = false;
+        }
+        else {
             setPasswordError('');
         }
 
@@ -129,10 +133,13 @@ console.log('value',rollvalue,'data',rolldata );
         } else if (password !== confirmpassword) {
             setConfirmPasswordError('Passwords do not match');
             valid = false;
-        } else {
+        }else if(confirmpassword.length < 8) {
+            setConfirmPasswordError('Password must be at least 8 characters long');
+            valid = false;
+        } 
+        else {
             setConfirmPasswordError('');
         }
-
 
         if (!valid) {
             return;
@@ -220,6 +227,7 @@ console.log('value',rollvalue,'data',rolldata );
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
+    
     return (
         <View style={styles.maincontainer}>
             <View style={styles.subcontainer1}>

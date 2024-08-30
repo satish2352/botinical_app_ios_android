@@ -144,7 +144,7 @@ const AddEntityform = ({ navigation, route }) => {
 
 
         if (field === "name") {
-            setSelectedTree(value)
+            setSeletedTree(value)
             const selectedItem = dropdowndata.find(item => item.english_name === value);
             setenglish_botnical_name(selectedItem.english_botnical_name)
             sethindi_botnical_name(selectedItem.hindi_botnical_name)

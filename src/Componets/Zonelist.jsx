@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
 
-const Amenities = ({ navigation }) => {
+const Zonelist = ({ navigation }) => {
     const [cardData, setAmenitiesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [start, setStart] = useState(1);
@@ -42,7 +42,7 @@ const Amenities = ({ navigation }) => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
-            const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+            const response = await axios.post(`${config.API_URL}auth/get-zone-area`, {
                 start,
                 language: SelectedLanguage1,
             }, {
@@ -61,7 +61,7 @@ const Amenities = ({ navigation }) => {
     };
 
     const handleLogin = (data) => {
-        navigation.navigate('Aminitiesdetails', data);
+        navigation.navigate('Zonesdetails', data);
     };
 
     const handleNext = () => {
@@ -136,7 +136,7 @@ const Amenities = ({ navigation }) => {
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
             >
-                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'AMENITIES' : 'సౌకర్యాలు'}</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'ZONES' : 'మండలాలు'}</Text>
 
                 {cardData.map((item, index) => {
                     if (index % 2 === 0) {
@@ -316,5 +316,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Amenities;
+export default Zonelist;
 
