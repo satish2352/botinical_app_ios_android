@@ -1,35 +1,41 @@
-import { View, Text, TouchableOpacity, Modal, StyleSheet, TextInput ,Alert} from 'react-native'
+import { View, Text, TouchableOpacity, Modal, StyleSheet, TextInput, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Getcordinates from './Getcordinates';
 import { log } from 'react-native-reanimated';
 
-const Editcordinates = ({item,setlong,setlat,Updatecordinates,settreeid}) => {
+const Editcordinates = ({ item, setlong, setlat, Updatecordinates, settreeid }) => {
 
 
-  
+
   const [modalVisible, setModalVisible] = useState(false);
-  settreeid(item.id)
 
-  
+
+
   return (
 
     <View style={{ alignItems: 'center', justifyContent: "center" }}>
       <TouchableOpacity onPress={() => setModalVisible(true)} style={{ backgroundColor: '#01595A', borderRadius: 20, height: 40, width: 40, alignItems: 'center', justifyContent: "center", padding: 5 }}>
         <Icon name="edit" size={25} color="#FFFFFF" />
       </TouchableOpacity>
-      {modalVisible? <Editlatlongmodal modalVisible={modalVisible} setModalVisible={setModalVisible} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} />:null}
-     
+      {modalVisible ? <Editlatlongmodal modalVisible={modalVisible} setModalVisible={setModalVisible} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} item={item} settreeid={settreeid} /> : null}
+
     </View>
 
   )
 }
 
-const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Updatecordinates}) => {
-  const [lat,setlatt] = useState(null);
-  const [long,setlongg] = useState(null);
+const Editlatlongmodal = ({ modalVisible, setModalVisible, setlong, setlat, Updatecordinates, item, settreeid }) => {
+  console.log('all data', item);
+  settreeid(item.id)
+
+  const [lat, setlatt] = useState(null);
+  const [long, setlongg] = useState(null);
   const [showmap, setshowmap] = useState(false);
-  const [marker, setMarker] = useState(null); // State to store a single marker
+  const [marker, setMarker] = useState({
+    latitude: Number(item.latitude),
+    longitude: Number(item.longitude)
+  });
   const [latError, setLatError] = useState('');
   const [longError, setLongError] = useState('');
   const handleSubmit = () => {
@@ -42,14 +48,15 @@ const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Update
 
     // If there are no errors, proceed with form submission
     if (lat && long) {
-   
+
       Updatecordinates();
       setModalVisible(false);
       setLatError('');
-      setLongError('')
+      setLongError('');
+
     }
- 
-   
+
+
   }
   const closemodal = () => {
 
@@ -60,20 +67,22 @@ const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Update
   }
   const handleLongPress = (event) => {
     const { coordinate } = event.nativeEvent;
+    console.log(coordinate, 'coodinate');
+
     setMarker(coordinate);
     setlat(coordinate.latitude.toString()) // Convert to string if needed
-      setlong(coordinate.longitude.toString()) // Convert to string if needed
-      setlatt(coordinate.latitude.toString()) 
-      setlongg(coordinate.longitude.toString()) 
-};
+    setlong(coordinate.longitude.toString()) // Convert to string if needed
+    setlatt(coordinate.latitude.toString())
+    setlongg(coordinate.longitude.toString())
+  };
 
   const handleDragEnd = (event) => {
     const { coordinate } = event.nativeEvent;
     setMarker(coordinate);
     setlat(coordinate.latitude.toString()) // Convert to string if needed
-      setlong(coordinate.longitude.toString()) // Convert to string if needed
-      setlatt(coordinate.latitude.toString()) 
-      setlongg(coordinate.longitude.toString()) 
+    setlong(coordinate.longitude.toString()) // Convert to string if needed
+    setlatt(coordinate.latitude.toString())
+    setlongg(coordinate.longitude.toString())
   };
   const handleCloseMap = () => {
     setshowmap(false); // Hide the map
@@ -100,6 +109,10 @@ const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Update
       setLongError('');
     }
   };
+  const Openmodal1 = () => {
+    setshowmap(true)
+   
+  }
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Modal
@@ -120,22 +133,22 @@ const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Update
                 editable={false}
                 onChangeText={validateLatitude}
               />
-             
+
               <TextInput
                 style={styles.input2}
                 placeholder="LONGITUDE "
                 placeholderTextColor="black"
                 value={long}
                 editable={false}
-              onChangeText={validateLongitude}
+                onChangeText={validateLongitude}
               />
-              
+
             </View>
             <View style={[styles.inputwrap]}>
-            {latError ? <Text style={styles.errorText}>{latError}</Text> : null}
-            {longError ? <Text style={styles.errorText}>{longError}</Text> : null}
+              {latError ? <Text style={styles.errorText}>{latError}</Text> : null}
+              {longError ? <Text style={styles.errorText}>{longError}</Text> : null}
             </View>
-            <TouchableOpacity style={[styles.button, { width: '12%', borderRadius: 40 }]} onPress={() => setshowmap(true)} >
+            <TouchableOpacity style={[styles.button, { width: '12%', borderRadius: 40 }]} onPress={() => Openmodal1()} >
               <Icon name="map-marker" size={25} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { width: '50%' }]} onPress={() => handleSubmit()} >
@@ -149,9 +162,9 @@ const Editlatlongmodal = ({ modalVisible, setModalVisible,setlong,setlat ,Update
           </View>
         </View>
         {showmap ? <Getcordinates marker={marker}
-      handleLongPress={handleLongPress} handleDragEnd={handleDragEnd} handleCloseMap={handleCloseMap} /> : null}
+          handleLongPress={handleLongPress} handleDragEnd={handleDragEnd} handleCloseMap={handleCloseMap} /> : null}
       </Modal>
-      
+
     </View>
   )
 }
@@ -240,7 +253,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     // marginBottom: 10,
-    marginHorizontal:15
+    marginHorizontal: 15
   },
 })
 export default Editcordinates

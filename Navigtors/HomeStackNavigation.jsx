@@ -59,7 +59,7 @@ function HomeStackNavigation() {
 
   return (
 
-    <Stack.Navigator initialRouteName={isLoggedIn === false ? 'Login' : 'Home'}
+    <Stack.Navigator initialRouteName='Login'
       screenOptions={{
         statusBarHidden: false,
         translucent: false,
@@ -88,55 +88,91 @@ function HomeStackNavigation() {
       }}
     >
 
-     
 
-      {isLoggedIn === false ?
-        (
-          <>
-          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-          <Stack.Screen name="Home" component={Home}  options={{ statusBarHidden: true }}  />
-          </>
-        )
-        :
-        (
-          <>
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />
-            <Stack.Screen name="Regifrom" component={Regifrom} />
-            <Stack.Screen name="ChargesList" component={ChargesList} />
-            <Stack.Screen name="About" component={About} />
-            <Stack.Screen name="Amenities" component={Amenities} />
-            <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
-            <Stack.Screen name="Treecompo" component={Treecompo} />
-            <Stack.Screen name="Flowers" component={Flowers} />
-            <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
-            <Stack.Screen name="Flowerdetails" component={Flowerdetails} />
-            <Stack.Screen name="Contactus" component={Contactus} />
-            <Stack.Screen name="Gallery" component={Gallery} />
-            <Stack.Screen name="Aminities2" component={Aminities2} />
-            <Stack.Screen name="logout" component={Logout} />
-            {/*
+
+
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={Home} options={{ statusBarHidden: true }} />
+
+      <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />
+      <Stack.Screen name="Regifrom" component={Regifrom} />
+      <Stack.Screen name="ChargesList" component={ChargesList} />
+      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="Amenities" component={Amenities} />
+      <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
+      <Stack.Screen name="Treecompo" component={Treecompo} />
+      <Stack.Screen name="Flowers" component={Flowers} />
+      <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
+      <Stack.Screen name="Flowerdetails" component={Flowerdetails} />
+      <Stack.Screen name="Contactus" component={Contactus} />
+      <Stack.Screen name="Gallery" component={Gallery} />
+      <Stack.Screen name="Aminities2" component={Aminities2} />
+      <Stack.Screen name="logout" component={Logout} />
+      {/*
         <Stack.Screen name="AddEntity" component={AddEntity} /> 
      <Stack.Screen name="AddEntityform" component={AddEntityform} /> 
      <Stack.Screen name="Addamenities" component={Addamenities} /> 
      */}
-            <Stack.Screen name="ChangePass" component={ChangePass} />
-            <Stack.Screen name="Editcordinates" component={Editcordinates} />
-            <Stack.Screen name="Arvramenities" component={Arvramenities} />
-            <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-          </>
-
-        )
+      <Stack.Screen name="ChangePass" component={ChangePass} />
+      <Stack.Screen name="Editcordinates" component={Editcordinates} />
+      <Stack.Screen name="Arvramenities" component={Arvramenities} />
+      <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
 
 
-      }
+
+
+
+
+
 
 
 
     </Stack.Navigator>
 
-  );
+  )
 }
 
 export default HomeStackNavigation;
+
+
+// {isLoggedIn === false ?
+//   (
+//     <>
+//     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+//     <Stack.Screen name="Home" component={Home}  options={{ statusBarHidden: true }}  />
+//     </>
+//   )
+//   :
+//   (
+//     <>
+//       <Stack.Screen name="Home" component={Home} />
+//       <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />
+//       <Stack.Screen name="Regifrom" component={Regifrom} />
+//       <Stack.Screen name="ChargesList" component={ChargesList} />
+//       <Stack.Screen name="About" component={About} />
+//       <Stack.Screen name="Amenities" component={Amenities} />
+//       <Stack.Screen name="Aminitiesdetails" component={Aminitiesdetails} />
+//       <Stack.Screen name="Treecompo" component={Treecompo} />
+//       <Stack.Screen name="Flowers" component={Flowers} />
+//       <Stack.Screen name="PlatsDetails" component={PlatsDetails} />
+//       <Stack.Screen name="Flowerdetails" component={Flowerdetails} />
+//       <Stack.Screen name="Contactus" component={Contactus} />
+//       <Stack.Screen name="Gallery" component={Gallery} />
+//       <Stack.Screen name="Aminities2" component={Aminities2} />
+//       <Stack.Screen name="logout" component={Logout} />
+//       {/*
+//   <Stack.Screen name="AddEntity" component={AddEntity} />
+// <Stack.Screen name="AddEntityform" component={AddEntityform} />
+// <Stack.Screen name="Addamenities" component={Addamenities} />
+// */}
+//       <Stack.Screen name="ChangePass" component={ChangePass} />
+//       <Stack.Screen name="Editcordinates" component={Editcordinates} />
+//       <Stack.Screen name="Arvramenities" component={Arvramenities} />
+//       <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
+//       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+//     </>
+
+//   )
+
+
+// }
