@@ -229,7 +229,7 @@ console.log('value',rollvalue,'data',rolldata );
     };
     
     return (
-        <View style={styles.maincontainer}>
+        <ScrollView style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
                 <Image style={styles.Image} source={require('../Assets/logo.png')} />
             </View>
@@ -355,7 +355,7 @@ console.log('value',rollvalue,'data',rolldata );
                 </View>
                 <Text style={{ fontSize: 15, fontWeight: '500', color: '#ffff', alignSelf: 'flex-end', marginHorizontal: 25, marginBottom: 20 }} onPress={skipregi}>SKIP FOR NOW</Text>
             </LinearGradient>
-        </View>
+        </ScrollView>
     )
 }
 

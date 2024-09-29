@@ -40,7 +40,7 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
     );
 };
 
-const Aminitiesdetails = ({ route ,navigation}) => {
+const Aminitiesdetails = ({ route, navigation }) => {
     const data = route.params;
     const [audioModalVisible, setAudioModalVisible] = useState(false);
     const [videoModalVisible, setvideoModalVisible] = useState(false);
@@ -89,10 +89,10 @@ const Aminitiesdetails = ({ route ,navigation}) => {
     };
 
 
-const goOnMap=()=>{
-   
-    navigation.navigate('Mainmap',about);
-}
+    const goOnMap = () => {
+
+        navigation.navigate('Mainmap', about);
+    }
 
     const stripHtmlTags = (str) => {
         if (!str) return '';
@@ -142,36 +142,37 @@ const goOnMap=()=>{
             </View>
 
             <View style={styles.contentContainer}>
-                <View style={styles.carouselwrap}>
-                    <Carousel
-                        data={carouselData}
-                        renderItem={renderItem}
-                        sliderWidth={wp(100)}
-                        autoplay={true}
-                        itemWidth={wp(90)} // Set item width to full width
-                        onSnapToItem={(index) => setActiveIndex(index)}
-                        autoplayInterval={5000}
-                        loop={true}
-                    />
-                    <View style={styles.paginationContainer}>
-                        <Pagination
-                            dotsLength={carouselData.length}
-                            activeDotIndex={activeIndex}
-                            dotStyle={styles.paginationDot}
-                            inactiveDotStyle={styles.paginationInactiveDot}
-                            inactiveDotOpacity={0.4}
-                            inactiveDotScale={0.6}
-                        />
-                    </View>
-                </View>
                 <ScrollView>
-                    <View style={styles.headingwrap}>
-                   
-                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-                    <Text style={styles.headtext}>{about.name}</Text> 
-                    <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap(about)}>Show On Map</Text></TouchableOpacity>
+                    <View style={styles.carouselwrap}>
+                        <Carousel
+                            data={carouselData}
+                            renderItem={renderItem}
+                            sliderWidth={wp(100)}
+                            autoplay={true}
+                            itemWidth={wp(90)} // Set item width to full width
+                            onSnapToItem={(index) => setActiveIndex(index)}
+                            autoplayInterval={5000}
+                            loop={true}
+                        />
+                        <View style={styles.paginationContainer}>
+                            <Pagination
+                                dotsLength={carouselData.length}
+                                activeDotIndex={activeIndex}
+                                dotStyle={styles.paginationDot}
+                                inactiveDotStyle={styles.paginationInactiveDot}
+                                inactiveDotOpacity={0.4}
+                                inactiveDotScale={0.6}
+                            />
+                        </View>
                     </View>
-                        
+
+                    <View style={styles.headingwrap}>
+
+                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+                            <Text style={styles.headtext}>{about.name}</Text>
+                            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
+                        </View>
+
                         <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
 
                         <View style={styles.headtext2wrap}>
@@ -192,27 +193,28 @@ const goOnMap=()=>{
 
 
 
-                        
-                             <View  >
+
+                        <View  >
                             <View style={styles.buttonview}>
-                         
-                            {
-                                about.audio_link && about.audio_link.length > 0 ?<TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                                <Text style={styles.buttonText}>Audio</Text>
-                                <Icon name="multitrack-audio" size={24} color="#fff" />
-                              </TouchableOpacity>:null
-                            }
-                            
-                            {
-                                about.video_upload && about.video_upload.length > 0 ?<TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                                <Text style={styles.buttonText}>Video</Text>
-                                <Icon name="ondemand-video" size={24} color="#fff" />
-                              </TouchableOpacity>:null
-                            }
-                            
-                          </View>
+
+                                {
+                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                                        <Text style={styles.buttonText}>Audio</Text>
+                                        <Icon name="multitrack-audio" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
+                                {
+                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                                        <Text style={styles.buttonText}>Video</Text>
+                                        <Icon name="ondemand-video" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
                             </View>
+                        </View>
                     </View>
+
                 </ScrollView>
             </View>
 
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
         alignItems: 'center',
-        padding: 2,
+      
     },
     button: {
         width: '40%',
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     headingwrap: {
-        // alignItems: 'flex-start',
+        alignItems: 'flex-start',
         top: 0,
         marginHorizontal: 13,
     },
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         marginVertical: 20,
         alignSelf: 'center',
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
     },
     centeredView: {
         flex: 1,
@@ -392,8 +394,8 @@ const styles = StyleSheet.create({
     carouselwrap: {
         alignItems: "center",
         justifyContent: 'center',
-        height: '50%',
-        padding: 10
+        height: '35%',
+        marginVertical: wp(4)
 
     },
     modalBackground: {
@@ -401,8 +403,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContainer: {
+    },
+    modalContainer: {
         width: wp(80),
         backgroundColor: 'white',
         borderRadius: 10,
@@ -410,8 +412,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -426,15 +428,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#01595A',
         margin: 10,
-    
+
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'black',
-      },
-      dibtn: {
+    },
+    dibtn: {
         width: '34%',
         height: 40,
         borderRadius: 10,
@@ -442,7 +444,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         backgroundColor: '#01595A',
-      },
+        alignSelf: 'center'
+    },
 });
 
 export default Aminitiesdetails;

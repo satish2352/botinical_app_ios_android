@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import axios from 'axios';
 import config from '../../config/config';
+import RotatingImage from '../Reusablecompoent/RotatingImage';
 
 const Home = () => {
     const [isModalVisible, setModalVisible] = useState(true);
@@ -109,10 +110,7 @@ const Home = () => {
                         imageHeight={Dimensions.get('window').height}
 
                     >
-                        <Image
-                            style={styles.image}
-                            source={{ uri: homedata.image }}
-                        />
+                    <RotatingImage image={homedata.image} toggleModal={toggleModal}/>
                     </ImageZoom>
                     {loading && <ActivityIndicator size="large" color="red" />}
                 </View>

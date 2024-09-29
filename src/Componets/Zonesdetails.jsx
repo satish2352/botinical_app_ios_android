@@ -142,6 +142,7 @@ const goOnMap=()=>{
             </View>
 
             <View style={styles.contentContainer}>
+            <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
                 <View style={styles.carouselwrap}>
                     <Carousel
                         data={carouselData}
@@ -164,7 +165,7 @@ const goOnMap=()=>{
                         />
                     </View>
                 </View>
-                <ScrollView>
+                
                     <View style={styles.headingwrap}>
                    
                     <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
@@ -194,9 +195,8 @@ const goOnMap=()=>{
                           </View>
                             </View>
                     </View>
-                </ScrollView>
+                    </ScrollView>
             </View>
-
             <View>
                 <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
                 <ButtonModal
@@ -373,8 +373,8 @@ const styles = StyleSheet.create({
     carouselwrap: {
         alignItems: "center",
         justifyContent: 'center',
-        height: '50%',
-        padding: 10
+        height: '35%',
+        marginVertical: wp(4) 
 
     },
     modalBackground: {

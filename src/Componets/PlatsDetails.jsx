@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Modal,ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Langchange from './Langchange';
@@ -37,7 +37,7 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
   );
 };
 
-const PlatsDetails = ({ route,navigation }) => {
+const PlatsDetails = ({ route, navigation }) => {
   const data = route.params;
   const [audioModalVisible, setAudioModalVisible] = useState(false);
 
@@ -112,11 +112,11 @@ const PlatsDetails = ({ route,navigation }) => {
 
   };
   const carouselData = [
-    { image:  source={ uri: treeData.image } },
-    { image: source={ uri: treeData.image_two } },
-    { image: source={ uri: treeData.image_three }},
-    { image: source={ uri: treeData.image_four }},
-    { image: source={ uri: treeData.image_five }},
+    { image: source = { uri: treeData.image } },
+    { image: source = { uri: treeData.image_two } },
+    { image: source = { uri: treeData.image_three } },
+    { image: source = { uri: treeData.image_four } },
+    { image: source = { uri: treeData.image_five } },
 
   ];
   const renderItem = ({ item, index }) => {
@@ -127,10 +127,10 @@ const PlatsDetails = ({ route,navigation }) => {
     );
   };
 
-  const goOnMap=()=>{
-   
-    navigation.navigate('Mainmap',treeData);
-}
+  const goOnMap = () => {
+
+    navigation.navigate('Mainmap', treeData);
+  }
   return (
     <View style={styles.maincontainer}>
       <View style={styles.subcontainer1}>
@@ -138,67 +138,70 @@ const PlatsDetails = ({ route,navigation }) => {
           <Image style={styles.image} source={{ uri: treeData.image }} />
         </View>
       </View>
+
       <View style={styles.contentContainer}>
-        <View style={styles.carouselwrap}>
-          <Carousel
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={wp(100)}
-            autoplay={true}
-            itemWidth={wp(90)} // Set item width to full width
-            onSnapToItem={(index) => setActiveIndex(index)}
-            autoplayInterval={5000}
-            loop={true}
-          />
-          <View style={styles.paginationContainer}>
-            <Pagination
-              dotsLength={carouselData.length}
-              activeDotIndex={activeIndex}
-              dotStyle={styles.paginationDot}
-              inactiveDotStyle={styles.paginationInactiveDot}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
+        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+          <View style={styles.carouselwrap}>
+            <Carousel
+              data={carouselData}
+              renderItem={renderItem}
+              sliderWidth={wp(100)}
+              autoplay={true}
+              itemWidth={wp(90)} // Set item width to full width
+              onSnapToItem={(index) => setActiveIndex(index)}
+              autoplayInterval={5000}
+              loop={true}
             />
+            <View style={styles.paginationContainer}>
+              <Pagination
+                dotsLength={carouselData.length}
+                activeDotIndex={activeIndex}
+                dotStyle={styles.paginationDot}
+                inactiveDotStyle={styles.paginationInactiveDot}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+              />
+            </View>
           </View>
-        </View>
-        <ScrollView>
-        <View style={styles.headingwrap}>
-        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}> 
-        <Text style={styles.headtext}>{treeData.name}</Text>
-        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap()}>Show On Map</Text></TouchableOpacity>
-        </View>
-         
-          <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
-          <View style={styles.headtext2wrap}>
-            <Text style={styles.headtext2}>
-              BOTANICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.botnical_name}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.common_name}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              HEIGHT:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.height}&nbsp;{treeData.height_type}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              CANOPY:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.canopy}&nbsp;{treeData.canopy_type}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              GIRTH:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.girth}&nbsp;{treeData.girth_type}</Text>
-            </Text>
+
+          <View style={styles.headingwrap}>
+            <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+              <Text style={styles.headtext}>{treeData.name}</Text>
+              <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
+            </View>
+
+            <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
+            <View style={styles.headtext2wrap}>
+              <Text style={styles.headtext2}>
+                BOTANICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.botnical_name}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.common_name}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                HEIGHT:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.height}&nbsp;{treeData.height_type}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                CANOPY:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.canopy}&nbsp;{treeData.canopy_type}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                GIRTH:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{treeData.girth}&nbsp;{treeData.girth_type}</Text>
+              </Text>
+            </View>
+            <View style={styles.buttonview}>
+              <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                <Text style={styles.buttonText}>Audio</Text>
+                <Icon name="multitrack-audio" size={24} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                <Text style={styles.buttonText}>Video</Text>
+                <Icon name="ondemand-video" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
           </View>
-          <View style={styles.buttonview}>
-            <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-              <Text style={styles.buttonText}>Audio</Text>
-              <Icon name="multitrack-audio" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-              <Text style={styles.buttonText}>Video</Text>
-              <Icon name="ondemand-video" size={24} color="#fff" />
-            </TouchableOpacity>
-          </View>
-         
-        </View>
         </ScrollView>
+        <View />
         <AudioModal data={treeData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
         <ButtonModal
           visible={buttonmodal}
@@ -302,7 +305,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginVertical: 20,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    // marginBottom:wp(10)
   },
   headtext2wrap: {
     marginVertical: 10,
@@ -341,47 +345,47 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // marginBottom: 10,
 
-},
-carouselImage: {
+  },
+  carouselImage: {
     // flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
-},
-paginationContainer: {
+  },
+  paginationContainer: {
     position: 'absolute',
     top: hp(20), // Adjust top position as needed
 
-},
-paginationDot: {
+  },
+  paginationDot: {
     width: 12,
     height: 12,
     borderRadius: 12,
     backgroundColor: '#ffff',
     marginHorizontal: 4,
 
-},
-paginationInactiveDot: {
+  },
+  paginationInactiveDot: {
     backgroundColor: '#C4C4C4',
 
-},
-carouselwrap:{
-  alignItems:"center",
-  justifyContent:'center',
-  height:'50%',
-padding:10
+  },
+  carouselwrap: {
+    alignItems: "center",
+    justifyContent: 'center',
+    height: '35%',
+    marginVertical: wp(4)
 
-},
-dibtn: {
-  width: '25%',
-  height: 40,
-  borderRadius: 10,
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'row',
-  backgroundColor: '#01595A',
-  marginLeft:20
-},
+  },
+  dibtn: {
+    width: '25%',
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#01595A',
+    marginLeft: 20
+  },
 });
 
 export default PlatsDetails;

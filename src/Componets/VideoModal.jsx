@@ -25,12 +25,12 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     return () => clearTimeout(timer);
   }, [paused, progress]);
 
-  useEffect(() => {
-    if (!visible) {
-      Orientation.lockToPortrait(); // Lock to portrait mode when modal is closed
-    }
-    return () => {};
-  }, [visible]);
+  // useEffect(() => {
+  //   if (!visible) {
+  //     Orientation.lockToPortrait(); // Lock to portrait mode when modal is closed
+  //   }
+  //   return () => {};
+  // }, [visible]);
 
   useEffect(() => {
     if (playMode === 'offline') {
@@ -38,7 +38,7 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     } else {
       setLoadingOnline(true); // Start loading indicator for online playback
     }
-    return () => {};
+    return () => { };
   }, [playMode]);
 
   const formatTime = (seconds) => {
@@ -84,13 +84,13 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
         console.log('Download succeeded:', downloadDest);
         setOfflinePath(downloadDest);
       } else {
-        Alert.alert("Warning","This video is unavailable")
-   
+        Alert.alert("Warning", "This video is unavailable")
+
         console.error('Download failed:', result.statusCode);
-        
+
       }
     } catch (error) {
-      
+
       console.error('Download error:', error);
     } finally {
       setLoading(false);
@@ -205,7 +205,7 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
                     />
                     <Text style={{ color: 'white' }}>{formatTime(progress.seekableDuration)}</Text>
                   </View>
-                  <View
+                 {/* <View
                     style={{
                       width: '100%',
                       flexDirection: 'row',
@@ -236,7 +236,7 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
                         style={{ width: 24, height: 24, tintColor: 'white' }}
                       />
                     </TouchableOpacity>
-                  </View>
+                  </View>*/}
                 </TouchableOpacity>
               </View>
             )}

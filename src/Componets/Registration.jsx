@@ -4,6 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp, } from 'react-na
 import Langchange from './Langchange';
 import LinearGradient from 'react-native-linear-gradient';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Registration = ({ navigation }) => {
     const handlelogin = () => {
@@ -13,7 +14,7 @@ const Registration = ({ navigation }) => {
         navigation.navigate('Home');
     }
     return (
-        <View style={styles.maincontainer}>
+        <ScrollView style={styles.maincontainer}>
             <View style={styles.subcontainer1}>
 
                 <Image style={styles.Image} source={require('../Assets/logowithtext.png')} />
@@ -41,7 +42,7 @@ const Registration = ({ navigation }) => {
 
 
             </LinearGradient>
-        </View>
+        </ScrollView>
     )
 }
 

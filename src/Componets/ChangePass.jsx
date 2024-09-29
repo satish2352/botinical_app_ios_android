@@ -86,7 +86,9 @@ const ChangePass = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
     return (
-        <View style={styles.maincontainer}>
+        
+        <ScrollView style={styles.maincontainer}>
+       
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>
                 <Image style={styles.Image} source={require('../Assets/logo.png')} />
             </ImageBackground>
@@ -153,7 +155,9 @@ const ChangePass = () => {
                    
                 </ImageBackground>
             </View>
-        </View>
+          
+        </ScrollView>
+        
     );
 };
 
@@ -163,6 +167,7 @@ const ChangePass = () => {
 const styles = StyleSheet.create({
     maincontainer: {
         flex: 1,
+        backgroundColor:'#ffffff'
     },
     bgImage: {
         height: hp(45),
@@ -172,7 +177,7 @@ const styles = StyleSheet.create({
         height: 180,
         width: 250,
         resizeMode: 'contain',
-        marginVertical: 50,
+        // marginVertical: 50,
     },
     bottombgImage: {
         height: hp(64),

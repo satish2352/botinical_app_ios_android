@@ -269,14 +269,14 @@
 
 // export default Contactus;
 
-
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import config from '../../config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
-
+import { FlatList } from 'react-native-gesture-handler';
+import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 const Contactus = ({ route }) => {
     const data = route.params;
     const [formData, setFormData] = useState({
@@ -338,34 +338,21 @@ const Contactus = ({ route }) => {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
 
-                Alert.alert('Registration successful:', response.data.message);
+                Alert.alert('Contact successful:', response.data.message);
                 setFormData({ name: '', email: '', address: '', message: '' });
             } catch (error) {
                 console.error('Error:', error);
-                Alert.alert('Error', 'Failed to register. Please try again later.');
+                Alert.alert('Error', 'Failed to Contact. Please try again later.');
             }
         }
     };
 
     return (
-        <View style={styles.mainContainer}>
-            <View>
-                <View style={styles.bgImage}>
-                    <Image style={styles.image} source={require('../Assets/contactus/contact.png')} />
-                </View>
+        <ScrollView contentContainerStyle={styles.mainContainer}>
+            <View style={styles.bgImage}>
+                <Image style={styles.image} source={require('../Assets/contactus/contact.png')} />
             </View>
-            <View style={styles.contentContainer}>
-                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Location' : 'స్థానం'}<Text style={styles.normalText}>{'\n'}{contactDetails.address}</Text></Text>
-                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Phone' : 'ఫోన్'}{'\n'}
-                    <Text style={styles.normalText}>
-                    {SelectedLanguage1 === 'english' ? 'Assit Director' : 'అసిస్టెంట్ డైరెక్టర్'}: {contactDetails.director_number} {'\n'}
-                    {SelectedLanguage1 === 'english' ? 'Estate Officer' : 'ఎస్టేట్ అధికారి'}: {contactDetails.officer_number}
-                    </Text>
-                </Text>
-                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Email' : 'ఇమెయిల్'}{'\n'}
-                    <Text style={styles.normalText}>{contactDetails.email}</Text>
-                </Text>
-            </View>
+
             <View style={styles.contactCardWrap}>
                 <View style={styles.formWrap}>
                     <Text style={styles.formTitle}>{SelectedLanguage1 === 'english' ? 'CONTACT US' : 'మమ్మల్ని సంప్రదించండి'}</Text>
@@ -388,54 +375,62 @@ const Contactus = ({ route }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+
+            <View style={styles.contentContainer}>
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Location' : 'స్థానం'}
+                    <Text style={styles.normalText}>{'\n'}{contactDetails.address}</Text>
+                </Text>
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Phone' : 'ఫోన్'}{'\n'}
+                    <Text style={styles.normalText}>
+                        {SelectedLanguage1 === 'english' ? 'Assit Director' : 'అసిస్టెంట్ డైరెక్టర్'}: {contactDetails.director_number} {'\n'}
+                        {SelectedLanguage1 === 'english' ? 'Estate Officer' : 'ఎస్టేట్ అధికారి'}: {contactDetails.officer_number}
+                    </Text>
+                </Text>
+                <Text style={styles.location}>{SelectedLanguage1 === 'english' ? 'Email' : 'ఇమెయిల్'}{'\n'}
+                    <Text style={styles.normalText}>{contactDetails.email}</Text>
+                </Text>
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
+        paddingBottom: 50, // To avoid content being cut off when scrolling
+        alignItems: 'center', // Align all children in the center
     },
-    bgImage: {},
+    bgImage: {
+        width: wp(70),
+        alignItems: 'center',
+        marginBottom: 20,
+        left:wp(4),
+        marginTop:wp(3)
+    },
     image: {
-        height: '65%',
+        height: 200, // Adjust as necessary
         width: '100%',
-        resizeMode: 'center',
-        alignSelf: 'flex-start',
-        left:15
-    },
-    contentContainer: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: '#01595A',
-        justifyContent:'flex-end'
-       
+        resizeMode: 'cover',
     },
     contactCardWrap: {
+        width: '90%',
         backgroundColor: 'white',
         borderRadius: 30,
         elevation: 20,
         shadowOpacity: 0.27,
         shadowRadius: 4.65,
-        position: 'absolute',
-        width: '90%',
-        alignSelf: "center",
-        marginTop: 160,
-        flex:1
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+        marginBottom: 20, // Added space between form and the contact info
     },
     formWrap: {
         alignItems: 'center',
-        padding: 5,
-        flex: 1
     },
     formTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#000',
-        marginVertical: 10,
-        alignSelf: 'center',
-        marginHorizontal: 35,
-        fontFamily: 'Century Gothic'
+        marginBottom: 20,
+        fontFamily: 'Century Gothic',
     },
     input: {
         width: '90%',
@@ -443,18 +438,12 @@ const styles = StyleSheet.create({
         borderColor: '#477E56',
         borderRadius: 25,
         paddingHorizontal: 15,
-        marginBottom: 6,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 10,
-        padding: 4,
+        marginBottom: 10,
+        elevation: 5,
         backgroundColor: '#E0FEE7',
         fontSize: 16,
         fontWeight: 'bold',
-        marginVertical: 4,
-        color:'#000'
+        color: '#000',
     },
     button: {
         width: '50%',
@@ -462,33 +451,33 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 2,
         backgroundColor: '#01595A',
-        alignSelf: 'flex-end',
-        marginRight: 25,
-        margin: 10
+        marginTop: 20,
     },
     buttonText: {
-        color: '#ffffff',
+        color: '#fff',
         fontSize: 18,
         fontWeight: '500',
+    },
+    contentContainer: {
+        width: '90%',
+        backgroundColor: '#01595A',
+        borderRadius: 15,
+        padding: 20,
     },
     location: {
         fontSize: 20,
         fontWeight: '700',
-        color: '#ffff',
-        marginBottom: 22,
-        marginHorizontal: 35,
-        fontFamily: 'Century Gothic',
+        color: '#fff',
+        marginBottom: 10,
     },
     normalText: {
-        fontSize: 14,
-        fontWeight: 'normal',
+        fontSize: 16,
+        color: '#fff',
     },
     error: {
         color: 'red',
-        marginBottom: 5,
-        marginHorizontal: 29
+        fontSize: 14,
     },
 });
 

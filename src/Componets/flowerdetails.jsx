@@ -13,158 +13,165 @@ import VideoModal from './VideoModal';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
-    return (
-        <View style={{ flex: 1 }}>
-            <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.title}>Choose an Option</Text>
-                        <TouchableOpacity style={styles.button1} onPress={() => onPlayOnline()}>
-                            <Text style={styles.buttonText}>Play Online</Text>
-                            <Icon name="play-arrow" size={24} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button1} onPress={() => onDownloadAndPlay()}>
-                            <Text style={styles.buttonText}>Play Offline</Text>
-                            <Icon name="file-download" size={24} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onClose}>
+  return (
+    <View style={{ flex: 1 }}>
+      <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.title}>Choose an Option</Text>
+            <TouchableOpacity style={styles.button1} onPress={() => onPlayOnline()}>
+              <Text style={styles.buttonText}>Play Online</Text>
+              <Icon name="play-arrow" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button1} onPress={() => onDownloadAndPlay()}>
+              <Text style={styles.buttonText}>Play Offline</Text>
+              <Icon name="file-download" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onClose}>
 
-                            <Icon name="close" size={30} color="#01595A" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal></View>
+              <Icon name="close" size={30} color="#01595A" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal></View>
 
-    );
+  );
 };
 
-const Flowerdetails = ({ route ,navigation}) => {
-    const data = route.params;
-    const [audioModalVisible, setAudioModalVisible] = useState(false);
-    const [videoModalVisible, setvideoModalVisible] = useState(false);
-    const [flowerData, setflowerseatils] = useState([]);
-    const [buttonmodal, setbuttonmodal] = useState(false);
-    const { SelectedLanguage1 } = globalvariavle();
-    const [playMode, setPlayMode] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-    useEffect(() => {
+const Flowerdetails = ({ route, navigation }) => {
+  const data = route.params;
 
-        const id = data.id
-        console.log(id);
-        const fetchData = async () => {
-            const token = await AsyncStorage.getItem('token');
 
-            try {
+  const [audioModalVisible, setAudioModalVisible] = useState(false);
+  const [videoModalVisible, setvideoModalVisible] = useState(false);
+  const [flowerData, setflowerseatils] = useState([]);
+  const [buttonmodal, setbuttonmodal] = useState(false);
+  const { SelectedLanguage1 } = globalvariavle();
+  const [playMode, setPlayMode] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  console.log('flowerData', flowerData);
+  useEffect(() => {
 
-                const response = await axios.post(`${config.API_URL}auth/get-flowers-list`,
-                    {
-                        flowers_id: id,
-                        language: SelectedLanguage1,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
+    const id = data.id
+    console.log(id);
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem('token');
 
-                setflowerseatils(response.data.data[0]);
-                console.log(response.data.data[0]);
+      try {
 
-            } catch (error) {
-                console.error('Error fetching tree data:', error);
+        const response = await axios.post(`${config.API_URL}auth/get-flowers-list`,
+          {
+            flowers_id: id,
+            language: SelectedLanguage1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
             }
-        };
-        fetchData();
-        return () => {
+          });
 
-            console.log('Component will unmount');
-        };
-    }, [SelectedLanguage1]);
-    const openAudioModal = () => {
-        setAudioModalVisible(true);
-    };
-    const openvideoModal = () => {
-        setbuttonmodal(true);
-    };
+        setflowerseatils(response.data.data[0]);
+        console.log('gore', response.data.data[0]);
 
-    const stripHtmlTags = (str) => {
-        if (!str) return '';
-        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-        result = result.replace(/&nbsp;/g, " ");
-        result = result.replace(/wikipedia/gi, "");
-        return result;
+      } catch (error) {
+        console.error('Error fetching tree data:', error);
+      }
+    };
+    fetchData();
+    if (flowerData == '') {
+      setflowerseatils(data)
     }
-    const handlePlayOnline = () => {
-        // Handle playing video online
+    return () => {
 
-        setbuttonmodal(false);
-        setPlayMode('online');
-        setvideoModalVisible(true)
+      console.log('Component will unmount');
     };
+  }, [SelectedLanguage1,]);
+  const openAudioModal = () => {
+    setAudioModalVisible(true);
+  };
+  const openvideoModal = () => {
+    setbuttonmodal(true);
+  };
 
-    const handleDownloadAndPlay = () => {
-        // Handle downloading and playing video
-        setbuttonmodal(false);
-        setPlayMode('offline');
-        setvideoModalVisible(true)
-
-    };
-    const carouselData = [
-      { image:  source={ uri: flowerData.image } },
-      { image: source={ uri: flowerData.image_two } },
-      { image: source={ uri: flowerData.image_three }},
-      { image: source={ uri: flowerData.image_four }},
-      { image: source={ uri: flowerData.image_five }},
-    
-    ];
-    const renderItem = ({ item, index }) => {
-      return (
-        <View style={styles.carouselItem}>
-          <Image style={styles.carouselImage} source={item.image} />
-        </View>
-      );
-    };
-    const goOnMap=()=>{
-   
-      navigation.navigate('Mainmap',flowerData);
+  const stripHtmlTags = (str) => {
+    if (!str) return '';
+    let result = str.replace(/<\/?[^>]+(>|$)/g, "");
+    result = result.replace(/&nbsp;/g, " ");
+    result = result.replace(/wikipedia/gi, "");
+    return result;
   }
+  const handlePlayOnline = () => {
+    // Handle playing video online
+
+    setbuttonmodal(false);
+    setPlayMode('online');
+    setvideoModalVisible(true)
+  };
+
+  const handleDownloadAndPlay = () => {
+    // Handle downloading and playing video
+    setbuttonmodal(false);
+    setPlayMode('offline');
+    setvideoModalVisible(true)
+
+  };
+  const carouselData = [
+    { image: source = { uri: flowerData.image } },
+    { image: source = { uri: flowerData.image_two } },
+    { image: source = { uri: flowerData.image_three } },
+    { image: source = { uri: flowerData.image_four } },
+    { image: source = { uri: flowerData.image_five } },
+
+  ];
+  const renderItem = ({ item, index }) => {
     return (
-        <View style={styles.maincontainer}>
+      <View style={styles.carouselItem}>
+        <Image style={styles.carouselImage} source={item.image} />
+      </View>
+    );
+  };
+  const goOnMap = () => {
+
+    navigation.navigate('Mainmap', flowerData);
+  }
+  return (
+    <View style={styles.maincontainer}>
       <View style={styles.subcontainer1}>
         <View style={styles.bgImage}>
           <Image style={styles.image} source={{ uri: flowerData.image }} />
         </View>
       </View>
       <View style={styles.contentContainer}>
-      <View style={styles.carouselwrap}>
-      <Carousel
-        data={carouselData}
-        renderItem={renderItem}
-        sliderWidth={wp(100)}
-        autoplay={true}
-        itemWidth={wp(90)} // Set item width to full width
-        onSnapToItem={(index) => setActiveIndex(index)}
-        autoplayInterval={5000}
-        loop={true}
-      />
-      <View style={styles.paginationContainer}>
-        <Pagination
-          dotsLength={carouselData.length}
-          activeDotIndex={activeIndex}
-          dotStyle={styles.paginationDot}
-          inactiveDotStyle={styles.paginationInactiveDot}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-        />
-      </View>
-    </View>
-    <ScrollView>
-        <View style={styles.headingwrap}>
-        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-        <Text style={styles.headtext}>{flowerData.name}</Text>
-        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap()}>Show On Map</Text></TouchableOpacity>
+        <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+        <View style={styles.carouselwrap}>
+          <Carousel
+            data={carouselData}
+            renderItem={renderItem}
+            sliderWidth={wp(100)}
+            autoplay={true}
+            itemWidth={wp(90)} // Set item width to full width
+            onSnapToItem={(index) => setActiveIndex(index)}
+            autoplayInterval={5000}
+            loop={true}
+          />
+          <View style={styles.paginationContainer}>
+            <Pagination
+              dotsLength={carouselData.length}
+              activeDotIndex={activeIndex}
+              dotStyle={styles.paginationDot}
+              inactiveDotStyle={styles.paginationInactiveDot}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          </View>
         </View>
-          
+
+        <View style={styles.headingwrap}>
+          <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+            <Text style={styles.headtext}>{flowerData.name}</Text>
+            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
+          </View>
+
           <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(flowerData.description)}</Text>
           <View style={styles.headtext2wrap}>
             <Text style={styles.headtext2}>
@@ -193,7 +200,9 @@ const Flowerdetails = ({ route ,navigation}) => {
               <Icon name="ondemand-video" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
+
         </View>
+        </ScrollView>
         <AudioModal data={flowerData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
         <ButtonModal
           visible={buttonmodal}
@@ -201,15 +210,15 @@ const Flowerdetails = ({ route ,navigation}) => {
           onPlayOnline={handlePlayOnline}
           onDownloadAndPlay={handleDownloadAndPlay}
         />
-        </ScrollView>
+
       </View>
-      
+
       <VideoModal
-                visible={videoModalVisible}
-                onClose={() => setvideoModalVisible(false)}
-                videoUri={flowerData.video_upload}
-                playMode={playMode}
-            />
+        visible={videoModalVisible}
+        onClose={() => setvideoModalVisible(false)}
+        videoUri={flowerData.video_upload}
+        playMode={playMode}
+      />
     </View>
   );
 };
@@ -258,7 +267,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#01595A',
     margin: 10,
 
-},
+  },
   button: {
     width: '40%',
     height: 45,
@@ -269,7 +278,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#01595A',
     margin: 10,
 
-},
+  },
   buttonText: {
     color: '#ffffff',
     fontSize: 18,
@@ -279,7 +288,7 @@ const styles = StyleSheet.create({
   headingwrap: {
     alignItems: 'flex-start',
     top: 0,
-    marginHorizontal: 15,
+    // marginHorizontal: 15,
   },
   headtext: {
     fontSize: 28,
@@ -296,11 +305,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   buttonview: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginVertical: 20,
-        alignSelf: 'center'
-    },
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginVertical: 20,
+    alignSelf: 'center'
+  },
   headtext2wrap: {
     marginVertical: 10,
   },
@@ -330,54 +339,54 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-},
-carouselItem: {
+  },
+  carouselItem: {
     width: '100%', // Set width to full width
     height: hp(28),
     borderRadius: 10,
     overflow: 'hidden',
     // marginBottom: 10,
 
-},
-carouselImage: {
+  },
+  carouselImage: {
     // flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
-},
-paginationContainer: {
+  },
+  paginationContainer: {
     position: 'absolute',
     top: hp(20), // Adjust top position as needed
 
-},
-paginationDot: {
+  },
+  paginationDot: {
     width: 12,
     height: 12,
     borderRadius: 12,
     backgroundColor: '#ffff',
     marginHorizontal: 4,
 
-},
-paginationInactiveDot: {
+  },
+  paginationInactiveDot: {
     backgroundColor: '#C4C4C4',
 
-},
-carouselwrap:{
-  alignItems:"center",
-  justifyContent:'center',
-  height:'50%',
-padding:10
+  },
+  carouselwrap: {
+    alignItems: "center",
+    justifyContent: 'center',
+    height: '35%',
+    marginVertical: wp(4)
 
-},
-dibtn: {
-  width: '25%',
-  height: 40,
-  borderRadius: 10,
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'row',
-  backgroundColor: '#01595A',
-  marginLeft:20
-},
+  },
+  dibtn: {
+    width: '25%',
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#01595A',
+    marginLeft: 20
+  },
 });
 export default Flowerdetails;

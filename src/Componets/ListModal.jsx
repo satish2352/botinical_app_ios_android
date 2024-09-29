@@ -98,7 +98,8 @@ const data = [
     itemText: {
       fontSize: 16,
       width:"80%",
-      alignSelf:'center'
+      alignSelf:'center',
+      color:'#000'
     },
   });
 export default ListModal

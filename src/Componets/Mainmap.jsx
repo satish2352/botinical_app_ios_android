@@ -272,7 +272,7 @@ const Mainmap = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
-  const { SelectedLanguage1, isLoggedIn, showLoginPrompt ,roleid} = globalvariavle();
+  const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
   const [playMode, setPlayMode] = useState(null);
   const [buttonmodal, setbuttonmodal] = useState(false);
   const [audioModalVisible, setAudioModalVisible] = useState(false);
@@ -314,7 +314,7 @@ const Mainmap = ({ route, navigation }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log('polygoan fetch from api',response.data.data[0].polygons);
+      console.log('polygoan fetch from api', response.data.data[0].polygons);
       setPolygons(response.data.data[0].polygons);
 
     } catch (error) {
@@ -402,8 +402,9 @@ const Mainmap = ({ route, navigation }) => {
 
   const findNearbyEntities = (latitude, longitude) => {
     const radius = 0.1; // 100 meters
-    const nearby = combinedData
-      .map(entity => ({
+
+
+    const nearby = combinedData.map(entity => ({
         ...entity,
         distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
       }))
@@ -416,6 +417,8 @@ const Mainmap = ({ route, navigation }) => {
       setModalVisible(true); // Automatically open the modal if nearby entities are found
     } else {
       setModalVisible(false); // Close the modal if no nearby entities are found
+      // setNearbyEntities(null);
+
     }
   };
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -704,7 +707,7 @@ const Mainmap = ({ route, navigation }) => {
                 latitude: parseFloat(amenity.latitude),
                 longitude: parseFloat(amenity.longitude),
               }}
-              radius={20} // Radius in meters
+              radius={10} // Radius in meters
               strokeColor="rgba(0,0,0,0)"
               fillColor="rgba(0,0,0,0)"
             />
@@ -737,7 +740,7 @@ const Mainmap = ({ route, navigation }) => {
             />
           </View>
         )}
-     {polygons.map((item, index) => {
+        {polygons.map((item, index) => {
           if (item.type === 'Polygon') {
             return (
               <Polygon
@@ -770,7 +773,7 @@ const Mainmap = ({ route, navigation }) => {
           }
           return null;
         })}
-    
+
         {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
@@ -803,34 +806,35 @@ const Mainmap = ({ route, navigation }) => {
         showDirections ? <TouchableOpacity style={styles.directioncloseButton} onPress={() => Canceldirection()}>
           <Text style={styles.btntext}>Cancel Direction</Text>
         </TouchableOpacity> :
-        
+
           <View style={{ justifyContent: 'space-evenly', marginHorizontal: 5 }}>
-          {roleid === '2' ||roleid === '1'?
-            <View>
-            {
-              isTracking ?
-                <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
-                  <Text style={styles.btntext}>Exit Location</Text>
-                </TouchableOpacity>
-                :
-                <TouchableOpacity style={styles.trackButton} onPress={() => Trackdirection()}>
-                  <Text style={styles.btntext}>Track Location</Text>
-                </TouchableOpacity>
-            }
-            </View>
-            :null}
-           
+            {roleid === '2' || roleid === '1' ?
+              <View>
+                {
+                  isTracking ?
+                    <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
+                      <Text style={styles.btntext}>Exit Location</Text>
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity style={styles.trackButton} onPress={() => Trackdirection()}>
+                      <Text style={styles.btntext}>Track Location</Text>
+                    </TouchableOpacity>
+                }
+              </View>
+              : null}
+
           </View>
       }
       {selectedAmenity && (
         <Modal
-          animationType="slide"
+          animationType="slide" 
           transparent={true}
           visible={true}
           onRequestClose={closeModal}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
+            <ScrollView  contentContainerStyle={{ alignItems: 'center' }}>
               <View style={styles.carouselwrap}>
                 <Carousel
                   data={carouselData}
@@ -856,7 +860,7 @@ const Mainmap = ({ route, navigation }) => {
               <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
                 <Icon name="close" size={34} color="#01595A" />
               </TouchableOpacity>
-              <ScrollView>
+             <View style={styles.headingwrap}>
                 <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
                   <Text style={styles.title}>{selectedAmenity.name}</Text>
                   <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
@@ -893,7 +897,9 @@ const Mainmap = ({ route, navigation }) => {
                       <Icon2 name="ondemand-video" size={24} color="#fff" />
                     </TouchableOpacity> : null
                   }
+                  
                   <View>
+                  
                     <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
                   </View>
                   <ButtonModal
@@ -908,6 +914,7 @@ const Mainmap = ({ route, navigation }) => {
                     videoUri={audiovideodata.video_upload}
                     playMode={playMode}
                   />
+                </View>
                 </View>
               </ScrollView>
               {/* Add buttons to select transportation mode */}
@@ -964,6 +971,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+   
   },
   modalContent: {
     width: '100%',
@@ -975,6 +983,11 @@ const styles = StyleSheet.create({
     height: '70%',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+  },
+  headingwrap: {
+    alignItems: 'flex-start',
+    top: 0,
+    marginHorizontal: 15,
   },
   title: {
     fontSize: 24,
@@ -994,7 +1007,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     right: 20
   },
   closeButtonText: {
@@ -1002,18 +1015,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   carouselwrap: {
+    // alignItems: "center",
+    // justifyContent: 'center',
+    // height: '35%',
+    // // padding: 10,
+    // resizeMode: "center"
     alignItems: "center",
     justifyContent: 'center',
-    height: '40%',
-    padding: 10,
-    resizeMode: "center"
+    height: '35%',
+    marginVertical: wp(4),
+    // resizeMode: "center"
+    // backgroundColor:'red'
   },
-  carouselItem: {
-    width: '100%',
-    height: hp(28),
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
+
   carouselImage: {
     // flex: 1,
     width: '100%',
@@ -1035,13 +1049,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#C4C4C4',
   },
   dibtn: {
-    width: '25 %',
+    width: '25%',
     height: 40,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: '#01595A',
+    marginLeft:wp(2),
   },
   transportModeContainer: {
     flexDirection: 'row',
@@ -1161,12 +1176,7 @@ const styles = StyleSheet.create({
   paginationInactiveDot: {
     backgroundColor: '#C4C4C4',
   },
-  carouselwrap: {
-    alignItems: "center",
-    justifyContent: 'center',
-    height: '50%',
-    padding: 10
-  },
+
   headtext2wrap: {
     marginVertical: 10,
     alignItems: "center"
