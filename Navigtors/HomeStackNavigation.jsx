@@ -81,7 +81,6 @@ function HomeStackNavigation() {
           return (
             <View >
               <Langchange />
-
             </View>
           )
         }
@@ -92,7 +91,7 @@ function HomeStackNavigation() {
 
 
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={Home} options={{ statusBarHidden: true }} />
+      <Stack.Screen name="Home" component={Home} options={{ statusBarHidden: true ,headerShown: true}} />
 
       <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />
       <Stack.Screen name="Regifrom" component={Regifrom} />

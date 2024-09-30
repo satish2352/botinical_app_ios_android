@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, RefreshControl, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, RefreshControl, Modal ,TouchableWithoutFeedback} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,7 +7,9 @@ import axios from 'axios';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
+
 import Icon from 'react-native-vector-icons/AntDesign';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 const ChargesList = ({ navigation }) => {
     const [chargesData, setChargesData] = useState([]);
     const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
@@ -122,6 +124,7 @@ const ChargesList = ({ navigation }) => {
                 onRequestClose={closeModal}
             >
                 <View style={styles.modalContainer}>
+                <TouchableWithoutFeedback onPress={()=>closeModal()}>
                     <View style={styles.modalContent}>
 
                         {selectedItem && (
@@ -130,9 +133,9 @@ const ChargesList = ({ navigation }) => {
                                 <View style={styles.modaldata}>
 
                                     <Text style={styles.modalTitle}>{selectedItem.name}</Text>
-                                    <TouchableOpacity style={styles.closeButton} onPress={() => closeModal()}>
+                                    <View style={styles.closeButton} onPress={() => closeModal()}>
                                         <FontAwesomeIcon icon={faTimes} size={35} style={styles.closeIcon} />
-                                    </TouchableOpacity>
+                                    </View>
 
                                 </View>
                                 <Text style={styles.modalDetails}> {selectedItem.rules_terms}</Text>
@@ -140,6 +143,7 @@ const ChargesList = ({ navigation }) => {
                             </View>
                         )}
                     </View>
+                    </TouchableWithoutFeedback>
                 </View>
             </Modal>
         </LinearGradient>
@@ -279,7 +283,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         margin: 10,
         color: '#fff',
-        textAlign: 'center'
+        textAlign: 'center',
+        width:wp(70)
     },
     modalDetails: {
         fontSize: 15,

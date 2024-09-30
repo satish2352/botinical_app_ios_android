@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: wp(100),
-    height: wp(280),
-    resizeMode:"contain"
+    width: wp(90),
+    height: wp(145),
+    resizeMode:"cover"
   },
 });
 

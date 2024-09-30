@@ -1,6 +1,6 @@
 
 
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ActivityIndicator, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Alert, ActivityIndicator, Modal, Button ,} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -112,14 +112,14 @@ const Login = () => {
     };
 
     return (
-        <ScrollView style={styles.maincontainer}>
+   
+        <View style={styles.maincontainer}>
             <ImageBackground style={styles.bgImage} source={require('../Assets/bg.png')}>
                 <Image style={styles.Image} source={require('../Assets/logo.png')} />
             </ImageBackground>
-
             <View style={styles.underview}>
-
                 <ImageBackground style={styles.bottombgImage} source={require('../Assets/animal.png')}>
+                <ScrollView style={{marginBottom:wp(20)}}>
                     <View style={styles.inputwrap}>
                         <TextInput
                             style={styles.input}
@@ -160,13 +160,14 @@ const Login = () => {
                         <View style={styles.regiline}><Text style={{ color: 'black' }}> Dont have an account? <Text style={{ fontWeight: 'bold', color: "orange" }} onPress={() => navigation.navigate('Regifrom')}>Register now</Text></Text></View>
                     </View>
                     <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#01595A', alignSelf: 'flex-end', marginHorizontal: 25 }} onPress={skipregi}>SKIP FOR NOW</Text>
-                </ImageBackground>
+                    </ScrollView>
+                    </ImageBackground>
                 {modalVisible ?
                     <ForgotPass modalVisible={modalVisible} setModalVisible={setModalVisible} />
                     : null}
             </View>
 
-        </ScrollView>
+        </View>
     );
 };
 
@@ -283,27 +284,32 @@ const ForgotPass = ({ modalVisible, setModalVisible }) => {
 const styles = StyleSheet.create({
     maincontainer: {
         flex: 1,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        
+        // justifyContent: "flex-end",
+
     },
     bgImage: {
-        height: hp(45),
+        height: hp(35),
         alignItems: 'center',
         flex: 1,
-       
+        // justifyContent:"flex-start"
+
     },
     Image: {
-        height: 180,
-        width: 250,
-        resizeMode: 'contain',
-        marginVertical: 50,
+        height: wp(25),
+        width: wp(40),
+        resizeMode: 'center',
+        marginVertical: wp(6),
     },
     bottombgImage: {
-        height: hp(64),
+        height: '90%',
         width: '100%',
         resizeMode: 'center',
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
-       
+        bottom:wp(5)
+
     },
     input: {
         width: '70%',
@@ -340,12 +346,15 @@ const styles = StyleSheet.create({
     },
     inputwrap: {
         alignItems: 'center',
-        marginTop: 80,
+        marginTop: wp(10),
     },
     underview: {
         backgroundColor: 'white',
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
+        justifyContent:'center',
+       top:wp(25),
+       overflow:'hidden'
     },
     error: {
         color: 'red',

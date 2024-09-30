@@ -12,6 +12,7 @@ import Editcordinates from '../Reusablecompoent/Editcordinates';
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
     const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
+    console.log('SelectedLanguage1',SelectedLanguage1);
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);

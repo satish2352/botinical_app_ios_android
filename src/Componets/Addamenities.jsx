@@ -21,6 +21,8 @@ const Addamenities = ({ navigation, route }) => {
     const id = item.id
 
     const { useerid, SelectedLanguage1 } = globalvariavle();
+    console.log('SelectedLanguage1',SelectedLanguage1);
+    
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedField, setSelectedField] = useState(null);
     const [selectedTree, setSelectedTree] = useState(null);
