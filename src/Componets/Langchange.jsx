@@ -119,7 +119,7 @@ const Langchange = () => {
   }, []);
 
   return (
-    <View style={styles.langiconwrap}>
+    <TouchableOpacity style={styles.langiconwrap}>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Icon name="language" size={34} color="#01595A" />
       </TouchableOpacity>
@@ -141,7 +141,7 @@ const Langchange = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 }
 

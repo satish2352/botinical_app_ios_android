@@ -33,7 +33,6 @@ function AboutStack() {
                     return (
                       <View >
                         <Langchange/>
-          
                       </View>
                     )
                   }

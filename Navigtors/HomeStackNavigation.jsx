@@ -31,35 +31,38 @@ import ChangePass from '../src/Componets/ChangePass';
 import Editcordinates from '../src/Reusablecompoent/Editcordinates';
 import Arvramenities from '../src/Componets/Arvramenities';
 import Arvrdetails from '../src/Componets/Arvrdetails';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
 const Stack = createNativeStackNavigator();
 function HomeStackNavigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  
   const navigation = useNavigation();
 
 
-  useEffect(() => {
-    const checkUserToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        setIsLoggedIn(token ? true : false); // Set isLoggedIn based on token presence
-      } catch (error) {
-        console.error('Error checking user token:', error);
-        setIsLoggedIn(false);
-      } finally {
-        setIsLoading(false); // Hide loading indicator after checking
-      }
-    };
+  // useEffect(() => {
+  //   const checkUserToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem('token');
+  //       setIsLoggedIn(token ? true : false); // Set isLoggedIn based on token presence
+  //     } catch (error) {
+  //       console.error('Error checking user token:', error);
+  //       setIsLoggedIn(false);
+  //     } finally {
+  //       setIsLoading(false); // Hide loading indicator after checking
+  //     }
+  //   };
 
-    checkUserToken();
-  }, []);
+  //   checkUserToken();
+  // }, []);
 
 
   return (
 
-    <Stack.Navigator initialRouteName='Login'
+    <Stack.Navigator initialRouteName='Home'
       screenOptions={{
         statusBarHidden: false,
         translucent: false,
@@ -79,9 +82,9 @@ function HomeStackNavigation() {
         },
         headerLeft: () => {
           return (
-            <View >
-              <Langchange />
-            </View>
+            <TouchableOpacity >
+              <Langchange  />
+            </TouchableOpacity>
           )
         }
       }}
@@ -90,7 +93,7 @@ function HomeStackNavigation() {
 
 
 
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} /> 
       <Stack.Screen name="Home" component={Home} options={{ statusBarHidden: true ,headerShown: true}} />
 
       <Stack.Screen name="Registration" component={Registration} options={{ headerShown: false }} />

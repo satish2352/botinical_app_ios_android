@@ -6,6 +6,7 @@ import { Platform, Alert } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import Geolocation from 'react-native-geolocation-service';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyContext = createContext();
 
@@ -16,6 +17,24 @@ export const MyProvider = ({ children }) => {
   const [isGPSOn, setIsGPSOn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roleid, setroleid] = useState(null);
+
+  useEffect(() => {
+    const checkUserToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        setIsLoggedIn(token ? true : false); // Set isLoggedIn based on token presence
+        const role_id=await AsyncStorage.getItem('role_id');
+        setroleid(role_id)  
+        
+      } catch (error) {
+        console.error('Error checking user token:', error);
+        setIsLoggedIn(false);
+      } 
+    };
+
+    checkUserToken();
+  }, []);
+
 
   const checkGPSStatus = async () => {
     let permission;
@@ -71,7 +90,7 @@ export const MyProvider = ({ children }) => {
     checkGPSStatus();
 
     // Update login status based on user ID
-    setIsLoggedIn(useerid !== '');
+    // setIsLoggedIn(useerid !== '');
 console.log('uuuuuuuuuuuuuuuuuuuuu',useerid );
 
     return () => {

@@ -496,6 +496,7 @@ import { globalvariavle } from './globlevariable/MyContext';
 import ChangepassStack from './ChangepassStack';
 import ARVRamenitiesStack from './ARVRamenitiesStack';
 import ZonesStack from './ZonesStack';
+import Login from '../src/Componets/Login';
 
 const Drawer = createDrawerNavigator();
 
@@ -518,7 +519,7 @@ function CustomDrawerContent(props) {
       { cancelable: false }
     );
   };
-
+  
   return (
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor="#01595A" barStyle="light-content" />
@@ -544,14 +545,16 @@ function CustomDrawerContent(props) {
 }
 
 function DrawerNavigator() {
-  const { SelectedLanguage1, roleid } = globalvariavle();
+  const { SelectedLanguage1, roleid,isLoggedIn } = globalvariavle();
+  console.log('isLoggedIn',isLoggedIn);
+  
   useEffect(() => {
     return () => { }
   }, [SelectedLanguage1,roleid])
   const roleId = roleid; // Example roleId, adjust as needed
   return (
 
-    <Drawer.Navigator initialRouteName="HomeStack"
+    <Drawer.Navigator initialRouteName= 'HomeStack'
       screenOptions={{
         statusBarHidden: false,
         headerShown: false,
@@ -565,6 +568,7 @@ function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
 
+ 
       <Drawer.Screen
         name="HomeStack"
         component={HomeStackNavigation}

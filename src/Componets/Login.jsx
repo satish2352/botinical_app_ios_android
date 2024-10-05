@@ -22,32 +22,30 @@ const Login = () => {
     const [loading, setLoading] = useState(false); // Loading state
     const [modalVisible, setModalVisible] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const { setid, setroleid } = globalvariavle();
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const { setid, setroleid,setIsLoggedIn } = globalvariavle();
 
-    // useEffect(() => {
-    //     const checkUserToken = async () => {
-    //         try {
-    //             const token = await AsyncStorage.getItem('token');
-    //             if (token) {
-    //                 setIsLoggedIn(true);
-
-    //                 navigation.navigate('Home');
-    //             } else {
-    //                 setIsLoggedIn(false);
-
-    //             }
-    //         } catch (error) {
-    //             console.error('Error checking user token:', error);
-    //             setIsLoggedIn(false);
-    //         } finally {
-    //             setLoading(false); // Loading is done whether token is found or not
-    //         }
-    //     };
-
-    //     checkUserToken();
-    // }, []);
-
+    
+    useEffect(() => {
+        const checkUserToken = async () => {
+          try {
+            const token = await AsyncStorage.getItem('token');
+            setIsLoggedIn(token ? true : false); // Set isLoggedIn based on token presence
+            
+            // Fetch email and password after checking the token
+            const email = await AsyncStorage.getItem('email');
+            const password = await AsyncStorage.getItem('password');
+      
+            setemail(email); 
+            setpassword(password); 
+          } catch (error) {
+            console.error('Error checking user token:', error);
+            setIsLoggedIn(false);
+          } 
+        };
+      
+        checkUserToken();
+      }, []);
+                                                               
     const handleLogin = async () => {
         const URL = config.API_URL;
         setError('');
@@ -87,6 +85,10 @@ const Login = () => {
                 console.log('User ID:', id, role_id);
                 setid(id);
                 setroleid(role_id);
+                setIsLoggedIn(true)
+                await AsyncStorage.setItem('email', email);
+                await AsyncStorage.setItem('password',password);
+                await AsyncStorage.setItem('role_id',role_id);
                 // navigation.navigate('Otpscreen', { mobile_number: mobile });
                 navigation.navigate('Home');
                 setError('');

@@ -79,7 +79,6 @@
 
 // export default Logout;
 
-
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
@@ -94,51 +93,43 @@ const Logout = () => {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const { setid } = globalvariavle();
 
-    const showLogoutAlert = () => {
-        setShowAlert(true);
-    };
-
-    const hideLogoutAlert = () => {
-        setShowAlert(false);
-    };
-
     const handleLogout = async () => {
-        hideLogoutAlert();
-        await AsyncStorage.removeItem('token');
-        setid('');
-        setShowSuccessAlert(true); // Show success alert
-        navigation.navigate('Login');
-    };
-
-    const handleSuccessAlertConfirm = () => {
-        setShowSuccessAlert(false);
-       
-        console.log('User logged out');
+        setShowAlert(false);
+        try {
+            await AsyncStorage.removeItem('token');
+            setid('');
+            setShowSuccessAlert(true); // Show success alert
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error("Error logging out: ", error);
+        }
     };
 
     return (
-        <View style={styles.langiconwrap}>
-            <TouchableOpacity onPress={showLogoutAlert} style={styles.logsty}>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => setShowAlert(true)} style={styles.logoutButton}>
                 <Icon name="logout" size={34} color="#01595A" />
-                <Text style={styles.logtext}>Log Out</Text>
+                <Text style={styles.logoutText}>Log Out</Text>
             </TouchableOpacity>
             
             {/* Confirmation Alert */}
-            <AwesomeAlert
+            {
+                showAlert? <AwesomeAlert
                 show={showAlert}
                 showProgress={false}
                 title="Logout"
                 message="Are you sure you want to logout?"
                 closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
                 showCancelButton={true}
                 showConfirmButton={true}
                 cancelText="No"
                 confirmText="Yes"
                 confirmButtonColor="#01595A"
-                onCancelPressed={hideLogoutAlert}
+                onCancelPressed={() => setShowAlert(false)}
                 onConfirmPressed={handleLogout}
-            />
+            />:null
+            }
+           
 
             {/* Success Alert after logout */}
             <AwesomeAlert
@@ -147,29 +138,28 @@ const Logout = () => {
                 title="Logged Out"
                 message="You have been logged out successfully."
                 closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
                 showConfirmButton={true}
                 confirmText="OK"
                 confirmButtonColor="#01595A"
-                onConfirmPressed={handleSuccessAlertConfirm}
+                onConfirmPressed={() => setShowSuccessAlert(false)}
             />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    langiconwrap: {
+    container: {
         padding: 3,
     },
-    logsty: {
+    logoutButton: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
+        alignItems: 'center',
     },
-    logtext: {
+    logoutText: {
         fontSize: 20,
         fontWeight: '500',
         color: '#01595A',
-        padding: 3,
+        paddingLeft: 10, // Added padding for better spacing
     },
 });
 

@@ -380,16 +380,18 @@ const Mainmap = ({ route, navigation }) => {
         animate(latitude, longitude);
         setUserLocation({ latitude, longitude });
         findNearbyEntities(latitude, longitude);
+        if (isTracking === 'false') {
+          updateState({
 
-        updateState({
+            coordinateanimated: new AnimatedRegion({
+              latitude: latitude,
+              longitude: longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+            }),
+          })
+        }
 
-          coordinateanimated: new AnimatedRegion({
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          }),
-        })
 
 
       },
@@ -405,9 +407,9 @@ const Mainmap = ({ route, navigation }) => {
 
 
     const nearby = combinedData.map(entity => ({
-        ...entity,
-        distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
-      }))
+      ...entity,
+      distance: haversineDistance(latitude, longitude, entity.latitude, entity.longitude),
+    }))
       .filter(entity => entity.distance <= radius)
       .sort((a, b) => a.distance - b.distance)
       .slice(0, 4); // Get only the closest 4 entities
@@ -611,6 +613,51 @@ const Mainmap = ({ route, navigation }) => {
       }, 1000); // 1000 is the duration in milliseconds
     }
   }
+  useEffect(() => {
+    const startTracking = () => {
+      const watchId = Geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+
+          if (isTracking && mapRef.current) {
+            updateState({
+
+              coordinateanimated: new AnimatedRegion({
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
+              }),
+            })
+            mapRef.current.animateToRegion({
+              latitude,
+              longitude,
+              latitudeDelta: 0.001,
+              longitudeDelta: 0.001,
+            }, 1000); // 1-second animation duration
+          }
+        },
+        (error) => {
+          console.error('Error tracking location:', error);
+        },
+        { enableHighAccuracy: true, distanceFilter: 10, interval: 2000 }
+      );
+
+      // Clean up on component unmount
+      return () => {
+        Geolocation.clearWatch(watchId);
+      };
+    };
+
+    if (isTracking) {
+      startTracking();
+    }
+
+    return () => {
+      Geolocation.clearWatch();
+    };
+  }, [isTracking]);
   const Trackdirection = () => {
     if (userLocation && userLocation.latitude && userLocation.longitude) {
       setShowDirections(false)
@@ -657,6 +704,8 @@ const Mainmap = ({ route, navigation }) => {
       <MapView
         ref={mapRef}
         style={styles.map}
+        followUserLocation={true}
+
         initialRegion={{
           latitude: 17.45407013149723,
           longitude: 78.35728537719703,
@@ -827,94 +876,94 @@ const Mainmap = ({ route, navigation }) => {
       }
       {selectedAmenity && (
         <Modal
-          animationType="slide" 
+          animationType="slide"
           transparent={true}
           visible={true}
           onRequestClose={closeModal}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-            <ScrollView  contentContainerStyle={{ alignItems: 'center' }}>
-              <View style={styles.carouselwrap}>
-                <Carousel
-                  data={carouselData}
-                  renderItem={renderItem}
-                  sliderWidth={wp(100)}
-                  autoplay={true}
-                  itemWidth={wp(90)} // Set item width to full width
-                  onSnapToItem={(index) => setActiveIndex(index)}
-                  autoplayInterval={5000}
-                  loop={true}
-                />
-                <View style={styles.paginationContainer}>
-                  <Pagination
-                    dotsLength={carouselData.length}
-                    activeDotIndex={activeIndex}
-                    dotStyle={styles.paginationDot}
-                    inactiveDotStyle={styles.paginationInactiveDot}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.6}
+              <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+                <View style={styles.carouselwrap}>
+                  <Carousel
+                    data={carouselData}
+                    renderItem={renderItem}
+                    sliderWidth={wp(100)}
+                    autoplay={true}
+                    itemWidth={wp(90)} // Set item width to full width
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                    autoplayInterval={5000}
+                    loop={true}
                   />
-                </View>
-              </View>
-              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                <Icon name="close" size={34} color="#01595A" />
-              </TouchableOpacity>
-             <View style={styles.headingwrap}>
-                <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-                  <Text style={styles.title}>{selectedAmenity.name}</Text>
-                  <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
-                </View>
-                <Text style={styles.description}> {stripHtmlTags(selectedAmenity.description)}</Text>
-                {
-                  selectedAmenity.height ? <View >
-                    <Text style={styles.headtext2}>HIGHT :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.height}&nbsp;{selectedAmenity.height_type}</Text></Text>
-                    <Text style={styles.headtext2}>CANOPY :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.canopy}&nbsp;{selectedAmenity.canopy_type}</Text></Text>
-                    <Text style={styles.headtext2}>GIRTH :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.girth}&nbsp;{selectedAmenity.girth_type}</Text></Text>
-                  </View> : <View style={styles.headtext2wrap}>
-                    <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.open_time_first}</Text></Text>
-                      <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.close_time_first}</Text></Text>
-                    </View>
-                    <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.open_time_second}</Text></Text>
-                      <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.close_time_second}</Text></Text>
-                    </View>
+                  <View style={styles.paginationContainer}>
+                    <Pagination
+                      dotsLength={carouselData.length}
+                      activeDotIndex={activeIndex}
+                      dotStyle={styles.paginationDot}
+                      inactiveDotStyle={styles.paginationInactiveDot}
+                      inactiveDotOpacity={0.4}
+                      inactiveDotScale={0.6}
+                    />
                   </View>
-                }
-                <View style={styles.buttonview}>
-                  {
-                    selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                      <Text style={styles.buttonText}>Audio</Text>
-                      <Icon2 name="multitrack-audio" size={24} color="#fff" />
-                    </TouchableOpacity> : null
-                  }
-                  {
-                    selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                      <Text style={styles.buttonText}>Video</Text>
-                      <Icon2 name="ondemand-video" size={24} color="#fff" />
-                    </TouchableOpacity> : null
-                  }
-                  
-                  <View>
-                  
-                    <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
-                  </View>
-                  <ButtonModal
-                    visible={buttonmodal}
-                    onClose={() => setbuttonmodal(false)}
-                    onPlayOnline={handlePlayOnline}
-                    onDownloadAndPlay={handleDownloadAndPlay}
-                  />
-                  <VideoModal
-                    visible={videoModalVisible}
-                    onClose={() => setvideoModalVisible(false)}
-                    videoUri={audiovideodata.video_upload}
-                    playMode={playMode}
-                  />
                 </View>
+                <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                  <Icon name="close" size={34} color="#01595A" />
+                </TouchableOpacity>
+                <View style={styles.headingwrap}>
+                  <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+                    <Text style={styles.title}>{selectedAmenity.name}</Text>
+                    <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
+                  </View>
+                  <Text style={styles.description}> {stripHtmlTags(selectedAmenity.description)}</Text>
+                  {
+                    selectedAmenity.height ? <View >
+                      <Text style={styles.headtext2}>HIGHT :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.height}&nbsp;{selectedAmenity.height_type}</Text></Text>
+                      <Text style={styles.headtext2}>CANOPY :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.canopy}&nbsp;{selectedAmenity.canopy_type}</Text></Text>
+                      <Text style={styles.headtext2}>GIRTH :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.girth}&nbsp;{selectedAmenity.girth_type}</Text></Text>
+                    </View> : <View style={styles.headtext2wrap}>
+                      <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.open_time_first}</Text></Text>
+                        <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.close_time_first}</Text></Text>
+                      </View>
+                      <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.open_time_second}</Text></Text>
+                        <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{selectedAmenity.close_time_second}</Text></Text>
+                      </View>
+                    </View>
+                  }
+                  <View style={styles.buttonview}>
+                    {
+                      selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                        <Text style={styles.buttonText}>Audio</Text>
+                        <Icon2 name="multitrack-audio" size={24} color="#fff" />
+                      </TouchableOpacity> : null
+                    }
+                    {
+                      selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                        <Text style={styles.buttonText}>Video</Text>
+                        <Icon2 name="ondemand-video" size={24} color="#fff" />
+                      </TouchableOpacity> : null
+                    }
+
+                    <View>
+
+                      <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+                    </View>
+                    <ButtonModal
+                      visible={buttonmodal}
+                      onClose={() => setbuttonmodal(false)}
+                      onPlayOnline={handlePlayOnline}
+                      onDownloadAndPlay={handleDownloadAndPlay}
+                    />
+                    <VideoModal
+                      visible={videoModalVisible}
+                      onClose={() => setvideoModalVisible(false)}
+                      videoUri={audiovideodata.video_upload}
+                      playMode={playMode}
+                    />
+                  </View>
                 </View>
               </ScrollView>
               {/* Add buttons to select transportation mode */}
@@ -971,7 +1020,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-   
+
   },
   modalContent: {
     width: '100%',
@@ -1056,7 +1105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: '#01595A',
-    marginLeft:wp(2),
+    marginLeft: wp(2),
   },
   transportModeContainer: {
     flexDirection: 'row',
