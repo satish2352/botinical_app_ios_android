@@ -85,13 +85,14 @@ const Amenities = ({ navigation }) => {
         fetchData();
     };
 
-    const stripHtmlTags = (str) => {
-        if (!str) return '';
-        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-        result = result.replace(/&nbsp;/g, " ");
-        result = result.replace(/wikipedia/gi, "");
-        return result;
-    }
+   const stripHtmlTags = (str) => {
+    if (!str) return '';
+    let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+    result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+    result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+    result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+    return result.trim();                             // Trim spaces from start/end
+};
 
     const Updatecordinates = async () => {
         const token = await AsyncStorage.getItem('token');

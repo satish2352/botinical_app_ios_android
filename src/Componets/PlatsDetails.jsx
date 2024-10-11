@@ -165,9 +165,11 @@ const PlatsDetails = ({ route, navigation }) => {
           </View>
 
           <View style={styles.headingwrap}>
-            <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+            <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between",width: '95%' }}>
               <Text style={styles.headtext}>{treeData.name}</Text>
-              <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
+           
+                <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
+      
             </View>
 
             <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(treeData.description)}</Text>
@@ -283,9 +285,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   headingwrap: {
-    alignItems: 'flex-start',
+
     top: 0,
-    marginHorizontal: 15,
+    marginHorizontal: 13,
   },
   headtext: {
     fontSize: 28,
@@ -384,7 +386,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: '#01595A',
-    marginLeft: 20
+    marginLeft: 0
   },
 });
 

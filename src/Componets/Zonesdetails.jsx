@@ -94,13 +94,14 @@ const goOnMap=()=>{
     navigation.navigate('Mainmap',about);
 }
 
-    const stripHtmlTags = (str) => {
-        if (!str) return '';
-        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-        result = result.replace(/&nbsp;/g, " ");
-        result = result.replace(/wikipedia/gi, "");
-        return result;
-    };
+   const stripHtmlTags = (str) => {
+    if (!str) return '';
+    let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+    result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+    result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+    result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+    return result.trim();                             // Trim spaces from start/end
+};;
     const handlePlayOnline = () => {
         // Handle playing video online
 
@@ -168,7 +169,7 @@ const goOnMap=()=>{
                 
                     <View style={styles.headingwrap}>
                    
-                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between",width: '95%' }}>
                     <Text style={styles.headtext}>{about.name}</Text> 
                     <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap(about)}>Show On Map</Text></TouchableOpacity>
                     </View>

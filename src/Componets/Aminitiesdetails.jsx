@@ -96,10 +96,11 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
     const stripHtmlTags = (str) => {
         if (!str) return '';
-        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-        result = result.replace(/&nbsp;/g, " ");
-        result = result.replace(/wikipedia/gi, "");
-        return result;
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+        result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+        result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+        result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+        return result.trim();                             // Trim spaces from start/end
     };
     const handlePlayOnline = () => {
         // Handle playing video online
@@ -142,7 +143,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
             </View>
 
             <View style={styles.contentContainer}>
-                <ScrollView>
+                <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
                     <View style={styles.carouselwrap}>
                         <Carousel
                             data={carouselData}
@@ -168,12 +169,14 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
                     <View style={styles.headingwrap}>
 
-                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
                             <Text style={styles.headtext}>{about.name}</Text>
                             <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
                         </View>
-
                         <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
+
+
+
 
                         <View style={styles.headtext2wrap}>
                             <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
@@ -262,7 +265,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
         alignItems: 'center',
-      
+
     },
     button: {
         width: '40%',
@@ -281,7 +284,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     headingwrap: {
-        alignItems: 'flex-start',
+
         top: 0,
         marginHorizontal: 13,
     },

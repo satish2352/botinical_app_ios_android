@@ -143,65 +143,65 @@ const Flowerdetails = ({ route, navigation }) => {
       </View>
       <View style={styles.contentContainer}>
         <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-        <View style={styles.carouselwrap}>
-          <Carousel
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={wp(100)}
-            autoplay={true}
-            itemWidth={wp(90)} // Set item width to full width
-            onSnapToItem={(index) => setActiveIndex(index)}
-            autoplayInterval={5000}
-            loop={true}
-          />
-          <View style={styles.paginationContainer}>
-            <Pagination
-              dotsLength={carouselData.length}
-              activeDotIndex={activeIndex}
-              dotStyle={styles.paginationDot}
-              inactiveDotStyle={styles.paginationInactiveDot}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
+          <View style={styles.carouselwrap}>
+            <Carousel
+              data={carouselData}
+              renderItem={renderItem}
+              sliderWidth={wp(100)}
+              autoplay={true}
+              itemWidth={wp(90)} // Set item width to full width
+              onSnapToItem={(index) => setActiveIndex(index)}
+              autoplayInterval={5000}
+              loop={true}
             />
-          </View>
-        </View>
-
-        <View style={styles.headingwrap}>
-          <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-            <Text style={styles.headtext}>{flowerData.name}</Text>
-            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
-          </View>
-
-          <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(flowerData.description)}</Text>
-          <View style={styles.headtext2wrap}>
-            <Text style={styles.headtext2}>
-              BOTANICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.botnical_name}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.common_name}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              HEIGHT:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.height}&nbsp;{flowerData.height_type}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              CANOPY:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.canopy}&nbsp;{flowerData.canopy_type}</Text>
-            </Text>
-            <Text style={styles.headtext2}>
-              GIRTH:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.girth}&nbsp;{flowerData.girth_type}</Text>
-            </Text>
-          </View>
-          <View style={styles.buttonview}>
-            <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-              <Text style={styles.buttonText}>Audio</Text>
-              <Icon name="multitrack-audio" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-              <Text style={styles.buttonText}>Video</Text>
-              <Icon name="ondemand-video" size={24} color="#fff" />
-            </TouchableOpacity>
+            <View style={styles.paginationContainer}>
+              <Pagination
+                dotsLength={carouselData.length}
+                activeDotIndex={activeIndex}
+                dotStyle={styles.paginationDot}
+                inactiveDotStyle={styles.paginationInactiveDot}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+              />
+            </View>
           </View>
 
-        </View>
+          <View style={styles.headingwrap}>
+            <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '95%' }}>
+              <Text style={styles.headtext}>{flowerData.name}</Text>
+              <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap()}>Show On Map</Text></TouchableOpacity>
+            </View>
+
+            <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(flowerData.description)}</Text>
+            <View style={styles.headtext2wrap}>
+              <Text style={styles.headtext2}>
+                BOTANICAL NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.botnical_name}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                COMMON NAME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.common_name}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                HEIGHT:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.height}&nbsp;{flowerData.height_type}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                CANOPY:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.canopy}&nbsp;{flowerData.canopy_type}</Text>
+              </Text>
+              <Text style={styles.headtext2}>
+                GIRTH:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: '400' }}>{flowerData.girth}&nbsp;{flowerData.girth_type}</Text>
+              </Text>
+            </View>
+            <View style={styles.buttonview}>
+              <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                <Text style={styles.buttonText}>Audio</Text>
+                <Icon name="multitrack-audio" size={24} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                <Text style={styles.buttonText}>Video</Text>
+                <Icon name="ondemand-video" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+          </View>
         </ScrollView>
         <AudioModal data={flowerData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
         <ButtonModal
@@ -286,9 +286,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   headingwrap: {
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     top: 0,
-    // marginHorizontal: 15,
+    marginHorizontal: 15,
   },
   headtext: {
     fontSize: 28,

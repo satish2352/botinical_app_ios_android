@@ -91,17 +91,18 @@ const Arvrdetails = ({ route }) => {
     };
 
 
-const goOnMap=()=>{
-   
-    navigation.navigate('Mainmap',about);
-}
+    const goOnMap = () => {
+
+        navigation.navigate('Mainmap', about);
+    }
 
     const stripHtmlTags = (str) => {
         if (!str) return '';
-        let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-        result = result.replace(/&nbsp;/g, " ");
-        result = result.replace(/wikipedia/gi, "");
-        return result;
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+        result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+        result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+        result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+        return result.trim();                             // Trim spaces from start/end
     };
     const handlePlayOnline = () => {
         // Handle playing video online
@@ -168,12 +169,12 @@ const goOnMap=()=>{
                 </View>
                 <ScrollView>
                     <View style={styles.headingwrap}>
-                   
-                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
-                    <Text style={styles.headtext}>{about.name}</Text> 
-                    <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={()=>goOnMap(about)}>Show On Map</Text></TouchableOpacity>
-                    </View>
-                        
+
+                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
+                            <Text style={styles.headtext}>{about.name}</Text>
+                            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
+                        </View>
+
                         <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
 
                         <View style={styles.headtext2wrap}>
@@ -194,26 +195,26 @@ const goOnMap=()=>{
 
 
 
-                        
-                             <View  >
+
+                        <View  >
                             <View style={styles.buttonview}>
-                         
-                            {
-                                about.audio_link && about.audio_link.length > 0 ?<TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                                <Text style={styles.buttonText}>Audio</Text>
-                                <Icon name="multitrack-audio" size={24} color="#fff" />
-                              </TouchableOpacity>:null
-                            }
-                            
-                            {
-                                about.video_upload && about.video_upload.length > 0 ?<TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                                <Text style={styles.buttonText}>Video</Text>
-                                <Icon name="ondemand-video" size={24} color="#fff" />
-                              </TouchableOpacity>:null
-                            }
-                            
-                          </View>
+
+                                {
+                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                                        <Text style={styles.buttonText}>Audio</Text>
+                                        <Icon name="multitrack-audio" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
+                                {
+                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                                        <Text style={styles.buttonText}>Video</Text>
+                                        <Icon name="ondemand-video" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
                             </View>
+                        </View>
                     </View>
                 </ScrollView>
             </View>
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         marginVertical: 20,
         alignSelf: 'center',
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
     },
     centeredView: {
         flex: 1,
@@ -403,8 +404,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContainer: {
+    },
+    modalContainer: {
         width: wp(80),
         backgroundColor: 'white',
         borderRadius: 10,
@@ -412,8 +413,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -428,15 +429,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#01595A',
         margin: 10,
-    
+
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'black',
-      },
-      dibtn: {
+    },
+    dibtn: {
         width: '34%',
         height: 40,
         borderRadius: 10,
@@ -444,7 +445,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         backgroundColor: '#01595A',
-      },
+    },
 });
 
 export default Arvrdetails;

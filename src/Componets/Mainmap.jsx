@@ -249,11 +249,12 @@ const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
 };
 const stripHtmlTags = (str) => {
   if (!str) return '';
-  let result = str.replace(/<\/?[^>]+(>|$)/g, "");
-  result = result.replace(/&nbsp;/g, " ");
-  result = result.replace(/wikipedia/gi, "");
-  return result;
-}
+  let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+  result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+  result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+  result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+  return result.trim();                             // Trim spaces from start/end
+};
 const Mainmap = ({ route, navigation }) => {
   const deatils = route.params;
   const [selectedAmenity, setSelectedAmenity] = useState(null);
@@ -910,7 +911,7 @@ const Mainmap = ({ route, navigation }) => {
                   <Icon name="close" size={34} color="#01595A" />
                 </TouchableOpacity>
                 <View style={styles.headingwrap}>
-                  <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between" }}>
+                  <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between",width: '95%' }}>
                     <Text style={styles.title}>{selectedAmenity.name}</Text>
                     <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
                   </View>
@@ -1034,9 +1035,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
   },
   headingwrap: {
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     top: 0,
-    marginHorizontal: 15,
+    marginHorizontal: 13,
   },
   title: {
     fontSize: 24,

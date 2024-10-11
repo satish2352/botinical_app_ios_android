@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs';
 const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(null);
-  const [fullScreen, setFullScreen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(true);
   const [showControls, setShowControls] = useState(true);
   const [offlinePath, setOfflinePath] = useState(null);
   const [loading, setLoading] = useState(false); // For offline download
