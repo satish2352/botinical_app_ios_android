@@ -39,27 +39,27 @@ console.log('value',rollvalue,'data',rolldata );
     const { SelectedLanguage1 } = globalvariavle();
 
     useEffect(() => {
-        fetchData();
+        // fetchData();
         return (() => { })
     }, [])
-    const fetchData = async () => {
-        const token = await AsyncStorage.getItem('token');
-        try {
-            const response = await axios.post(`${config.API_URL}get-role`,
-                {
-                    // tree_plant_id: id,
-                    language: SelectedLanguage1,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            setrolldata(response.data.data);
-        } catch (error) {
-            console.error('Error fetching tree data:', error);
-        }
-    };
+    // const fetchData = async () => {
+    //     const token = await AsyncStorage.getItem('token');
+    //     try {
+    //         const response = await axios.post(`${config.API_URL}get-role`,
+    //             {
+    //                 // tree_plant_id: id,
+    //                 language: SelectedLanguage1,
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 }
+    //             });
+    //         setrolldata(response.data.data);
+    //     } catch (error) {
+    //         console.error('Error fetching tree data:', error);
+    //     }
+    // };
 
     const [show, setShow] = useState(false);
     const handleRegistration = async () => {
@@ -157,7 +157,8 @@ console.log('value',rollvalue,'data',rolldata );
             occupation: occupation,
             language: SelectedLanguage1,
             password: confirmpassword,
-            role_id:rollvalue
+            // role_id:rollvalue
+            role_id:3
         },
             {
                 headers: {
@@ -244,7 +245,7 @@ console.log('value',rollvalue,'data',rolldata );
 
                     <Text style={{ fontSize: 25, fontWeight: '500', color: '#01595A', margin: 15, alignSelf: 'flex-start', marginHorizontal: 35 }}>REGISTRATION</Text>
                     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-                        <View style={styles.picker}>
+                       {/*  <View style={styles.picker}>
                             <Picker
                                 selectedValue={rollvalue}
                                 style={styles.pickervalue}
@@ -258,6 +259,7 @@ console.log('value',rollvalue,'data',rolldata );
                                     <Picker.Item key={index} label={data.role_name} value={data.id} />
                                 ))}
                             </Picker></View>
+                            */}
 
                         <TextInput
                             style={styles.input}
