@@ -308,7 +308,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginVertical: 20,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+
   },
   headtext2wrap: {
     marginVertical: 10,
@@ -379,7 +381,7 @@ const styles = StyleSheet.create({
 
   },
   dibtn: {
-    width: '25%',
+    width: '30%',
     height: 40,
     borderRadius: 10,
     alignItems: 'center',

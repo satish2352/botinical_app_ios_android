@@ -296,9 +296,10 @@ const styles = StyleSheet.create({
     buttonview: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginVertical: 20,
+        marginVertical: 3,
         alignSelf: 'center',
         justifyContent: 'space-between',
+        marginBottom:30
     },
     centeredView: {
         flex: 1,
@@ -438,7 +439,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     dibtn: {
-        width: '34%',
+      width: '30%',
         height: 40,
         borderRadius: 10,
         alignItems: 'center',
