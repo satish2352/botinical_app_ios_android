@@ -497,6 +497,7 @@ import ChangepassStack from './ChangepassStack';
 import ARVRamenitiesStack from './ARVRamenitiesStack';
 import ZonesStack from './ZonesStack';
 import Login from '../src/Componets/Login';
+import PriorityamenitiesStack from './PriorityamenitiesStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -644,6 +645,16 @@ function DrawerNavigator() {
         component={ARVRamenitiesStack}
         options={{
           title: SelectedLanguage1 === 'english' ? 'ARVR Amenities ' : 'ARVR సౌకర్యాలు',
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="logo-apple-ar" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="PriorityamenitiesStack"
+        component={PriorityamenitiesStack}
+        options={{
+          title: SelectedLanguage1 === 'english' ? 'Priority Base Amenities ' : 'ప్రాధాన్య బేస్ సౌకర్యాలు',
           drawerIcon: ({ focused, size }) => (
             <Icon name="logo-apple-ar" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),

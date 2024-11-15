@@ -9,13 +9,15 @@ import Langchange from '../src/Componets/Langchange';
 import Arvramenities from '../src/Componets/Arvramenities';
 import Arvrdetails from '../src/Componets/Arvrdetails';
 import Mainmap from '../src/Componets/Mainmap';
+import Priortyamenities from '../src/Componets/Priortyamenities';
+import PriortyArvrdetails from '../src/Componets/PriortyArvrdetails';
 
 const Stack = createNativeStackNavigator();
-function ARVRamenitiesStack() {
+function PriorityamenitiesStack() {
     const navigation = useNavigation();
     return (
 
-        <Stack.Navigator initialRouteName="Arvramenities"
+        <Stack.Navigator initialRouteName="Priortyamenities"
             screenOptions={{
                 statusBarHidden: true,
                 headerTransparent: true,
@@ -42,8 +44,8 @@ function ARVRamenitiesStack() {
                   }
             }}
         >
-            <Stack.Screen name="Arvramenities" component={Arvramenities} />
-            <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
+            <Stack.Screen name="Priortyamenities" component={Priortyamenities} />
+            <Stack.Screen name="PriortyArvrdetails" component={PriortyArvrdetails} />
             <Stack.Screen name="Mainmap" component={Mainmap} />
 
         </Stack.Navigator>
@@ -51,4 +53,4 @@ function ARVRamenitiesStack() {
     );
 }
 
-export default ARVRamenitiesStack;
+export default PriorityamenitiesStack;

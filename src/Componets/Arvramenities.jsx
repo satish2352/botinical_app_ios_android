@@ -9,7 +9,7 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
-
+import SearchBar from '../Reusablecompoent/SearchBar';
 const Arvramenities = ({ navigation }) => {
     const [cardData, setAmenitiesData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const Arvramenities = ({ navigation }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
-
+    const [searchText, setSearchText] = useState('');
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -27,7 +27,7 @@ const Arvramenities = ({ navigation }) => {
             }
         });
         return unsubscribe;
-    }, [navigation, isLoggedIn, SelectedLanguage1, start]);
+    }, [navigation, isLoggedIn, SelectedLanguage1, start, searchText]);
 
     // useEffect(() => {
 
@@ -41,6 +41,7 @@ const Arvramenities = ({ navigation }) => {
             const response = await axios.post(`${config.API_URL}auth/get-ar-vr-amenities-list`, {
                 start,
                 language: SelectedLanguage1,
+                name: searchText
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -48,7 +49,7 @@ const Arvramenities = ({ navigation }) => {
             });
             setAmenitiesData(response.data.data);
             setTotalPages(response.data.totalPages);
-   
+
         } catch (error) {
             console.error('Error fetching amenities data:', error);
         } finally {
@@ -80,16 +81,30 @@ const Arvramenities = ({ navigation }) => {
         setStart(1);
         setCurrentPage(1);
         fetchData();
+        setSearchText('')
     };
 
-   const stripHtmlTags = (str) => {
-    if (!str) return '';
-    let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
-    result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
-    result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
-    result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
-    return result.trim();                             // Trim spaces from start/end
-};
+    const stripHtmlTags = (str) => {
+        if (!str) return '';
+        let result = str.replace(/<\/?[^>]+(>|$)/g, "");  // Remove HTML tags
+        result = result.replace(/&nbsp;/g, " ");          // Replace &nbsp; with a space
+        result = result.replace(/wikipedia/gi, "");       // Remove "wikipedia"
+        result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
+        return result.trim();                             // Trim spaces from start/end
+    };
+    const handleSearchChange = (text) => {
+        setSearchText(text);
+        setStart(1); // Set start to 1 when text changes
+    };
+
+    const handleSearchFocus = () => {
+        setStart(1); // Set start to 1 when search bar is clicked
+    };
+
+    const handleSearchPress = () => {
+        console.log('Search button pressed');
+        setStart(1); // Set start to 1 when search icon is clicked
+    };
     return (
         <LinearGradient
             colors={['rgba(83, 174, 105, 0.39)', '#FBFFFC']}
@@ -104,57 +119,74 @@ const Arvramenities = ({ navigation }) => {
                 }
             >
                 <Text style={styles.header}>{SelectedLanguage1 === 'english' ? ' ARVR AMENITIES' : 'ARVR సౌకర్యాలు'}</Text>
+                <SearchBar
+                    value={searchText}
+                    onChange={handleSearchChange}
+                    onFocus={handleSearchFocus}
+                    onSearch={handleSearchPress}
+                    placeholder="Search here..."
+                />
+                {cardData.length === 0 ? (
+                    // Show this message if cardData is empty
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>Data not found</Text>
+                    </View>
+                ) : (
+                    cardData.map((item, index) => {
+                        if (index % 2 === 0) {
+                            return (
+                                <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
+                                    {/* Image Section */}
+                                    <View style={styles.cardhead}>
+                                        <Image source={{ uri: item.image }} style={styles.image2} />
+                                    </View>
 
-                {cardData.map((item, index) => {
-                    if (index % 2 === 0) {
-                        return (
-                            <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
+                                    {/* Text Section */}
+                                    <View style={styles.cardtext}>
+                                        <Text style={styles.text}>{item.name}</Text>
+                                        <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>
+                                            {stripHtmlTags(item.description)}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        } else {
+                            return (
+                                <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
+                                    {/* Text Section */}
+                                    <View style={styles.cardtext}>
+                                        <Text style={styles.text}>{item.name}</Text>
+                                        <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={6} ellipsizeMode="tail">
+                                            {stripHtmlTags(item.description)}
+                                        </Text>
+                                    </View>
 
-                                <View style={styles.cardhead}>
-                                    <Image
-                                        source={{ uri: item.image }}
-                                        style={styles.image2}
-                                    />
-                                </View>
+                                    {/* Image Section */}
+                                    <View style={styles.cardhead}>
+                                        <Image source={{ uri: item.image }} style={styles.image3} />
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        }
+                    })
+                )}
 
-                                <View style={styles.cardtext}>
-                                    <Text style={styles.text}>{item.name}</Text>
-                                    <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>{stripHtmlTags(item.description)}</Text>
-
-                                </View>
-                            </TouchableOpacity>
-                        );
-                    } else {
-                        return (
-                            <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
-
-                                <View style={styles.cardtext}>
-                                    <Text style={styles.text}>{item.name}</Text>
-                                    <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={6} ellipsizeMode="tail">{stripHtmlTags(item.description)}</Text>
-                                </View>
-
-                                <View style={styles.cardhead}>
-                                    <Image
-                                        source={{ uri: item.image }}
-                                        style={styles.image3}
-                                    />
-                                </View>
-
-                            </TouchableOpacity>
-                        );
-                    }
-                })}
                 {loading && <ActivityIndicator size="large" color="#01595A" />}
                 {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-                <Text style={styles.pageIndicator}>{currentPage} / {totalPages}</Text>
+                <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
             </ScrollView>
 
-            <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
-                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext} disabled={start === totalPages}>
-                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-            </TouchableOpacity>
+            {
+                totalPages > 1 ? <View>
+                    <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.nextButton} onPress={handleNext} disabled={start === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+                    : null
+            }
         </LinearGradient>
     );
 };
@@ -268,6 +300,16 @@ const styles = StyleSheet.create({
     icon: {
         color: '#fff',
         fontSize: 20,
+    },
+    emptyContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    emptyText: {
+        fontSize: 18,
+        color: '#888',
     },
 });
 

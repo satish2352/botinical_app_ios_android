@@ -17,7 +17,7 @@ import AudioModal from './AudioModal';
 import ListModal from './ListModal';
 import { DOMParser } from 'xmldom';
 import { kml } from '@tmcw/togeojson';
-
+import SearchBar from '../Reusablecompoent/SearchBar';
 
 const kmlData = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -268,8 +268,6 @@ const Mainmap = ({ route, navigation }) => {
   const [flowersData, setFlowersData] = useState([]);
   const [amenitiesData, setAmenitiesData] = useState([]);
   const [polygons, setPolygons] = useState([]);
-
-
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -283,6 +281,7 @@ const Mainmap = ({ route, navigation }) => {
   const [isTracking, setIsTracking] = useState(false);
   const [nearbyEntities, setNearbyEntities] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width / screen.height;
   const LATITUDE_DELTA = 0.01;
@@ -300,7 +299,47 @@ const Mainmap = ({ route, navigation }) => {
   const { coordinateanimated } = state
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const mapRef = useRef();
+  const [routeSteps, setRouteSteps] = useState([]);
+
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+
+  const handleDirectionsReady = (result) => {
+    if (mapRef.current) {
+      mapRef.current.fitToCoordinates(result.coordinates, {
+        edgePadding: { right: 30, bottom: 300, left: 30, top: 100 },
+      });
+    }
+
+    // Log distance and duration
+    console.log(`Distance: ${result.distance} km`);
+    console.log(`Duration: ${result.duration} min`);
+
+    // Fetch step-by-step directions
+    // fetchDirections(userLocation, directionsDestination);
+  };
+
+  const fetchDirections = async (origin, destination) => {
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${transportMode}&key=${GOOGLE_MAPS_APIKEY}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.routes.length) {
+        const steps = data.routes[0].legs[0].steps.map((step) => ({
+          instruction: step.html_instructions.replace(/<[^>]+>/g, ''), // Clean HTML tags
+          distance: step.distance.text,
+          location: {
+            latitude: step.end_location.lat,
+            longitude: step.end_location.lng,
+          },
+        }));
+        setRouteSteps(steps);
+      }
+    } catch (error) {
+      console.error('Error fetching directions:', error);
+    }
+  };
   useEffect(async () => {
     // data();
 
@@ -339,6 +378,11 @@ const Mainmap = ({ route, navigation }) => {
     });
     return unsubscribe;
   }, [navigation, isLoggedIn, start]);
+  // useEffect(() => {
+    
+  //   fetchData();
+   
+  // }, [searchText]);
 
 
   const requestlocationPermission = async () => {
@@ -362,23 +406,24 @@ const Mainmap = ({ route, navigation }) => {
       console.warn(err);
     }
   };
-  useEffect(() => {
+  // useEffect(() => {
 
-    const timer = setTimeout(() => {
-      livelocation();
+  //   const timer = setTimeout(() => {
+  //     if (isTracking === 'false') {
+  //     livelocation();
+  //     }
+  //   }, 10000); // 60000 milliseconds = 1 minute
 
-    }, 10000); // 60000 milliseconds = 1 minute
-
-    return () => {
-      clearTimeout(timer); // Cleanup timer on unmount
-    };
-  }, [userLocation]);
+  //   return () => {
+  //     clearTimeout(timer); // Cleanup timer on unmount
+  //   };
+  // }, [userLocation]);
   const livelocation = () => {
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords;
         // console.log("after every 6 second call live location function");
-        animate(latitude, longitude);
+        // animate(latitude, longitude);
         setUserLocation({ latitude, longitude });
         findNearbyEntities(latitude, longitude);
         if (isTracking === 'false') {
@@ -392,9 +437,6 @@ const Mainmap = ({ route, navigation }) => {
             }),
           })
         }
-
-
-
       },
       (error) => {
         console.log(error.code, error.message);
@@ -402,7 +444,6 @@ const Mainmap = ({ route, navigation }) => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }
-
   const findNearbyEntities = (latitude, longitude) => {
     const radius = 0.1; // 100 meters
 
@@ -437,11 +478,12 @@ const Mainmap = ({ route, navigation }) => {
   };
   const fetchData = async () => {
     const token = await AsyncStorage.getItem('token');
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await axios.post(`${config.API_URL}auth/get-map-data-new`, {
         language: SelectedLanguage1,
-        start
+        start,
+        // name:searchText
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -455,7 +497,7 @@ const Mainmap = ({ route, navigation }) => {
     } catch (error) {
       console.error('Error fetching map data:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
       setRefreshing(false);
     }
   };
@@ -509,6 +551,7 @@ const Mainmap = ({ route, navigation }) => {
     livelocation();
     Canceldirection();
     // data();
+    setSearchText('')
   }
   const parseCoordinates = (kml) => {
     const coordinates = [];
@@ -537,10 +580,12 @@ const Mainmap = ({ route, navigation }) => {
     setaudiovideodata(amenity)
     setShowDirections(false);
     setModalVisible(false);
+    setRouteSteps([]);
   };
   const closeModal = () => {
     setSelectedAmenity(null);
     setShowDirections(false);
+    setRouteSteps([]);
   };
   const handleDirectionPress = () => {
     if (selectedAmenity.latitude == null) {
@@ -557,13 +602,13 @@ const Mainmap = ({ route, navigation }) => {
     }
   };
   const coordinates = parseCoordinates(kmlData);
-  console.log('coordinates', coordinates);
+  console.log('coordinatesravi', coordinates);
 
   const animate = (latitude, longitude) => {
     const newCoordinate = { latitude, longitude };
     if (Platform.OS == "android") {
       if (markerRef.current) {
-        markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
+        markerRef.current.animateMarkerToCoordinate(newCoordinate, 2000);
       }
       else {
         coordinateanimated.timing(newCoordinate).start();
@@ -600,71 +645,82 @@ const Mainmap = ({ route, navigation }) => {
       </View>
     );
   };
+  // const Canceldirection = () => {
+  //   setShowDirections(false)
+  //   setRouteSteps([]);
+  //   setSelectedAmenity(null);
+  //   setIsTracking(false);
+  //   if (mapRef.current) {
+  //     // Example: animate to a specific region
+  //     mapRef.current.animateToRegion({
+  //       latitude: 17.45407013149723,
+  //       longitude: 78.35728537719703,
+  //       latitudeDelta: 0.01,
+  //       longitudeDelta: 0.01,
+  //     }, 2000); // 1000 is the duration in milliseconds
+  //   }
+  // }
   const Canceldirection = () => {
-    setShowDirections(false)
-    setSelectedAmenity(null);
     setIsTracking(false);
+    setShowDirections(false);
+    setSelectedAmenity(null);
+  
     if (mapRef.current) {
-      // Example: animate to a specific region
+      // Animate back to a default region or the user's location
       mapRef.current.animateToRegion({
         latitude: 17.45407013149723,
         longitude: 78.35728537719703,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
-      }, 1000); // 1000 is the duration in milliseconds
+      }, 1000); // 1-second animation duration
     }
-  }
+  
+    // Do not set mapRef.current to null
+  };
+  
   useEffect(() => {
+    let watchId;
+  
     const startTracking = () => {
-      const watchId = Geolocation.watchPosition(
+      watchId = Geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude, longitude });
-
+          animate(latitude, longitude);
+          findNearbyEntities(latitude, longitude);
+  
           if (isTracking && mapRef.current) {
-            updateState({
-
-              coordinateanimated: new AnimatedRegion({
-                latitude: latitude,
-                longitude: longitude,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-              }),
-            })
             mapRef.current.animateToRegion({
               latitude,
               longitude,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001,
-            }, 1000); // 1-second animation duration
+            }, 2000); // 2-second animation duration
           }
         },
         (error) => {
           console.error('Error tracking location:', error);
         },
-        { enableHighAccuracy: true, distanceFilter: 10, interval: 2000 }
+        { enableHighAccuracy: true, distanceFilter: 6, interval: 2000 }
       );
-
-      // Clean up on component unmount
-      return () => {
-        Geolocation.clearWatch(watchId);
-      };
     };
-
+  
     if (isTracking) {
       startTracking();
     }
-
+  
     return () => {
-      Geolocation.clearWatch();
+      if (watchId !== undefined) {
+        Geolocation.clearWatch(watchId);
+      }
     };
   }, [isTracking]);
+  
   const Trackdirection = () => {
     if (userLocation && userLocation.latitude && userLocation.longitude) {
-      setShowDirections(false)
+
       setSelectedAmenity(null);
       setIsTracking(true);
-
+      setRouteSteps([]);
 
       if (mapRef.current) {
         // Example: animate to a specific region
@@ -673,7 +729,7 @@ const Mainmap = ({ route, navigation }) => {
           longitude: userLocation.longitude,
           latitudeDelta: 0.001,
           longitudeDelta: 0.001,
-        }, 1000); // 1000 is the duration in milliseconds
+        }, 2000); // 1000 is the duration in milliseconds
       }
     }
     else {
@@ -697,11 +753,25 @@ const Mainmap = ({ route, navigation }) => {
 
     }
   };
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+    setStart(1); // Set start to 1 when text changes
+  };
+
+  const handleSearchFocus = () => {
+    setStart(1); // Set start to 1 when search bar is clicked
+  };
+
+  const handleSearchPress = () => {
+    console.log('Search button pressed');
+    setStart(1); // Set start to 1 when search icon is clicked
+  };
   if (loading) {
     return <ActivityIndicator size="large" color="#01595A" />;
   }
   return (
     <View style={styles.container}>
+
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -716,6 +786,7 @@ const Mainmap = ({ route, navigation }) => {
         }}
 
       >
+      
         <Polyline
           coordinates={coordinates}
           strokeColor="#FF0000"
@@ -728,6 +799,7 @@ const Mainmap = ({ route, navigation }) => {
           strokeColor="rgba(0,0,0,0.5)"
           strokeWidth={2}
         />
+
         {/*
         <Circle
           center={{
@@ -763,6 +835,7 @@ const Mainmap = ({ route, navigation }) => {
             />
           </React.Fragment>
         ))}
+
         {userLocation && (
           <View>
             <Marker.Animated
@@ -824,7 +897,7 @@ const Mainmap = ({ route, navigation }) => {
           return null;
         })}
 
-        {showDirections && userLocation && directionsDestination && (
+        {/* {showDirections && userLocation && directionsDestination && (
           <MapViewDirections
             origin={userLocation}
             destination={directionsDestination}
@@ -851,11 +924,51 @@ const Mainmap = ({ route, navigation }) => {
             }}
           />
         )}
+          */}
+        {/* Render directions if enabled */}
+        {showDirections && userLocation && directionsDestination && (
+          <MapViewDirections
+            origin={userLocation}
+            destination={directionsDestination}
+            apikey={GOOGLE_MAPS_APIKEY}
+            strokeWidth={4}
+            strokeColor="blue"
+            mode={transportMode}
+            lineDashPattern={transportMode === 'walking' ? [1, 10] : null}
+            optimizeWaypoints={true}
+            onReady={handleDirectionsReady}
+            onError={(errorMessage) => {
+              console.error('Error with directions:', errorMessage);
+            }}
+          />
+        )}
+
+        {/* Show markers for each step */}
+        {showDirections &&
+          routeSteps.map((step, index) => (
+            <Marker key={index} coordinate={step.location}>
+              <View style={styles.marker}>
+                <Text style={styles.markerText}>{step.instruction}</Text>
+                <Text style={styles.distanceText}>{step.distance}</Text>
+              </View>
+            </Marker>
+          ))}
+
       </MapView>
+  
       {
-        showDirections ? <TouchableOpacity style={styles.directioncloseButton} onPress={() => Canceldirection()}>
-          <Text style={styles.btntext}>Cancel Direction</Text>
-        </TouchableOpacity> :
+        showDirections ? <View >
+          {isTracking ?
+            <TouchableOpacity style={styles.trackButton1} onPress={() => Canceldirection()}>
+              <Text style={styles.btntext}>Cancel Direction</Text>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity style={styles.trackButton} onPress={() => Trackdirection()}>
+              <Text style={styles.btntext}>Start direction</Text>
+            </TouchableOpacity>
+          }
+        </View>
+          :
 
           <View style={{ justifyContent: 'space-evenly', marginHorizontal: 5 }}>
             {roleid === '2' || roleid === '1' ?
@@ -875,6 +988,17 @@ const Mainmap = ({ route, navigation }) => {
 
           </View>
       }
+      {/*
+      <View style={styles.searchContainer}>
+      <SearchBar
+      value={searchText}
+      onChange={handleSearchChange}
+      onFocus={handleSearchFocus}
+      onSearch={handleSearchPress}
+      placeholder="Search here..."
+    />
+    </View>
+    */}
       {selectedAmenity && (
         <Modal
           animationType="slide"
@@ -911,7 +1035,7 @@ const Mainmap = ({ route, navigation }) => {
                   <Icon name="close" size={34} color="#01595A" />
                 </TouchableOpacity>
                 <View style={styles.headingwrap}>
-                  <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between",width: '95%' }}>
+                  <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '95%' }}>
                     <Text style={styles.title}>{selectedAmenity.name}</Text>
                     <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
                   </View>
@@ -997,6 +1121,9 @@ const Mainmap = ({ route, navigation }) => {
           <Icon2 name="refresh" size={35} color="white" />
         </TouchableOpacity>
       </View>
+      
+     
+    
       {
         isTracking ?
           <ListModal visible={modalVisible} nearbyEntities={nearbyEntities} onItemSelect={handleItemSelect} onClose={() => setModalVisible(false)} />
@@ -1048,7 +1175,8 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 10,
-    color: 'black'
+    color: 'black',
+    paddingVertical: 5
   },
   image: {
     alignSelf: 'center',
@@ -1072,7 +1200,7 @@ const styles = StyleSheet.create({
     // resizeMode: "center"
     alignItems: "center",
     justifyContent: 'center',
-    height: '35%',
+    height: '25%',
     marginVertical: wp(4),
     // resizeMode: "center"
     // backgroundColor:'red'
@@ -1081,13 +1209,13 @@ const styles = StyleSheet.create({
   carouselImage: {
     // flex: 1,
     width: '100%',
-    height: '90%',
+    height: '100%',
     resizeMode: 'contain',
   },
-  paginationContainer: {
-    position: 'absolute',
-    top: hp(17),
-  },
+  // paginationContainer: {
+  //   position: 'absolute',
+  //   top: hp(17),
+  // },
   paginationDot: {
     width: 12,
     height: 12,
@@ -1256,6 +1384,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
 
   },
+  directioncloseButton1: {
+    position: 'absolute',
+    bottom: 20,
+    backgroundColor: '#01595A',
+    borderRadius: 25,
+    padding: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start'
+
+  },
   trackButton: {
     position: 'absolute',
     bottom: 20,
@@ -1280,7 +1419,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#ffff",
     fontWeight: "500"
-  }
+  },
+  searchContainer: {
+    position: 'absolute',
+    top: 20,
+   
+    alignSelf: 'center',
+    width:'70%'
+    
+  },
 });
 export default Mainmap;
 

@@ -88,7 +88,7 @@ const Login = () => {
                 setIsLoggedIn(true)
                 await AsyncStorage.setItem('email', email);
                 await AsyncStorage.setItem('password',password);
-                await AsyncStorage.setItem('role_id',role_id);
+                await AsyncStorage.setItem('role_id', JSON.stringify(role_id));
                 // navigation.navigate('Otpscreen', { mobile_number: mobile });
                 navigation.navigate('Home');
                 setError('');

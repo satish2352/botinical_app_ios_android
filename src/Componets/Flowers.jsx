@@ -8,16 +8,18 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
+import SearchBar from '../Reusablecompoent/SearchBar';
 const Flowers = ({ navigation }) => {
     const [flowerData, setFlowerData] = useState([]);
     const [start, setStart] = useState(1);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
-    const { SelectedLanguage1, isLoggedIn, showLoginPrompt ,roleid} = globalvariavle();
+    const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
     const [lat, setlat] = useState(null);
     const [long, setlong] = useState(null);
     const [treeid, settreeid] = useState(null);
+    const [searchText, setSearchText] = useState('');
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -26,7 +28,7 @@ const Flowers = ({ navigation }) => {
             }
         });
         return unsubscribe;
-    }, [navigation, isLoggedIn, SelectedLanguage1, start]);
+    }, [navigation, isLoggedIn, SelectedLanguage1, start, searchText]);
 
     useEffect(() => {
 
@@ -70,7 +72,8 @@ const Flowers = ({ navigation }) => {
         try {
             const response = await axios.post(`${config.API_URL}auth/get-flowers-list`, {
                 language: SelectedLanguage1,
-                start
+                start,
+                name: searchText
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -121,8 +124,21 @@ const Flowers = ({ navigation }) => {
         setRefreshing(true);
         setStart(1);
         fetchData();
+        setSearchText('')
     };
-
+    const handleSearchChange = (text) => {
+        setSearchText(text);
+        setStart(1); // Set start to 1 when text changes
+      };
+    
+      const handleSearchFocus = () => {
+        setStart(1); // Set start to 1 when search bar is clicked
+      };
+    
+      const handleSearchPress = () => {
+        console.log('Search button pressed');
+        setStart(1); // Set start to 1 when search icon is clicked
+      };
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -133,11 +149,25 @@ const Flowers = ({ navigation }) => {
             >
                 <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'PLANTS' : 'మొక్కలు'}</Text>
             </LinearGradient>
+
+            <SearchBar
+            value={searchText}
+            onChange={handleSearchChange}
+            onFocus={handleSearchFocus}
+            onSearch={handleSearchPress}
+            placeholder="Search here..."
+          />
+
             <FlatList
                 data={flowerData}
                 renderItem={renderFlowerItem}
                 keyExtractor={item => item.id.toString()}
                 numColumns={2}
+                ListEmptyComponent={() => (
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>Data not found</Text>
+                    </View>
+                )}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
 
@@ -148,12 +178,17 @@ const Flowers = ({ navigation }) => {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             />
 
-            <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
-                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-            </TouchableOpacity>
+            {
+                totalPages > 1 ? <View>
+                    <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.nextButton} onPress={handleNext} disabled={start === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+                    : null
+            }
         </View>
     );
 };
@@ -244,6 +279,25 @@ const styles = StyleSheet.create({
     icon: {
         color: '#fff',
         fontSize: 20,
+    },
+    emptyContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#888',
+    },
+    footer: {
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    pageIndicator: {
+        fontSize: 16,
+        color: '#01595A',
+        marginBottom: 10,
     },
 });
 

@@ -8,11 +8,12 @@ import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
+import SearchBar from '../Reusablecompoent/SearchBar';
 
 const Treecompo = ({ navigation }) => {
     const [treeData, setTreeData] = useState([]);
     const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
-    console.log('SelectedLanguage1',SelectedLanguage1);
+    console.log('SelectedLanguage1', SelectedLanguage1);
     const [loading, setLoading] = useState(false);
     const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);
@@ -20,6 +21,7 @@ const Treecompo = ({ navigation }) => {
     const [lat, setlat] = useState(null);
     const [long, setlong] = useState(null);
     const [treeid, settreeid] = useState(null);
+    const [searchText, setSearchText] = useState('');
     console.log('1111111111111', treeid);
 
 
@@ -33,7 +35,7 @@ const Treecompo = ({ navigation }) => {
             }
         });
         return unsubscribe;
-    }, [navigation, isLoggedIn, SelectedLanguage1, start]);
+    }, [navigation, isLoggedIn, SelectedLanguage1, start, searchText]);
 
     const Updatecordinates = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -73,6 +75,7 @@ const Treecompo = ({ navigation }) => {
             const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
                 start,
                 language: SelectedLanguage1,
+                name: searchText
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -123,7 +126,22 @@ const Treecompo = ({ navigation }) => {
     const handleRefresh = () => {
         setRefreshing(true);
         fetchData();
+        setSearchText('')
+        setStart(1);
     };
+    const handleSearchChange = (text) => {
+        setSearchText(text);
+        setStart(1); // Set start to 1 when text changes
+      };
+    
+      const handleSearchFocus = () => {
+        setStart(1); // Set start to 1 when search bar is clicked
+      };
+    
+      const handleSearchPress = () => {
+        console.log('Search button pressed');
+        setStart(1); // Set start to 1 when search icon is clicked
+      };
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -134,25 +152,47 @@ const Treecompo = ({ navigation }) => {
             >
                 <Text style={styles.text}>{SelectedLanguage1 === 'english' ? 'TREES' : 'చెట్లు'}</Text>
             </LinearGradient>
+
+            <SearchBar
+            value={searchText}
+            onChange={handleSearchChange}
+            onFocus={handleSearchFocus}
+            onSearch={handleSearchPress}
+            placeholder="Search here..."
+          />
+
             <FlatList
                 data={treeData}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={2}
+                ListEmptyComponent={() => (
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>Data not found</Text>
+                    </View>
+                )}
                 ListFooterComponent={() => (
                     <View style={styles.footer}>
                         <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
                         {loading && <ActivityIndicator size="large" color="#01595A" />}
                     </View>
                 )}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
             />
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-                <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
-            </TouchableOpacity>
+            {
+                totalPages > 1 ? <View>
+                    <TouchableOpacity style={styles.backButton} onPress={handleBack} disabled={start === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft} style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.nextButton} onPress={handleNext} disabled={start === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight} style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+                    : null
+            }
+
 
         </View>
     );
@@ -242,7 +282,25 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color: '#000000',
     },
-
+    emptyContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#888',
+    },
+    footer: {
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    pageIndicator: {
+        fontSize: 16,
+        color: '#01595A',
+        marginBottom: 10,
+    },
 });
 
 export default Treecompo;

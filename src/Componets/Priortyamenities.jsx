@@ -1,8 +1,6 @@
 
-
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import config from '../../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,18 +10,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Editcordinates from '../Reusablecompoent/Editcordinates';
 import SearchBar from '../Reusablecompoent/SearchBar';
-const Amenities = ({ navigation }) => {
+const Priortyamenities = ({ navigation }) => {
     const [cardData, setAmenitiesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [start, setStart] = useState(1);
     const [refreshing, setRefreshing] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const { SelectedLanguage1, isLoggedIn, showLoginPrompt, roleid } = globalvariavle();
-    const [lat, setlat] = useState(null);
-    const [long, setlong] = useState(null);
-    const [treeid, settreeid] = useState(null);
+    const [idArray, setIdArray] = useState([]);
+    const { SelectedLanguage1, isLoggedIn, showLoginPrompt } = globalvariavle();
     const [searchText, setSearchText] = useState('');
+    console.log('jjj',idArray);
+    
     useEffect(() => {
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
@@ -43,7 +41,7 @@ const Amenities = ({ navigation }) => {
         const token = await AsyncStorage.getItem('token');
         setLoading(true);
         try {
-            const response = await axios.post(`${config.API_URL}auth/get-amenities-list`, {
+            const response = await axios.post(`${config.API_URL}auth/get-order-number-amenities-list`, {
                 start,
                 language: SelectedLanguage1,
                 name: searchText
@@ -54,6 +52,9 @@ const Amenities = ({ navigation }) => {
             });
             setAmenitiesData(response.data.data);
             setTotalPages(response.data.totalPages);
+            const ids = response.data.data.map(item => item.order_number);
+            setIdArray(ids);
+
         } catch (error) {
             console.error('Error fetching amenities data:', error);
         } finally {
@@ -63,7 +64,7 @@ const Amenities = ({ navigation }) => {
     };
 
     const handleLogin = (data) => {
-        navigation.navigate('Aminitiesdetails', data);
+        navigation.navigate('PriortyArvrdetails', {data,idArray});
     };
 
     const handleNext = () => {
@@ -96,37 +97,6 @@ const Amenities = ({ navigation }) => {
         result = result.replace(/\s+/g, " ");             // Collapse multiple spaces
         return result.trim();                             // Trim spaces from start/end
     };
-
-    const Updatecordinates = async () => {
-        const token = await AsyncStorage.getItem('token');
-        setLoading(true);
-        try {
-            const response = await axios.post(`${config.API_URL}auth/update-tree-plant-aminities`, {
-                start,
-                language: SelectedLanguage1,
-                latitude: lat,
-                longitude: long,
-                type: 3,
-                aminities_id: treeid
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (response.data.status === 'true') {
-                Alert.alert("Data Update", response.data.message)
-            }
-            else {
-                Alert.alert("Error", response.data.message)
-            }
-            console.log('data update', response.data);
-        } catch (error) {
-            console.error('Error fetching tree data:', error);
-        } finally {
-            setLoading(false);
-            setRefreshing(false);
-        }
-    }
     const handleSearchChange = (text) => {
         setSearchText(text);
         setStart(1); // Set start to 1 when text changes
@@ -153,8 +123,7 @@ const Amenities = ({ navigation }) => {
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
             >
-                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? 'AMENITIES' : 'సౌకర్యాలు'}</Text>
-
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? ' Priority Base Amenities' : 'ప్రాధాన్య బేస్ సౌకర్యాలు'}</Text>
                 <SearchBar
                     value={searchText}
                     onChange={handleSearchChange}
@@ -165,88 +134,48 @@ const Amenities = ({ navigation }) => {
                 {cardData.length === 0 ? (
                     // Show this message if cardData is empty
                     <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>Data not found</Text>
+                        <Text style={styles.emptyText}>Data not found</Text>
                     </View>
-                  ) : (
-                    // Map through cardData if it's not empty
+                ) : (
                     cardData.map((item, index) => {
-                      if (index % 2 === 0) {
-                        return (
-                          <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
-                            <View style={styles.cardhead}>
-                              <Image source={{ uri: item.image }} style={styles.image2} />
-                            </View>
-                  
-                            <View style={styles.cardtext}>
-                              <Text style={styles.text}>{item.name}</Text>
-                              <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>
-                                {stripHtmlTags(item.description)}
-                              </Text>
-                            </View>
-                  
-                            {roleid === '1' && (
-                              <TouchableOpacity
-                                style={{
-                                  position: 'absolute',
-                                  alignSelf: 'flex-start',
-                                  borderTopRightRadius: 10,
-                                  borderBottomLeftRadius: 10,
-                                  backgroundColor: '#01595A',
-                                  zIndex: 1,
-                                  right: 0,
-                                }}
-                              >
-                                <Editcordinates
-                                  item={item}
-                                  setlong={setlong}
-                                  setlat={setlat}
-                                  Updatecordinates={Updatecordinates}
-                                  settreeid={settreeid}
-                                />
-                              </TouchableOpacity>
-                            )}
-                          </TouchableOpacity>
-                        );
-                      } else {
-                        return (
-                          <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
-                            <View style={styles.cardtext}>
-                              <Text style={styles.text}>{item.name}</Text>
-                              <Text numberOfLines={6} ellipsizeMode="tail" style={[styles.text2, { textAlign: 'left' }]}>
-                                {stripHtmlTags(item.description)}
-                              </Text>
-                            </View>
-                  
-                            <View style={styles.cardhead}>
-                              <Image source={{ uri: item.image }} style={styles.image3} />
-                            </View>
-                  
-                            {roleid === '1' && (
-                              <TouchableOpacity
-                                style={{
-                                  position: 'absolute',
-                                  alignSelf: 'flex-start',
-                                  borderTopRightRadius: 10,
-                                  borderBottomRightRadius: 10,
-                                  backgroundColor: '#01595A',
-                                  zIndex: 1,
-                                }}
-                              >
-                                <Editcordinates
-                                  item={item}
-                                  setlong={setlong}
-                                  setlat={setlat}
-                                  Updatecordinates={Updatecordinates}
-                                  settreeid={settreeid}
-                                />
-                              </TouchableOpacity>
-                            )}
-                          </TouchableOpacity>
-                        );
-                      }
+                        if (index % 2 === 0) {
+                            return (
+                                <TouchableOpacity key={index} style={styles.cardwrap} onPress={() => handleLogin(item)}>
+                                    {/* Image Section */}
+                                    <View style={styles.cardhead}>
+                                        <Image source={{ uri: item.image }} style={styles.image2} />
+                                    </View>
+
+                                    {/* Text Section */}
+                                    <View style={styles.cardtext}>
+                                        <Text style={styles.text}>{item.name}</Text>
+                                        <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>
+                                            {stripHtmlTags(item.description)}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        } else {
+                            return (
+                                <TouchableOpacity key={index} style={styles.cardwrap2} onPress={() => handleLogin(item)}>
+                                    {/* Text Section */}
+                                    <View style={styles.cardtext}>
+                                        <Text style={styles.text}>{item.name}</Text>
+                                        <Text style={[styles.text2, { textAlign: 'left' }]} numberOfLines={6} ellipsizeMode="tail">
+                                            {stripHtmlTags(item.description)}
+                                        </Text>
+                                    </View>
+
+                                    {/* Image Section */}
+                                    <View style={styles.cardhead}>
+                                        <Image source={{ uri: item.image }} style={styles.image3} />
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        }
                     })
-                  )}
-                  
+                )}
+
                 {loading && <ActivityIndicator size="large" color="#01595A" />}
                 {<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
                 <Text style={styles.pageIndicator}>{start} / {totalPages}</Text>
@@ -342,7 +271,8 @@ const styles = StyleSheet.create({
     },
     cardtext: {
         width: "60%",
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+
     },
     nextButton: {
         position: 'absolute',
@@ -382,12 +312,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 20,
-      },
-      emptyText: {
+    },
+    emptyText: {
         fontSize: 18,
         color: '#888',
-      },
+    },
 });
 
-export default Amenities;
+export default Priortyamenities;
 
