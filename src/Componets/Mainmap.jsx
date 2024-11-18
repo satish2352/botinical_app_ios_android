@@ -377,7 +377,7 @@ const Mainmap = ({ route, navigation }) => {
       }
     });
     return unsubscribe;
-  }, [navigation, isLoggedIn, start]);
+  }, [navigation, isLoggedIn, start,SelectedLanguage1]);
   // useEffect(() => {
     
   //   fetchData();
@@ -971,7 +971,7 @@ const Mainmap = ({ route, navigation }) => {
           :
 
           <View style={{ justifyContent: 'space-evenly', marginHorizontal: 5 }}>
-            {roleid === '2' || roleid === '1' ?
+            {roleid === '2' || roleid == '1' ?
               <View>
                 {
                   isTracking ?

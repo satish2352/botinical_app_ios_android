@@ -184,7 +184,7 @@ const Amenities = ({ navigation }) => {
                               </Text>
                             </View>
                   
-                            {roleid === '1' && (
+                            {roleid == '1' && (
                               <TouchableOpacity
                                 style={{
                                   position: 'absolute',
@@ -221,7 +221,7 @@ const Amenities = ({ navigation }) => {
                               <Image source={{ uri: item.image }} style={styles.image3} />
                             </View>
                   
-                            {roleid === '1' && (
+                            {roleid == '1' && (
                               <TouchableOpacity
                                 style={{
                                   position: 'absolute',

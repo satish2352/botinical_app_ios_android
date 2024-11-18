@@ -17,13 +17,15 @@ export const MyProvider = ({ children }) => {
   const [isGPSOn, setIsGPSOn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roleid, setroleid] = useState(null);
+  console.log('dddddd',roleid);
+  
 
   useEffect(() => {
     const checkUserToken = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
         setIsLoggedIn(token ? true : false); // Set isLoggedIn based on token presence
-        const role_id=await AsyncStorage.getItem('role_id');
+        const role_id = await AsyncStorage.getItem('role_id');
         setroleid(role_id)  
         
       } catch (error) {

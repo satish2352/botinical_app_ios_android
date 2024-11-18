@@ -97,6 +97,7 @@ const Logout = () => {
         setShowAlert(false);
         try {
             await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('role_id');
             setid('');
             setShowSuccessAlert(true); // Show success alert
             navigation.navigate('Login');

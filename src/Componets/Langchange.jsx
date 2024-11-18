@@ -101,22 +101,22 @@ const Langchange = () => {
   };
 
   // Function to retrieve selected language from AsyncStorage on component mount
-  const loadSelectedLanguage = async () => {
-    try {
-      const language = await AsyncStorage.getItem('selectedLanguage');
-      if (language !== null) {
-        setSelectedLanguage(language);
-        console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",language);
-      }
-    } catch (error) {
-      console.error('Error loading language:', error);
-    }
-  };
+  // const loadSelectedLanguage = async () => {
+  //   try {
+  //     const language = await AsyncStorage.getItem('selectedLanguage');
+  //     if (language !== null) {
+  //       setSelectedLanguage(language);
+  //       console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",language);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error loading language:', error);
+  //   }
+  // };
 
-  // Load selected language on component mount
-  useEffect(() => {
-    loadSelectedLanguage();
-  }, []);
+  // // Load selected language on component mount
+  // useEffect(() => {
+  //   loadSelectedLanguage();
+  // }, []);
 
   return (
     <TouchableOpacity style={styles.langiconwrap}>

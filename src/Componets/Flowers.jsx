@@ -95,7 +95,7 @@ const Flowers = ({ navigation }) => {
             <View style={styles.textWrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
-            {roleid === '1' ?
+            {roleid == '1' ?
                 <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
                     <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />
                 </TouchableOpacity>

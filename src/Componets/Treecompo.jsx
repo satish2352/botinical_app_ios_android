@@ -22,12 +22,13 @@ const Treecompo = ({ navigation }) => {
     const [long, setlong] = useState(null);
     const [treeid, settreeid] = useState(null);
     const [searchText, setSearchText] = useState('');
-    console.log('1111111111111', treeid);
+    console.log('1111111111111', SelectedLanguage1);
 
 
     console.log('under tree compoent lat long ', lat, long);
 
     useEffect(() => {
+       
         fetchData();
         const unsubscribe = navigation.addListener('focus', () => {
             if (!isLoggedIn) {
@@ -70,6 +71,7 @@ const Treecompo = ({ navigation }) => {
 
     const fetchData = async () => {
         const token = await AsyncStorage.getItem('token');
+        
         setLoading(true);
         try {
             const response = await axios.post(`${config.API_URL}auth/get-tress-list`, {
@@ -98,7 +100,7 @@ const Treecompo = ({ navigation }) => {
             <View style={styles.textwrap}>
                 <Text style={styles.title}>{item.name}</Text>
             </View>
-            {roleid === '1' ?
+            {roleid == '1' ?
 
                 <TouchableOpacity style={{ position: 'absolute', alignSelf: "flex-end", borderTopRightRadius: 10, borderBottomLeftRadius: 10, backgroundColor: '#01595A', }}>
                     <Editcordinates item={item} setlong={setlong} setlat={setlat} Updatecordinates={Updatecordinates} settreeid={settreeid} />

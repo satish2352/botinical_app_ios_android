@@ -186,7 +186,7 @@ const Zonelist = ({ navigation }) => {
                         </View>
                         
                         {/* Conditional render of Editcordinates button */}
-                        {roleid === '1' && (
+                        {roleid == '1' && (
                           <TouchableOpacity
                             style={{
                               position: 'absolute',
@@ -227,7 +227,7 @@ const Zonelist = ({ navigation }) => {
                         </View>
               
                         {/* Conditional render of Editcordinates button */}
-                        {roleid === '1' && (
+                        {roleid == '1' && (
                           <TouchableOpacity
                             style={{
                               position: 'absolute',

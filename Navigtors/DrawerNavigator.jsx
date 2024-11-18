@@ -88,7 +88,7 @@
 
 //       <Drawer.Navigator
 //         initialRouteName='HomeStack'
-//         // initialRouteName={roleId === 1 ? 'HomeStack' : roleId === 2 ? 'Mainmapstack' : 'Flowersstack'}
+//         // initialRouteName={roleid == '1' ? 'HomeStack' : roleId === 2 ? 'Mainmapstack' : 'Flowersstack'}
 //         screenOptions={{
 //           statusBarHidden: false,
 //           headerShown: false,
@@ -693,7 +693,7 @@ function DrawerNavigator() {
         }}
       />
 
-      {roleid === '1' ? (
+      {roleid == '1' ? (
         <Drawer.Screen
           name="AddEntityStack"
           component={AddEntityStack}
