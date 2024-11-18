@@ -123,7 +123,7 @@ const Priortyamenities = ({ navigation }) => {
                     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                 }
             >
-                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? ' Priority Base Amenities' : 'ప్రాధాన్య బేస్ సౌకర్యాలు'}</Text>
+                <Text style={styles.header}>{SelectedLanguage1 === 'english' ? ' Priority Amenities' : 'ప్రాధాన్య  సౌకర్యాలు'}</Text>
                 <SearchBar
                     value={searchText}
                     onChange={handleSearchChange}

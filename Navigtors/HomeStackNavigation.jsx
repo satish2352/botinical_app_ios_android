@@ -32,7 +32,8 @@ import Editcordinates from '../src/Reusablecompoent/Editcordinates';
 import Arvramenities from '../src/Componets/Arvramenities';
 import Arvrdetails from '../src/Componets/Arvrdetails';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import Priortyamenities from '../src/Componets/Priortyamenities';
+import PriortyArvrdetails from '../src/Componets/PriortyArvrdetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -119,6 +120,8 @@ function HomeStackNavigation() {
       <Stack.Screen name="Editcordinates" component={Editcordinates} />
       <Stack.Screen name="Arvramenities" component={Arvramenities} />
       <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
+      <Stack.Screen name="Priortyamenities" component={Priortyamenities} />
+      <Stack.Screen name="PriortyArvrdetails" component={PriortyArvrdetails} />
 
 
 

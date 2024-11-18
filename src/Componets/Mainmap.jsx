@@ -287,6 +287,9 @@ const Mainmap = ({ route, navigation }) => {
   const LATITUDE_DELTA = 0.01;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const markerRef = useRef()
+  const [routeSteps, setRouteSteps] = useState([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [turnInstruction, setTurnInstruction] = useState('');
   const [state, setState] = useState({
     coordinateanimated: new AnimatedRegion({
       // latitude: 30.7046,
@@ -299,7 +302,8 @@ const Mainmap = ({ route, navigation }) => {
   const { coordinateanimated } = state
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const mapRef = useRef();
-  const [routeSteps, setRouteSteps] = useState([]);
+
+console.log('bbbbb',routeSteps);
 
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
 
@@ -314,32 +318,10 @@ const Mainmap = ({ route, navigation }) => {
     console.log(`Distance: ${result.distance} km`);
     console.log(`Duration: ${result.duration} min`);
 
-    // Fetch step-by-step directions
-    // fetchDirections(userLocation, directionsDestination);
+
   };
 
-  const fetchDirections = async (origin, destination) => {
-    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${transportMode}&key=${GOOGLE_MAPS_APIKEY}`;
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data.routes.length) {
-        const steps = data.routes[0].legs[0].steps.map((step) => ({
-          instruction: step.html_instructions.replace(/<[^>]+>/g, ''), // Clean HTML tags
-          distance: step.distance.text,
-          location: {
-            latitude: step.end_location.lat,
-            longitude: step.end_location.lng,
-          },
-        }));
-        setRouteSteps(steps);
-      }
-    } catch (error) {
-      console.error('Error fetching directions:', error);
-    }
-  };
   useEffect(async () => {
     // data();
 
@@ -608,7 +590,7 @@ const Mainmap = ({ route, navigation }) => {
     const newCoordinate = { latitude, longitude };
     if (Platform.OS == "android") {
       if (markerRef.current) {
-        markerRef.current.animateMarkerToCoordinate(newCoordinate, 2000);
+        markerRef.current.animateMarkerToCoordinate(newCoordinate, 3000);
       }
       else {
         coordinateanimated.timing(newCoordinate).start();
@@ -687,13 +669,14 @@ const Mainmap = ({ route, navigation }) => {
           const { latitude, longitude } = position.coords;
           animate(latitude, longitude);
           findNearbyEntities(latitude, longitude);
-  
+          setUserLocation({ latitude, longitude });
+         
           if (isTracking && mapRef.current) {
             mapRef.current.animateToRegion({
               latitude,
               longitude,
-              latitudeDelta: 0.001,
-              longitudeDelta: 0.001,
+              latitudeDelta: 0.003,
+              longitudeDelta: 0.003,
             }, 2000); // 2-second animation duration
           }
         },
@@ -729,7 +712,7 @@ const Mainmap = ({ route, navigation }) => {
           longitude: userLocation.longitude,
           latitudeDelta: 0.001,
           longitudeDelta: 0.001,
-        }, 2000); // 1000 is the duration in milliseconds
+        }, 1000); // 1000 is the duration in milliseconds
       }
     }
     else {

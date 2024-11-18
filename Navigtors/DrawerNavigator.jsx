@@ -654,7 +654,7 @@ function DrawerNavigator() {
         name="PriorityamenitiesStack"
         component={PriorityamenitiesStack}
         options={{
-          title: SelectedLanguage1 === 'english' ? 'Priority Base Amenities ' : 'ప్రాధాన్య బేస్ సౌకర్యాలు',
+          title: SelectedLanguage1 === 'english' ? 'Priority  Amenities ' : 'ప్రాధాన్య  సౌకర్యాలు',
           drawerIcon: ({ focused, size }) => (
             <Icon name="logo-apple-ar" size={25} color={focused ? '#fff' : '#ccc'} /> // Adjusted icon for Contact Us
           ),
