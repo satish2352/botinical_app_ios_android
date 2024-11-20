@@ -223,7 +223,8 @@ import {
     TouchableWithoutFeedback,
     Dimensions,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    FlatList
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Modal from 'react-native-modal';
@@ -233,13 +234,16 @@ import axios from 'axios';
 import config from '../../config/config';
 import RotatingImage from '../Reusablecompoent/RotatingImage';
 import Orientation from 'react-native-orientation-locker';
+import CountCard from '../Reusablecompoent/CountCard';
 
 const Home = () => {
     const [isModalVisible, setModalVisible] = useState(true);
     const [homedata, setHomedataDetails] = useState({});
+    const [countData, setCountData] = useState({});
     const { SelectedLanguage1 } = globalvariavle();
     const [loading, setLoading] = useState(true);
-    
+    console.log('count', countData);
+
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
@@ -270,10 +274,36 @@ const Home = () => {
             setLoading(false);
         }
     };
+    const countdata = async () => {
+        try {
+            setLoading(true);
+            const token = await AsyncStorage.getItem('token');
+            const response = await axios.post(
+                `${config.API_URL}total-count`,
+                {
+                    language: SelectedLanguage1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.data) {
+                setCountData(response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching count data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         // Initial fetch
         fetchData();
+        countdata();
         return () => {
         };
     }, [SelectedLanguage1]);
@@ -296,6 +326,7 @@ const Home = () => {
             <StatusBar hidden={true} />
 
             <TouchableWithoutFeedback onPress={toggleModal}>
+
                 <View style={styles.zoomContainer}>
                     <ImageZoom
                         cropWidth={Dimensions.get('window').width}
@@ -303,13 +334,18 @@ const Home = () => {
                         imageWidth={Dimensions.get('window').width}
                         imageHeight={Dimensions.get('window').height}
                     >
-                    
-                            <RotatingImage image={homedata.image} toggleModal={toggleModal} />
-                 
+
+                        <RotatingImage image={homedata.image} toggleModal={toggleModal} />
+
                     </ImageZoom>
                 </View>
             </TouchableWithoutFeedback>
-
+            <View style={{ position: "absolute", top: 45, flexDirection: "row", flexWrap: "wrap",justifyContent:"space-evenly" }}>
+                <CountCard count={countData.zones ||0} name={SelectedLanguage1 === 'english' ? 'Theme Park' : 'థీమ్ పార్క్'} />
+                <CountCard count={countData.ARVR ||0} name={SelectedLanguage1 === 'english' ? 'ARVR Amenities ' : 'ARVR సౌకర్యాలు'} />
+                <CountCard count={countData.amenities ||0} name={SelectedLanguage1 === 'english' ? 'Total Facilities' : 'మొత్తం సౌకర్యాలు'} />
+                <CountCard count={countData.typeoftickets||0} name={SelectedLanguage1 === 'english' ? 'Type of Tickets ' : 'టిక్కెట్‌ల రకం'} />
+            </View>
             <Modal
                 isVisible={isModalVisible}
                 onBackdropPress={toggleModal}
@@ -385,6 +421,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 10,
+    },
+    list: {
+        paddingHorizontal: 10, // Adds some padding around the list
     },
 });
 

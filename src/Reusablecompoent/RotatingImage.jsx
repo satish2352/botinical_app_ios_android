@@ -27,11 +27,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    top:40
   },
   image: {
     width: wp(90),
-    height: wp(145),
-    resizeMode:"cover"
+    height: wp(120),
+    resizeMode:"contain"
   },
 });
 

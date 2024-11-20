@@ -80,8 +80,8 @@ android {
         applicationId "com.zooapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "23.0"
+        versionCode 25
+        versionName "25.0"
     }
     signingConfigs {
         debug {
