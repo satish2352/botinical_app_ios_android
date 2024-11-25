@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
 
     },
     Image: {
-        height: wp(25),
+        height: wp(30),
         width: wp(40),
         resizeMode: 'center',
         marginVertical: wp(6),

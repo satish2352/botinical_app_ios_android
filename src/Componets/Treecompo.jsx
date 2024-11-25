@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         height: 160,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
-        resizeMode: "cover",
+        resizeMode: "contain",
     },
     textwrap: {
         alignItems: 'center',

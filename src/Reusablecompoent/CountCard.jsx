@@ -14,7 +14,7 @@ const CountCard = ({ count, name, style }) => {
 const styles = StyleSheet.create({
     card: {
         width: wp(45),
-        height: wp(18),
+        height: wp(15),
         borderRadius: 10,
         justifyContent: 'space-evenly',
         alignItems: 'center',
@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
 
     },
     count: {
-        fontSize: 18,
+        fontSize: wp(4),
         fontWeight: 'bold',
         color: '#FFFFFF', // Fixed text color (e.g., white)
     },
     name: {
-        fontSize: 14,
+        fontSize: wp(4),
         marginTop: 1,
         color: '#FFFFFF', // Fixed text color (e.g., white)
         textAlign: "center"

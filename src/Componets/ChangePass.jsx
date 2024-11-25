@@ -172,10 +172,11 @@ const styles = StyleSheet.create({
     bgImage: {
         height: hp(45),
         alignItems: 'center',
+        justifyContent: 'center',
     },
     Image: {
-        height: 180,
-        width: 250,
+        height: wp(35),
+        width: wp(45),
         resizeMode: 'contain',
         // marginVertical: 50,
     },

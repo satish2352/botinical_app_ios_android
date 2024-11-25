@@ -10,6 +10,8 @@ const AudioModal = ({ data, visible, onClose }) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [sliderValue, setSliderValue] = useState(0);
     const soundRef = useRef(null);
+    console.log('data',data);
+    
 
     useEffect(() => {
         return () => {

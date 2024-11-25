@@ -350,7 +350,7 @@ const Contactus = ({ route }) => {
     return (
         <ScrollView contentContainerStyle={styles.mainContainer}>
             <View style={styles.bgImage}>
-                <Image style={styles.image} source={require('../Assets/contactus/contact.png')} />
+                <Image style={styles.image} source={require('../Assets/logo.png')} />
             </View>
 
             <View style={styles.contactCardWrap}>
@@ -403,13 +403,13 @@ const styles = StyleSheet.create({
         width: wp(70),
         alignItems: 'center',
         marginBottom: 20,
-        left:wp(4),
+        // left:wp(4),
         marginTop:wp(3)
     },
     image: {
         height: 200, // Adjust as necessary
         width: '100%',
-        resizeMode: 'cover',
+        resizeMode: 'contain',
     },
     contactCardWrap: {
         width: '90%',

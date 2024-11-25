@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
   carouselImage: {
     // flex: 1,
     width: '100%',
-    height: '100%',
+    height: '90%',
     resizeMode: 'contain',
   },
   paginationContainer: {
