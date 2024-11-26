@@ -886,6 +886,7 @@ const Mainmap = ({ route, navigation }) => {
       ];
       setCarouselData(newCarouselData);
       setSelectedAmenity(item);
+      setaudiovideodata(item)
       setModalVisible(false);
 
     }
