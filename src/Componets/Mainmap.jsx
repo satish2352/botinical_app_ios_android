@@ -1172,6 +1172,37 @@ const Mainmap = ({ route, navigation }) => {
                   <Icon name="close" size={34} color="#01595A" />
                 </TouchableOpacity>
                 <View style={styles.headingwrap}>
+                <View style={styles.buttonview}>
+                {
+                  selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                    <Text style={styles.buttonText}>Audio</Text>
+                    <Icon2 name="multitrack-audio" size={24} color="#fff" />
+                  </TouchableOpacity> : null
+                }
+                {
+                  selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                    <Text style={styles.buttonText}>Video</Text>
+                    <Icon2 name="ondemand-video" size={24} color="#fff" />
+                  </TouchableOpacity> : null
+                }
+
+                <View>
+
+                  <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+                </View>
+                <ButtonModal
+                  visible={buttonmodal}
+                  onClose={() => setbuttonmodal(false)}
+                  onPlayOnline={handlePlayOnline}
+                  onDownloadAndPlay={handleDownloadAndPlay}
+                />
+                <VideoModal
+                  visible={videoModalVisible}
+                  onClose={() => setvideoModalVisible(false)}
+                  videoUri={audiovideodata.video_upload}
+                  playMode={playMode}
+                />
+              </View>
                   <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '95%' }}>
                     <Text style={styles.title}>{selectedAmenity.name}</Text>
                     <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
@@ -1195,37 +1226,7 @@ const Mainmap = ({ route, navigation }) => {
                       </View>
                     </View>
                   }
-                  <View style={styles.buttonview}>
-                    {
-                      selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                        <Text style={styles.buttonText}>Audio</Text>
-                        <Icon2 name="multitrack-audio" size={24} color="#fff" />
-                      </TouchableOpacity> : null
-                    }
-                    {
-                      selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                        <Text style={styles.buttonText}>Video</Text>
-                        <Icon2 name="ondemand-video" size={24} color="#fff" />
-                      </TouchableOpacity> : null
-                    }
-
-                    <View>
-
-                      <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
-                    </View>
-                    <ButtonModal
-                      visible={buttonmodal}
-                      onClose={() => setbuttonmodal(false)}
-                      onPlayOnline={handlePlayOnline}
-                      onDownloadAndPlay={handleDownloadAndPlay}
-                    />
-                    <VideoModal
-                      visible={videoModalVisible}
-                      onClose={() => setvideoModalVisible(false)}
-                      videoUri={audiovideodata.video_upload}
-                      playMode={playMode}
-                    />
-                  </View>
+                 
                 </View>
               </ScrollView>
               {/* Add buttons to select transportation mode */}
@@ -1339,7 +1340,7 @@ const styles = StyleSheet.create({
     // resizeMode: "center"
     alignItems: "center",
     justifyContent: 'center',
-    height: '35%',
+    height: '25%',
     marginVertical: wp(4)
     // resizeMode: "center"
     // backgroundColor:'red'

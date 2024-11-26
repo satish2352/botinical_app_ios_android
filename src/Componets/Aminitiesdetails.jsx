@@ -169,6 +169,26 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
                     <View style={styles.headingwrap}>
 
+                    <View  >
+                            <View style={styles.buttonview}>
+
+                                {
+                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                                        <Text style={styles.buttonText}>Audio</Text>
+                                        <Icon name="multitrack-audio" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
+                                {
+                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                                        <Text style={styles.buttonText}>Video</Text>
+                                        <Icon name="ondemand-video" size={24} color="#fff" />
+                                    </TouchableOpacity> : null
+                                }
+
+                            </View>
+                        </View>
+
                         <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
                             <Text style={styles.headtext}>{about.name}</Text>
                             <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
@@ -197,25 +217,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
 
 
-                        <View  >
-                            <View style={styles.buttonview}>
-
-                                {
-                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                                        <Text style={styles.buttonText}>Audio</Text>
-                                        <Icon name="multitrack-audio" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
-
-                                {
-                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                                        <Text style={styles.buttonText}>Video</Text>
-                                        <Icon name="ondemand-video" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
-
-                            </View>
-                        </View>
+                        
                     </View>
 
                 </ScrollView>
@@ -287,6 +289,7 @@ const styles = StyleSheet.create({
 
         top: 0,
         marginHorizontal: 13,
+        marginBottom:100
     },
     headtext: {
         fontSize: 24,
