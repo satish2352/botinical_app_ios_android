@@ -498,6 +498,7 @@ import ARVRamenitiesStack from './ARVRamenitiesStack';
 import ZonesStack from './ZonesStack';
 import Login from '../src/Componets/Login';
 import PriorityamenitiesStack from './PriorityamenitiesStack';
+import Langchange from '../src/Componets/Langchange';
 
 const Drawer = createDrawerNavigator();
 
@@ -534,8 +535,13 @@ function CustomDrawerContent(props) {
         </View>
 
         <DrawerItemList {...props} />
-        <TouchableOpacity style={styles.info} onPress={() => showAlert()}>
-          <Icon1 name="info-with-circle" size={25} color="#ffff" /></TouchableOpacity>
+        <TouchableOpacity style={styles.info} >
+        <Langchange color={'#ffff'} size={25} />
+
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.info1} onPress={() => showAlert()} >
+        <Icon1 name="info-with-circle" size={25} color="#ffff" />
+      </TouchableOpacity>
       </DrawerContentScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
         <Logout />
@@ -756,7 +762,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     padding: 15,
     top: 10
-  }
+  },
+  info1: {
+    position: 'absolute',
+    alignSelf: 'flex-start',
+    padding: 15,
+    top: 10
+  },
 
 });
 

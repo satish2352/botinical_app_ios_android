@@ -82,7 +82,7 @@ import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalvariavle } from '../../Navigtors/globlevariable/MyContext';
-const Langchange = () => {
+const Langchange = ({color,size}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const {setSelectedLanguage1 } = globalvariavle();
@@ -121,7 +121,7 @@ const Langchange = () => {
   return (
     <TouchableOpacity style={styles.langiconwrap}>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Icon name="language" size={34} color="#01595A" />
+        <Icon name="language" size={size} color={color} />
       </TouchableOpacity>
       <Modal
         animationType='fade'
