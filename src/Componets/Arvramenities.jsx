@@ -125,7 +125,7 @@ const Arvramenities = ({ navigation }) => {
                     onFocus={handleSearchFocus}
                     onSearch={handleSearchPress}
                     placeholder="Search here..."
-                />
+                /> 
                 {cardData.length === 0 ? (
                     // Show this message if cardData is empty
                     <View style={styles.emptyContainer}>

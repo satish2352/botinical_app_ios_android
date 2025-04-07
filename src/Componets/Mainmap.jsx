@@ -291,6 +291,11 @@ const Mainmap = ({ route, navigation }) => {
   const markerRef = useRef()
   const [directions, setDirections] = useState([]);
   const [currentStep, setCurrentStep] = useState(null);
+  const [audioData, setaudioData] = useState();
+  const [offlineData, setofflineData] = useState('');
+  const [offlineData1, setofflineData1] = useState('');
+  const [showSlierModal, setShowSlierModal] = useState(false);
+  const [showSlierModal1, setShowSlierModal1] = useState(false);
   const [state, setState] = useState({
     coordinateanimated: new AnimatedRegion({
       // latitude: 30.7046,
@@ -304,9 +309,28 @@ const Mainmap = ({ route, navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const mapRef = useRef();
 
-  console.log('bbbbb', currentStep);
+  console.log('offlineData', offlineData);
 
   const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+
+
+  useEffect(() => {
+if(showSlierModal){
+  handleMarkerPress(selectedAmenity);
+
+}
+return()=>{}
+  }, [showSlierModal]);
+ 
+ 
+  useEffect(() => {
+if(showSlierModal1){
+  handleItemSelect(selectedAmenity);
+
+}
+return()=>{}
+  }, [showSlierModal1]);
+
 
   const handleDirectionsReady = (result) => {
     if (mapRef.current) {
@@ -316,8 +340,8 @@ const Mainmap = ({ route, navigation }) => {
     }
 
     // Log distance and duration
-    console.log(`Distance: ${result.distance} km`);
-    console.log(`Duration: ${result.duration} min`);
+    //console.log(`Distance: ${result.distance} km`);
+    //console.log(`Duration: ${result.duration} min`);
     fetchDirections()
 
   };
@@ -356,10 +380,10 @@ const Mainmap = ({ route, navigation }) => {
       intervalId = setInterval(() => {
         if (hasReachedDestination(userLocation2, directionsDestination)) {
           clearInterval(intervalId); // Stop the interval
-          console.log('stop');
+          //console.log('stop');
         } else {
           fetchDirections(); // Fetch directions if not reached
-          console.log('start');
+          //console.log('start');
         }
       }, 5000); // 10 seconds
     }
@@ -389,9 +413,9 @@ const Mainmap = ({ route, navigation }) => {
         }));
 
         setDirections(formattedSteps);
-        console.log("Directions fetched:", formattedSteps);
+        // //console.log("Directions fetched:", formattedSteps);
       } else {
-        console.error("No routes found or invalid response.");
+        // console.error("No routes found or invalid response.");
       }
     } catch (error) {
       console.error("Error fetching directions:", error);
@@ -423,29 +447,29 @@ const Mainmap = ({ route, navigation }) => {
       const checkProximity = () => {
         let nearestStep = null;
         let shortestDistance = Infinity;
-  
+
         // Find the nearest step
         directions.forEach((step) => {
           const distance = calculateDistance(userLocation2, {
             latitude: step.latitude,
             longitude: step.longitude,
           });
-  
+
           if (distance < shortestDistance) {
             shortestDistance = distance;
             nearestStep = step;
           }
         });
-  
-        console.log(`Nearest turn at distance: ${shortestDistance} meters`);
-  
+
+        //console.log(`Nearest turn at distance: ${shortestDistance} meters`);
+
         // Show popup if near the closest step (e.g., within 50 meters)
         if (nearestStep && shortestDistance < 100) {
           setCurrentStep(nearestStep); // Update the UI for the nearest turn
           setDirections((prev) =>
             prev.filter((step) => step !== nearestStep) // Remove the completed step
           );
-  
+
           // Show popup for the next turn
           Alert.alert(
             'Next Turn',
@@ -454,14 +478,14 @@ const Mainmap = ({ route, navigation }) => {
           );
         }
       };
-  
+
       // Check proximity every 10 seconds
       const interval = setInterval(checkProximity, 10000);
-  
+
       return () => clearInterval(interval); // Clean up on unmount or dependency change
     }
   }, [userLocation2, directions, showDirections, setCurrentStep, setDirections, calculateDistance]);
-  
+
   useEffect(async () => {
     // data();
 
@@ -476,7 +500,7 @@ const Mainmap = ({ route, navigation }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log('polygoan fetch from api', response.data.data[0].polygons);
+      // //console.log('polygoan fetch from api', response.data.data[0].polygons);
       setPolygons(response.data.data[0].polygons);
 
     } catch (error) {
@@ -521,9 +545,9 @@ const Mainmap = ({ route, navigation }) => {
       const result = await request(permission);
 
       if (result === RESULTS.GRANTED) {
-        console.log('You can use the Location');
+        //console.log('You can use the Location');
       } else {
-        console.log('Location permission denied');
+        //console.log('Location permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -534,25 +558,25 @@ const Mainmap = ({ route, navigation }) => {
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords;
-        // console.log("after every 6 second call live location function");
+        // //console.log("after every 6 second call live location function");
         // animate(latitude, longitude);
         setUserLocation({ latitude, longitude });
         setUserLocation2({ latitude, longitude });
         findNearbyEntities(latitude, longitude);
-   
-          updateState({
 
-            coordinateanimated: new AnimatedRegion({
-              latitude: latitude,
-              longitude: longitude,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA
-            }),
-          })
-        
+        updateState({
+
+          coordinateanimated: new AnimatedRegion({
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          }),
+        })
+
       },
       (error) => {
-        console.log(error.code, error.message);
+        //console.log(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
@@ -571,6 +595,7 @@ const Mainmap = ({ route, navigation }) => {
 
     if (nearby.length > 0) {
       setNearbyEntities(nearby);
+     
       setModalVisible(true); // Automatically open the modal if nearby entities are found
     } else {
       setModalVisible(false); // Close the modal if no nearby entities are found
@@ -614,13 +639,26 @@ const Mainmap = ({ route, navigation }) => {
       setRefreshing(false);
     }
   };
+  // const combinedData = 
+  //   [
+  //     ...treesData.map((item) => ({ ...item, type: 'Tree' })),
+  //     ...flowersData.map((item) => ({ ...item, type: 'Flower' })),
+  //     ...amenitiesData.map((item) => ({ ...item, type: 'Amenity' })),
+  //   ];
+
+
+
   const combinedData = useMemo(() => {
     return [
       ...treesData.map((item) => ({ ...item, type: 'Tree' })),
       ...flowersData.map((item) => ({ ...item, type: 'Flower' })),
       ...amenitiesData.map((item) => ({ ...item, type: 'Amenity' })),
     ];
+
   }, [treesData, flowersData, amenitiesData]);
+
+
+
   // useEffect(() => {
   //   requestlocationPermission();
   //   livelocation();
@@ -646,15 +684,15 @@ const Mainmap = ({ route, navigation }) => {
   useEffect(() => {
     if (deatils) {
       const newCarouselData = [
-        { image: { uri: deatils.image } },
-        { image: { uri: deatils.image_two } },
-        { image: { uri: deatils.image_three } },
-        { image: { uri: deatils.image_four } },
-        { image: { uri: deatils.image_five } },
+        { image: { uri: deatils.videoData.image } },
+        { image: { uri: deatils.about.image_two } },
+        { image: { uri: deatils.about.image_three } },
+        { image: { uri: deatils.about.image_four } },
+        { image: { uri: deatils.about.image_five } },
       ];
       setCarouselData(newCarouselData);
-      setSelectedAmenity(deatils)
-      setaudiovideodata(deatils)
+      setSelectedAmenity(deatils.about)
+      setaudiovideodata(deatils.about)
       setModalVisible(false);
     }
     return () => {
@@ -687,15 +725,16 @@ const Mainmap = ({ route, navigation }) => {
   };
   const handleMarkerPress = (amenity) => {
     const newCarouselData = [
-      { image: { uri: amenity.image } },
-      { image: { uri: amenity.image_two } },
-      { image: { uri: amenity.image_three } },
-      { image: { uri: amenity.image_four } },
-      { image: { uri: amenity.image_five } },
+      { image: { uri: offlineData.image } },
+      { image: { uri: amenity?.image_two } },
+      { image: { uri: amenity?.image_three } },
+      { image: { uri: amenity?.image_four } },
+      { image: { uri: amenity?.image_five } },
     ];
     setCarouselData(newCarouselData);
     setSelectedAmenity(amenity);
     setaudiovideodata(amenity)
+   
     setShowDirections(false);
     setModalVisible(false);
 
@@ -703,6 +742,8 @@ const Mainmap = ({ route, navigation }) => {
   const closeModal = () => {
     setSelectedAmenity(null);
     setShowDirections(false);
+    setShowSlierModal(false)
+    setShowSlierModal1(false)
 
   };
   const handleDirectionPress = () => {
@@ -720,7 +761,7 @@ const Mainmap = ({ route, navigation }) => {
     }
   };
   const coordinates = parseCoordinates(kmlData);
-  console.log('coordinatesravi', coordinates);
+  // //console.log('coordinatesravi', coordinates);
 
   const animate = (latitude, longitude) => {
     const newCoordinate = { latitude, longitude };
@@ -870,15 +911,18 @@ const Mainmap = ({ route, navigation }) => {
       }
     }
     else {
-      console.log("trun on location");
+      //console.log("trun on location");
       requestlocationPermission();
     }
 
   }
   const handleItemSelect = (item) => {
+    loadJsonData1(item.id)
+    setShowSlierModal1(true)
+
     if (item) {
       const newCarouselData = [
-        { image: { uri: item.image } },
+        { image: { uri: offlineData1.image } },
         { image: { uri: item.image_two } },
         { image: { uri: item.image_three } },
         { image: { uri: item.image_four } },
@@ -901,12 +945,68 @@ const Mainmap = ({ route, navigation }) => {
   };
 
   const handleSearchPress = () => {
-    console.log('Search button pressed');
+    //console.log('Search button pressed');
     setStart(1); // Set start to 1 when search icon is clicked
   };
   if (loading) {
     return <ActivityIndicator size="large" color="#01595A" />;
   }
+
+
+
+
+  const loadJsonData = async (dataId) => {
+ 
+    try {
+      // Path to the raw folder inside Android resources
+      const videoData = require('../../android/app/src/main/res/raw/data.json');
+
+
+      // Log the loaded JSON data
+      //console.log('videoData:', videoData);
+
+      // Find the video data that matches the provided dataId
+      const matchedData = videoData.find((item) => item.id === dataId);
+
+      if (matchedData) {
+        console.log('MatchedData:', matchedData);
+        setofflineData(matchedData)
+        return matchedData;
+      } else {
+        //console.log('No matching data found for id', dataId);
+        return null;
+      }
+
+    } catch (error) {
+      console.error('Error reading JSON file:', error);
+    }
+  };
+  const loadJsonData1 = async (dataId) => {
+ 
+    try {
+      // Path to the raw folder inside Android resources
+      const videoData = require('../../android/app/src/main/res/raw/data.json');
+
+
+      // Log the loaded JSON data
+      //console.log('videoData:', videoData);
+
+      // Find the video data that matches the provided dataId
+      const matchedData = videoData.find((item) => item.id === dataId);
+
+      if (matchedData) {
+        console.log('MatchedData:', matchedData);
+        setofflineData1(matchedData)
+        return matchedData;
+      } else {
+        //console.log('No matching data found for id', dataId);
+        return null;
+      }
+
+    } catch (error) {
+      console.error('Error reading JSON file:', error);
+    }
+  };
   return (
     <View style={styles.container}>
 
@@ -958,7 +1058,7 @@ const Mainmap = ({ route, navigation }) => {
                 longitude: parseFloat(amenity.longitude),
               }}
               title={amenity.name}
-              onPress={() => handleMarkerPress(amenity)}
+              onPress={() => { handleMarkerPress(amenity); loadJsonData(amenity.id);setShowSlierModal(true) }}
             >
               <Image style={{ height: 30, width: 30 }} source={{ uri: amenity.icon_image }} />
             </Marker>
@@ -1054,8 +1154,8 @@ const Mainmap = ({ route, navigation }) => {
                   top: 100
                 }
               })
-              console.log(`Distance: ${result.distance} km`);
-              console.log(`Duration: ${result.duration} min.`);
+              //console.log(`Distance: ${result.distance} km`);
+              //console.log(`Duration: ${result.duration} min.`);
             }}
             onError={(errorMessage) => {
               console.error('Error with directions:', errorMessage);
@@ -1151,7 +1251,7 @@ const Mainmap = ({ route, navigation }) => {
                     data={carouselData}
                     renderItem={renderItem}
                     sliderWidth={wp(100)}
-                    autoplay={true}
+                    autoplay={false}
                     itemWidth={wp(90)} // Set item width to full width
                     onSnapToItem={(index) => setActiveIndex(index)}
                     autoplayInterval={5000}
@@ -1172,37 +1272,37 @@ const Mainmap = ({ route, navigation }) => {
                   <Icon name="close" size={34} color="#01595A" />
                 </TouchableOpacity>
                 <View style={styles.headingwrap}>
-                <View style={styles.buttonview}>
-                {
-                  selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                    <Text style={styles.buttonText}>Audio</Text>
-                    <Icon2 name="multitrack-audio" size={24} color="#fff" />
-                  </TouchableOpacity> : null
-                }
-                {
-                  selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                    <Text style={styles.buttonText}>Video</Text>
-                    <Icon2 name="ondemand-video" size={24} color="#fff" />
-                  </TouchableOpacity> : null
-                }
+                  <View style={styles.buttonview}>
+                    {
+                      selectedAmenity.audio_link && selectedAmenity.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                        <Text style={styles.buttonText}>Audio</Text>
+                        <Icon2 name="multitrack-audio" size={24} color="#fff" />
+                      </TouchableOpacity> : null
+                    }
+                    {
+                      selectedAmenity.video_upload && selectedAmenity.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                        <Text style={styles.buttonText}>Video</Text>
+                        <Icon2 name="ondemand-video" size={24} color="#fff" />
+                      </TouchableOpacity> : null
+                    }
 
-                <View>
+                    <View>
 
-                  <AudioModal data={audiovideodata} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
-                </View>
-                <ButtonModal
-                  visible={buttonmodal}
-                  onClose={() => setbuttonmodal(false)}
-                  onPlayOnline={handlePlayOnline}
-                  onDownloadAndPlay={handleDownloadAndPlay}
-                />
-                <VideoModal
-                  visible={videoModalVisible}
-                  onClose={() => setvideoModalVisible(false)}
-                  videoUri={audiovideodata.video_upload}
-                  playMode={playMode}
-                />
-              </View>
+                      <AudioModal data={audiovideodata} SelectedLanguage1={SelectedLanguage1} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+                    </View>
+                    <ButtonModal
+                      visible={buttonmodal}
+                      onClose={() => setbuttonmodal(false)}
+                      onPlayOnline={handlePlayOnline}
+                      onDownloadAndPlay={handleDownloadAndPlay}
+                    />
+                    <VideoModal
+                      visible={videoModalVisible}
+                      onClose={() => setvideoModalVisible(false)}
+                      videoUri={audiovideodata}
+
+                    />
+                  </View>
                   <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '95%' }}>
                     <Text style={styles.title}>{selectedAmenity.name}</Text>
                     <TouchableOpacity style={styles.dibtn} onPress={handleDirectionPress}><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }}>Direction</Text></TouchableOpacity>
@@ -1226,7 +1326,7 @@ const Mainmap = ({ route, navigation }) => {
                       </View>
                     </View>
                   }
-                 
+
                 </View>
               </ScrollView>
               {/* Add buttons to select transportation mode */}
@@ -1431,7 +1531,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     alignSelf: 'center',
     alignItems: "center",
-    left: wp(5)
+
   },
   headtext2: {
     fontSize: 18,
@@ -1644,7 +1744,7 @@ export default Mainmap;
 //   }).filter(item => item !== null);
 
 //   setPolygons(convertedData);
-//   console.log("kmlDocument", convertedData);
+//   //console.log("kmlDocument", convertedData);
 // }
 
 

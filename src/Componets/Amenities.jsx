@@ -178,7 +178,7 @@ const Amenities = ({ navigation }) => {
                             </View>
                   
                             <View style={styles.cardtext}>
-                              <Text style={styles.text}>{item.name}</Text>
+                              <Text style={[styles.text,{ textAlign: 'left' }]}>{item.name}</Text>
                               <Text numberOfLines={6} ellipsizeMode="tail" style={styles.text2}>
                                 {stripHtmlTags(item.description)}
                               </Text>
@@ -285,12 +285,58 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: "#01595A",
         fontWeight: '500',
+        width:'95%'
     },
     text2: {
         fontSize: 13,
         color: '#000',
-        textAlign: 'right'
+        textAlign: 'right',
+        
     },
+    // image2: {
+    //     width: 160,
+    //     height: 155,
+    //     resizeMode: 'cover',
+    //     alignSelf: 'flex-start',
+    //     borderRadius: 100,
+    //     right: 2
+    // },
+    // image3: {
+    //     width: 160,
+    //     height: 155,
+    //     resizeMode: 'cover',
+    //     alignSelf: 'flex-end',
+    //     borderRadius: 100,
+    //     left: 3
+    // },
+    // cardwrap: {
+    //     backgroundColor: 'white',
+    //     borderRadius: 25,
+    //     shadowColor: '#000',
+    //     shadowOpacity: 0.23,
+    //     shadowRadius: 2.62,
+    //     elevation: 6,
+    //     flexDirection: "row",
+    //     alignItems: "center",
+    //     marginBottom: 20,
+    //     marginHorizontal: 10,
+    //     borderTopLeftRadius: 110,
+    //     borderBottomLeftRadius: 120,
+    // },
+    // cardwrap2: {
+    //     backgroundColor: 'white',
+    //     borderRadius: 25,
+    //     shadowColor: '#000',
+    //     shadowOpacity: 0.23,
+    //     shadowRadius: 2.62,
+    //     elevation: 6,
+    //     flexDirection: "row",
+    //     alignItems: "center",
+    //     marginBottom: 20,
+    //     marginHorizontal: 10,
+    //     borderTopRightRadius: 80,
+    //     borderBottomRightRadius: 80
+    // },
     image2: {
         width: 160,
         height: 155,

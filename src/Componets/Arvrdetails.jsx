@@ -51,6 +51,8 @@ const Arvrdetails = ({ route }) => {
     const [playMode, setPlayMode] = useState(null);
     const [buttonmodal, setbuttonmodal] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [audioData, setaudioData] = useState();
+    const [videoData, setVideoData] = useState('');
     console.log(about);
 
     useEffect(() => {
@@ -82,7 +84,43 @@ const Arvrdetails = ({ route }) => {
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
+  
 
+    useEffect(() => { 
+        if (data && data.id) {
+          loadJsonData(data.id); // Call loadJsonData when data changes
+        }
+      }, [data]);
+    
+    
+    
+      const loadJsonData = async (dataId) => {
+        try {
+          // Path to the raw folder inside Android resources
+          const videoData = require('../../android/app/src/main/res/raw/data.json');
+        
+          
+          // Log the loaded JSON data
+          console.log('videoData:', videoData);
+      
+          // Find the video data that matches the provided dataId
+          const matchedData = videoData.find((item) => item.id === dataId);
+      
+          if (matchedData) {
+            console.log('MatchedData:', matchedData);
+    
+            setVideoData(matchedData)
+            return matchedData;
+          } else {
+            console.log('No matching data found for id', dataId);
+            return null;
+          }
+      
+        } catch (error) {
+          console.error('Error reading JSON file:', error);
+        }
+      };
+      
     const openAudioModal = () => {
         setAudioModalVisible(true);
     };
@@ -120,7 +158,7 @@ const Arvrdetails = ({ route }) => {
 
     };
     const carouselData = [
-        { image: source = { uri: about.image } },
+        { image: source = { uri: videoData.image } },
         { image: source = { uri: about.image_two } },
         { image: source = { uri: about.image_three } },
         { image: source = { uri: about.image_four } },
@@ -140,7 +178,7 @@ const Arvrdetails = ({ route }) => {
 
             <View style={styles.subcontainer1}>
                 <View style={styles.bgImage}>
-                    <Image style={styles.image} source={{ uri: about.image }} />
+                    <Image style={styles.image} source={{ uri: videoData.image }} />
                 </View>
             </View>
 
@@ -150,7 +188,7 @@ const Arvrdetails = ({ route }) => {
                         data={carouselData}
                         renderItem={renderItem}
                         sliderWidth={wp(100)}
-                        autoplay={true}
+                        autoplay={false}
                         itemWidth={wp(90)} // Set item width to full width
                         onSnapToItem={(index) => setActiveIndex(index)}
                         autoplayInterval={5000}
@@ -220,7 +258,7 @@ const Arvrdetails = ({ route }) => {
             </View>
 
             <View>
-                <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+                <AudioModal data={about} visible={audioModalVisible} SelectedLanguage1={SelectedLanguage1} onClose={() => setAudioModalVisible(false)} />
                 <ButtonModal
                     visible={buttonmodal}
                     onClose={() => setbuttonmodal(false)}
@@ -231,8 +269,8 @@ const Arvrdetails = ({ route }) => {
             <VideoModal
                 visible={videoModalVisible}
                 onClose={() => setvideoModalVisible(false)}
-                videoUri={about.video_upload}
-                playMode={playMode}
+                videoUri={about}
+           
             />
 
         </View>

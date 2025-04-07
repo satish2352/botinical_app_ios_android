@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, Modal, ActivityIndicator, Alert } from 'react-native';
 import Video from 'react-native-video';
 import Slider from '@react-native-community/slider';
@@ -10,10 +10,17 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
   const [progress, setProgress] = useState(null);
   const [fullScreen, setFullScreen] = useState(true);
   const [showControls, setShowControls] = useState(true);
-  const [offlinePath, setOfflinePath] = useState(null);
-  const [loading, setLoading] = useState(false); // For offline download
-  const [loadingOnline, setLoadingOnline] = useState(false); // For online playback
+  const [loading, setLoading] = useState(false);
+
+  const [videoData1, setVideoData] = useState('');
+  
+  
   const ref = useRef();
+  console.log('videoUri',videoUri);
+
+
+  // Ensure videoUri is a valid string before checking startsWith
+  const videoSource = videoData1 ;
 
   useEffect(() => {
     let timer;
@@ -24,22 +31,6 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     }
     return () => clearTimeout(timer);
   }, [paused, progress]);
-
-  // useEffect(() => {
-  //   if (!visible) {
-  //     Orientation.lockToPortrait(); // Lock to portrait mode when modal is closed
-  //   }
-  //   return () => {};
-  // }, [visible]);
-
-  useEffect(() => {
-    if (playMode === 'offline') {
-      downloadVideo(videoUri, `${videoId}.mp4`);
-    } else {
-      setLoadingOnline(true); // Start loading indicator for online playback
-    }
-    return () => { };
-  }, [playMode]);
 
   const formatTime = (seconds) => {
     const mins = parseInt(seconds / 60, 10).toString().padStart(2, '0');
@@ -67,67 +58,61 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
     setPaused(!paused);
     setShowControls(!paused); // Show controls when paused
   };
+  useEffect(() => {
+    if (videoUri && videoUri.id) {
+      loadJsonData(videoUri.id); // Call loadJsonData when videoUri changes
+    }
+  }, [videoUri]);
 
-  const downloadVideo = async (url, filename) => {
-    const downloadDest = `${RNFS.DocumentDirectoryPath}/${filename}`;
 
+
+  const loadJsonData = async (dataId) => {
     try {
-      setLoading(true);
-      const download = RNFS.downloadFile({
-        fromUrl: url,
-        toFile: downloadDest,
-      });
+      // Path to the raw folder inside Android resources
+      const videoData = require('../../android/app/src/main/res/raw/data.json');
+    
+      
+      // Log the loaded JSON data
+      console.log('videoData:', videoData);
+  
+      // Find the video data that matches the provided dataId
+      const matchedData = videoData.find((item) => item.id === dataId);
+  
+      if (matchedData) {
+        console.log('MatchedData:', matchedData);
 
-      const result = await download.promise;
-
-      if (result.statusCode === 200) {
-        console.log('Download succeeded:', downloadDest);
-        setOfflinePath(downloadDest);
+        setVideoData(matchedData.video_upload)
+        return matchedData;
       } else {
-        Alert.alert("Warning", "This video is unavailable")
-
-        console.error('Download failed:', result.statusCode);
-
+        console.log('No matching data found for id', dataId);
+        return null;
       }
+  
     } catch (error) {
-
-      console.error('Download error:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error reading JSON file:', error);
     }
   };
-
-  const videoSource = offlinePath ? { uri: `file://${offlinePath}` } : { uri: videoUri };
-
+  
   return (
     <Modal visible={visible} transparent={true} onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.7)', justifyContent: 'center' }}>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity
-            onPress={onClose}
-            style={{
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              backgroundColor: 'rgba(0,0,0,.5)',
-              padding: 10,
-              borderRadius: 20,
-            }}
-          >
-            <Text style={{ color: 'white' }}>Close</Text>
-          </TouchableOpacity>
+     
           <View style={{ width: '100%', height: fullScreen ? '100%' : 200 }}>
-            <Video
-              paused={paused}
-              source={videoSource}
-              ref={ref}
-              onProgress={(x) => setProgress(x)}
-              style={{ width: '100%', height: fullScreen ? '100%' : 200 }}
-              resizeMode="contain"
-              onTouchStart={toggleControls} // Toggle controls visibility on touch
-              onEnd={onClose}
-              onLoad={() => setLoadingOnline(false)} // Hide loading indicator on load
-            />
+          
+            {videoSource ? (
+              <Video
+                paused={paused}
+                source={{uri: videoSource}} // Using re                ref={ref}
+                onProgress={(x) => setProgress(x)}
+                style={{ width: '100%', height: fullScreen ? '100%' : 200 }}
+                resizeMode="contain"
+                onTouchStart={toggleControls} // Toggle controls visibility on touch
+                onEnd={onClose}
+              />
+            ) : (
+              <Text style={{ color: 'white', textAlign: 'center' }}>Invalid video source</Text>
+            )}
             {showControls && progress && (
               <View style={{ position: 'absolute', width: '100%', height: '100%' }}>
                 <TouchableOpacity
@@ -141,6 +126,19 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
                   }}
                   onPress={toggleControls} // Toggle controls visibility on touch
                 >
+                <TouchableOpacity
+                onPress={onClose}
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  backgroundColor: 'rgba(0,0,0,.5)',
+                  padding: 10,
+                  borderRadius: 20,
+                }}
+              >
+                <Text style={{ color: 'white' }}>Close</Text>
+              </TouchableOpacity>
                   <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                       onPress={() => handleSeek(progress.currentTime - 10)}
@@ -205,48 +203,10 @@ const VideoModal = ({ visible, onClose, videoUri, videoId, playMode }) => {
                     />
                     <Text style={{ color: 'white' }}>{formatTime(progress.seekableDuration)}</Text>
                   </View>
-                 {/* <View
-                    style={{
-                      width: '100%',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      position: 'absolute',
-                      top: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      alignItems: 'center',
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (fullScreen) {
-                          Orientation.lockToPortrait();
-                        } else {
-                          Orientation.lockToLandscape();
-                        }
-                        setFullScreen(!fullScreen);
-                      }}
-                    >
-                      <Image
-                        source={
-                          fullScreen
-                            ? require('../Assets/videoplayer/minimize.png')
-                            : require('../Assets/videoplayer/full-size.png')
-                        }
-                        style={{ width: 24, height: 24, tintColor: 'white' }}
-                      />
-                    </TouchableOpacity>
-                  </View>*/}
                 </TouchableOpacity>
               </View>
             )}
           </View>
-          {playMode === 'offline' && loading && (
-            <ActivityIndicator size="large" color="#fff" />
-          )}
-          {playMode === 'online' && loadingOnline && (
-            <ActivityIndicator size="large" color="#fff" />
-          )}
         </View>
       </View>
     </Modal>

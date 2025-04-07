@@ -33,7 +33,7 @@ function Gardenmapstacks() {
                   headerLeft: () => {
                     return (
                       <View >
-                        <Langchange/>
+                         <Langchange color={'#01595A'} size={34} />
           
                       </View>
                     )

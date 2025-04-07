@@ -149,7 +149,7 @@ const goOnMap=()=>{
                         data={carouselData}
                         renderItem={renderItem}
                         sliderWidth={wp(100)}
-                        autoplay={true}
+                        autoplay={false}
                         itemWidth={wp(90)} // Set item width to full width
                         onSnapToItem={(index) => setActiveIndex(index)}
                         autoplayInterval={5000}
@@ -199,7 +199,7 @@ const goOnMap=()=>{
                     </ScrollView>
             </View>
             <View>
-                <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+                <AudioModal data={about} visible={audioModalVisible} SelectedLanguage1={SelectedLanguage1} onClose={() => setAudioModalVisible(false)} />
                 <ButtonModal
                     visible={buttonmodal}
                     onClose={() => setbuttonmodal(false)}
@@ -210,8 +210,8 @@ const goOnMap=()=>{
             <VideoModal
                 visible={videoModalVisible}
                 onClose={() => setvideoModalVisible(false)}
-                videoUri={about.video_upload}
-                playMode={playMode}
+                videoUri={about}
+               
             />
 
         </View>

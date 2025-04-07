@@ -1,17 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Modal, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Modal, TouchableOpacity, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
-
-const AudioModal = ({ data, visible, onClose }) => {
+import RNFS from 'react-native-fs';
+const AudioModal = ({ data, visible, onClose, SelectedLanguage1 }) => {
     const [loading, setLoading] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [sliderValue, setSliderValue] = useState(0);
+    const [audioData, setaudioData] = useState({});
     const soundRef = useRef(null);
-    console.log('data',data);
-    
+    console.log('SelectedLanguage1', SelectedLanguage1);
+    useEffect(() => {
+        if (data && data.id) {
+            loadJsonData(data.id); // Call loadJsonData when data changes
+        }
+    }, [data]);
+
+
+
+    const loadJsonData = async (dataId) => {
+        try {
+            // Path to the raw folder inside Android resources
+            const videoData = require('../../android/app/src/main/res/raw/data.json');
+
+
+            // Log the loaded JSON data
+            console.log('audioData:', audioData);
+
+            // Find the video data that matches the provided dataId
+            const matchedData = videoData.find((item) => item.id === dataId);
+
+            if (matchedData) {
+                console.log('MatchedData', matchedData);
+                if (SelectedLanguage1 === 'hindi') {
+                    setaudioData(matchedData.audio_hindi_link || null); // Pass null if no Hindi audio
+                } else {
+                    setaudioData(matchedData.audio_link || null); // Pass null if no English audio
+                }
+                return matchedData;
+            } else {
+                console.log('No matching data found for id:', dataId);
+                return null;
+            }
+
+        } catch (error) {
+            console.error('Error reading JSON file:', error);
+        }
+    };
 
     useEffect(() => {
         return () => {
@@ -33,9 +70,10 @@ const AudioModal = ({ data, visible, onClose }) => {
     };
 
     const playAudio = () => {
+
         setLoading(true);
         if (!soundRef.current) {
-            const newSound = new Sound(data.audio_link, '', (error) => {
+            const newSound = new Sound(audioData, '', (error) => {
                 setLoading(false);
                 if (error) {
                     console.log('Failed to load the sound', error);

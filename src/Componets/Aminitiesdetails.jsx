@@ -12,7 +12,7 @@ import axios from 'axios';
 import AudioModal from './AudioModal';
 import VideoModal from './VideoModal';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-
+import RNFS from 'react-native-fs';
 
 const ButtonModal = ({ visible, onClose, onPlayOnline, onDownloadAndPlay }) => {
     return (
@@ -49,7 +49,46 @@ const Aminitiesdetails = ({ route, navigation }) => {
     const [playMode, setPlayMode] = useState(null);
     const [buttonmodal, setbuttonmodal] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-    console.log(about);
+    const [audioData, setaudioData] = useState();
+    const [videoData, setVideoData] = useState('');
+    console.log('videoData', videoData);
+
+    useEffect(() => { 
+        if (data && data.id) {
+          loadJsonData(data.id); // Call loadJsonData when data changes
+        }
+      }, [data]);
+    
+    
+    
+      const loadJsonData = async (dataId) => {
+        try {
+          // Path to the raw folder inside Android resources
+          const videoData = require('../../android/app/src/main/res/raw/data.json');
+        
+          
+          // Log the loaded JSON data
+          console.log('videoData:', videoData);
+      
+          // Find the video data that matches the provided dataId
+          const matchedData = videoData.find((item) => item.id === dataId);
+      
+          if (matchedData) {
+            console.log('MatchedData:', matchedData);
+    
+            setVideoData(matchedData)
+            return matchedData;
+          } else {
+            console.log('No matching data found for id', dataId);
+            return null;
+          }
+      
+        } catch (error) {
+          console.error('Error reading JSON file:', error);
+        }
+      };
+      
+
 
     useEffect(() => {
 
@@ -75,11 +114,16 @@ const Aminitiesdetails = ({ route, navigation }) => {
             }
         };
         fetchData();
+   
         return () => {
 
             console.log('Component will unmount');
         };
     }, [SelectedLanguage1]);
+
+   
+
+
 
     const openAudioModal = () => {
         setAudioModalVisible(true);
@@ -91,7 +135,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
     const goOnMap = () => {
 
-        navigation.navigate('Mainmap', about);
+        navigation.navigate('Mainmap', {about,videoData});
     }
 
     const stripHtmlTags = (str) => {
@@ -118,7 +162,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
     };
     const carouselData = [
-        { image: source = { uri: about.image } },
+        { image: source = { uri: videoData.image } },
         { image: source = { uri: about.image_two } },
         { image: source = { uri: about.image_three } },
         { image: source = { uri: about.image_four } },
@@ -126,6 +170,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
     ];
     const renderItem = ({ item, index }) => {
+        console.log("itemm",item);
         return (
             <View style={styles.carouselItem}>
                 <Image style={styles.carouselImage} source={item.image} />
@@ -136,110 +181,104 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
         <View style={styles.maincontainer}>
 
-            <View style={styles.subcontainer1}>
-                <View style={styles.bgImage}>
-                    <Image style={styles.image} source={{ uri: about.image }} />
+        <View style={styles.subcontainer1}>
+            <View style={styles.bgImage}>
+                <Image style={styles.image} source={{ uri: videoData.image }} />
+            </View>
+        </View>
+
+        <View style={styles.contentContainer}>
+            <View style={styles.carouselwrap}>
+                <Carousel
+                    data={carouselData}
+                    renderItem={renderItem}
+                    sliderWidth={wp(100)}
+                    autoplay={false}
+                    itemWidth={wp(90)} // Set item width to full width
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                    autoplayInterval={5000}
+                    loop={true}
+                />
+                <View style={styles.paginationContainer}>
+                    <Pagination
+                        dotsLength={carouselData.length}
+                        activeDotIndex={activeIndex}
+                        dotStyle={styles.paginationDot}
+                        inactiveDotStyle={styles.paginationInactiveDot}
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.6}
+                    />
                 </View>
             </View>
+            <ScrollView>
+                <View style={styles.headingwrap}>
 
-            <View style={styles.contentContainer}>
-                <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-                    <View style={styles.carouselwrap}>
-                        <Carousel
-                            data={carouselData}
-                            renderItem={renderItem}
-                            sliderWidth={wp(100)}
-                            autoplay={true}
-                            itemWidth={wp(90)} // Set item width to full width
-                            onSnapToItem={(index) => setActiveIndex(index)}
-                            autoplayInterval={5000}
-                            loop={true}
-                        />
-                        <View style={styles.paginationContainer}>
-                            <Pagination
-                                dotsLength={carouselData.length}
-                                activeDotIndex={activeIndex}
-                                dotStyle={styles.paginationDot}
-                                inactiveDotStyle={styles.paginationInactiveDot}
-                                inactiveDotOpacity={0.4}
-                                inactiveDotScale={0.6}
-                            />
-                        </View>
+                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
+                        <Text style={styles.headtext}>{about.name}</Text>
+                        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
                     </View>
 
-                    <View style={styles.headingwrap}>
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
+
+                    <View style={styles.headtext2wrap}>
+                        <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
+                            <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
+                        </View>
+                        <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
+                            <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
+                        </View>
+
+
+
+                    </View>
+
+
+
 
                     <View  >
-                            <View style={styles.buttonview}>
+                        <View style={styles.buttonview}>
 
-                                {
-                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                                        <Text style={styles.buttonText}>Audio</Text>
-                                        <Icon name="multitrack-audio" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
+                            {
+                                about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                                    <Text style={styles.buttonText}>Audio</Text>
+                                    <Icon name="multitrack-audio" size={24} color="#fff" />
+                                </TouchableOpacity> : null
+                            }
 
-                                {
-                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                                        <Text style={styles.buttonText}>Video</Text>
-                                        <Icon name="ondemand-video" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
-
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
-                            <Text style={styles.headtext}>{about.name}</Text>
-                            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
-                        </View>
-                        <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
-
-
-
-
-                        <View style={styles.headtext2wrap}>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
-                            </View>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
-                            </View>
-
-
+                            {
+                                about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                                    <Text style={styles.buttonText}>Video</Text>
+                                    <Icon name="ondemand-video" size={24} color="#fff" />
+                                </TouchableOpacity> : null
+                            }
 
                         </View>
-
-
-
-
-                        
                     </View>
-
-                </ScrollView>
-            </View>
-
-            <View>
-                <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
-                <ButtonModal
-                    visible={buttonmodal}
-                    onClose={() => setbuttonmodal(false)}
-                    onPlayOnline={handlePlayOnline}
-                    onDownloadAndPlay={handleDownloadAndPlay}
-                />
-            </View>
-            <VideoModal
-                visible={videoModalVisible}
-                onClose={() => setvideoModalVisible(false)}
-                videoUri={about.video_upload}
-                playMode={playMode}
-            />
-
+                </View>
+            </ScrollView>
         </View>
+
+        <View>
+            <AudioModal data={about} visible={audioModalVisible} SelectedLanguage1={SelectedLanguage1} onClose={() => setAudioModalVisible(false)} />
+            <ButtonModal
+                visible={buttonmodal}
+                onClose={() => setbuttonmodal(false)}
+                onPlayOnline={handlePlayOnline}
+                onDownloadAndPlay={handleDownloadAndPlay}
+            />
+        </View>
+        <VideoModal
+            visible={videoModalVisible}
+            onClose={() => setvideoModalVisible(false)}
+            videoUri={about}
+       
+        />
+
+    </View>
 
     );
 };
@@ -289,7 +328,7 @@ const styles = StyleSheet.create({
 
         top: 0,
         marginHorizontal: 13,
-        marginBottom:100
+        marginBottom: 100
     },
     headtext: {
         fontSize: 24,
@@ -304,7 +343,7 @@ const styles = StyleSheet.create({
         marginVertical: 3,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        marginBottom:30
+        marginBottom: 30
     },
     centeredView: {
         flex: 1,
@@ -373,6 +412,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         // marginBottom: 10,
+        
 
     },
     carouselImage: {
@@ -380,6 +420,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'contain',
+         
     },
     paginationContainer: {
         position: 'absolute',
@@ -402,7 +443,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         height: '35%',
-        marginVertical: wp(4)
+        marginVertical: wp(4),
+      
 
     },
     modalBackground: {
@@ -452,7 +494,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#01595A',
         alignSelf: 'center',
-        paddingHorizontal:0
+        paddingHorizontal: 0
     },
 });
 

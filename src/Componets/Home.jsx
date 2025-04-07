@@ -324,7 +324,7 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
-
+          
             <TouchableWithoutFeedback onPress={toggleModal}>
 
                 <View style={styles.zoomContainer}>
@@ -340,7 +340,12 @@ const Home = () => {
                     </ImageZoom>
                 </View>
             </TouchableWithoutFeedback>
-         
+            <View style={{ position: "absolute", top: 50, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-evenly", alignSelf: "center" }}>
+            <CountCard count={countData.zones || 0} name={SelectedLanguage1 === 'english' ? 'Theme Park' : 'థీమ్ పార్క్'} />
+            <CountCard count={countData.ARVR || 0} name={SelectedLanguage1 === 'english' ? 'ARVR Amenities ' : 'ARVR సౌకర్యాలు'} />
+            <CountCard count={countData.amenities || 0} name={SelectedLanguage1 === 'english' ? 'Total Facilities' : 'మొత్తం సౌకర్యాలు'} />
+            <CountCard count={countData.typeoftickets || 0} name={SelectedLanguage1 === 'english' ? 'Type of Tickets ' : 'టిక్కెట్‌ల రకం'} />
+        </View>
             <Modal
                 isVisible={isModalVisible}
                 onBackdropPress={toggleModal}

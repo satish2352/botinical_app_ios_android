@@ -11,9 +11,9 @@ const App = () => {
   return (
    <MyProvider>
       <NavigationContainer>
-        <StatusCheck>
+        {/*  <StatusCheck>*/}
           <DrawerNavigator />
-        </StatusCheck>
+      {/* </StatusCheck>*/} 
       </NavigationContainer>
     </MyProvider>
   );

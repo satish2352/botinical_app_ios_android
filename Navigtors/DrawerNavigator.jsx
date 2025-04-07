@@ -498,7 +498,7 @@ import ARVRamenitiesStack from './ARVRamenitiesStack';
 import ZonesStack from './ZonesStack';
 import Login from '../src/Componets/Login';
 import PriorityamenitiesStack from './PriorityamenitiesStack';
-
+import Langchange from '../src/Componets/Langchange';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -520,10 +520,11 @@ function CustomDrawerContent(props) {
       { cancelable: false }
     );
   };
-  
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor="#01595A" barStyle="light-content" />
+
       <DrawerContentScrollView {...props}>
 
         <View style={styles.drawerHeader}>
@@ -534,11 +535,18 @@ function CustomDrawerContent(props) {
         </View>
 
         <DrawerItemList {...props} />
-        <TouchableOpacity style={styles.info} onPress={() => showAlert()}>
-          <Icon1 name="info-with-circle" size={25} color="#ffff" /></TouchableOpacity>
+        <TouchableOpacity style={styles.info} >
+          <Langchange color={'#ffff'} size={25} />
+
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.info1} onPress={() => showAlert()} >
+          <Icon1 name="info-with-circle" size={25} color="#ffff" />
+        </TouchableOpacity>
+
       </DrawerContentScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
         <Logout />
+
       </View>
     </View>
 
@@ -546,16 +554,16 @@ function CustomDrawerContent(props) {
 }
 
 function DrawerNavigator() {
-  const { SelectedLanguage1, roleid,isLoggedIn } = globalvariavle();
-  console.log('isLoggedIn',isLoggedIn);
-  
+  const { SelectedLanguage1, roleid, isLoggedIn } = globalvariavle();
+  console.log('isLoggedIn', isLoggedIn);
+
   useEffect(() => {
     return () => { }
-  }, [SelectedLanguage1,roleid])
+  }, [SelectedLanguage1, roleid])
   const roleId = roleid; // Example roleId, adjust as needed
   return (
 
-    <Drawer.Navigator initialRouteName= 'HomeStack'
+    <Drawer.Navigator initialRouteName='HomeStack'
       screenOptions={{
         statusBarHidden: false,
         headerShown: false,
@@ -569,7 +577,7 @@ function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
 
- 
+
       <Drawer.Screen
         name="HomeStack"
         component={HomeStackNavigation}
@@ -704,7 +712,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-      ):null}
+      ) : null}
 
       <Drawer.Screen
         name="ChangepassStack"
@@ -756,7 +764,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     padding: 15,
     top: 10
-  }
+  },
+  info1: {
+    position: 'absolute',
+    alignSelf: 'flex-start',
+    padding: 15,
+    top: 10
+  },
 
 });
 

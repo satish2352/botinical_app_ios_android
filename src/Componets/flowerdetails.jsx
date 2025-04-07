@@ -49,6 +49,7 @@ const Flowerdetails = ({ route, navigation }) => {
   const { SelectedLanguage1 } = globalvariavle();
   const [playMode, setPlayMode] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [videoData, setVideoData] = useState('');
   console.log('flowerData', flowerData);
   useEffect(() => {
 
@@ -86,6 +87,43 @@ const Flowerdetails = ({ route, navigation }) => {
       console.log('Component will unmount');
     };
   }, [SelectedLanguage1,]);
+
+
+  useEffect(() => { 
+    if (data && data.id) {
+      loadJsonData(data.id); // Call loadJsonData when data changes
+    }
+  }, [data]);
+
+
+
+  const loadJsonData = async (dataId) => {
+    try {
+      // Path to the raw folder inside Android resources
+      const videoData = require('../../android/app/src/main/res/raw/data.json');
+    
+      
+      // Log the loaded JSON data
+      console.log('videoData:', videoData);
+  
+      // Find the video data that matches the provided dataId
+      const matchedData = videoData.find((item) => item.id === dataId);
+  
+      if (matchedData) {
+        console.log('MatchedData:', matchedData);
+
+        setVideoData(matchedData)
+        return matchedData;
+      } else {
+        console.log('No matching data found for id', dataId);
+        return null;
+      }
+  
+    } catch (error) {
+      console.error('Error reading JSON file:', error);
+    }
+  };
+  
   const openAudioModal = () => {
     setAudioModalVisible(true);
   };
@@ -116,7 +154,7 @@ const Flowerdetails = ({ route, navigation }) => {
 
   };
   const carouselData = [
-    { image: source = { uri: flowerData.image } },
+    { image: source = { uri: videoData.image } },
     { image: source = { uri: flowerData.image_two } },
     { image: source = { uri: flowerData.image_three } },
     { image: source = { uri: flowerData.image_four } },
@@ -138,7 +176,7 @@ const Flowerdetails = ({ route, navigation }) => {
     <View style={styles.maincontainer}>
       <View style={styles.subcontainer1}>
         <View style={styles.bgImage}>
-          <Image style={styles.image} source={{ uri: flowerData.image }} />
+          <Image style={styles.image} source={{ uri: videoData.image }} />
         </View>
       </View>
       <View style={styles.contentContainer}>
@@ -148,7 +186,7 @@ const Flowerdetails = ({ route, navigation }) => {
               data={carouselData}
               renderItem={renderItem}
               sliderWidth={wp(100)}
-              autoplay={true}
+              autoplay={false}
               itemWidth={wp(90)} // Set item width to full width
               onSnapToItem={(index) => setActiveIndex(index)}
               autoplayInterval={5000}
@@ -203,7 +241,7 @@ const Flowerdetails = ({ route, navigation }) => {
 
           </View>
         </ScrollView>
-        <AudioModal data={flowerData} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
+        <AudioModal data={flowerData} visible={audioModalVisible} SelectedLanguage1={SelectedLanguage1} onClose={() => setAudioModalVisible(false)} />
         <ButtonModal
           visible={buttonmodal}
           onClose={() => setbuttonmodal(false)}
@@ -216,8 +254,8 @@ const Flowerdetails = ({ route, navigation }) => {
       <VideoModal
         visible={videoModalVisible}
         onClose={() => setvideoModalVisible(false)}
-        videoUri={flowerData.video_upload}
-        playMode={playMode}
+        videoUri={flowerData}
+      
       />
     </View>
   );

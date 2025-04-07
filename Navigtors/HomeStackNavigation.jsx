@@ -84,7 +84,7 @@ function HomeStackNavigation() {
         headerLeft: () => {
           return (
             <TouchableOpacity >
-              <Langchange  />
+              <Langchange color={'#01595A'} size={34} />
             </TouchableOpacity>
           )
         }

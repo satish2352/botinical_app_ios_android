@@ -13,7 +13,7 @@ const CountCard = ({ count, name, style }) => {
 
 const styles = StyleSheet.create({
     card: {
-        width: wp(45),
+        width: wp(35),
         height: wp(15),
         borderRadius: 10,
         justifyContent: 'space-evenly',
