@@ -136,111 +136,104 @@ const Aminitiesdetails = ({ route, navigation }) => {
 
         <View style={styles.maincontainer}>
 
-            <View style={styles.subcontainer1}>
-                <View style={styles.bgImage}>
-                    <Image style={styles.image} source={{ uri: about.image }} />
-                </View>
+        <View style={styles.subcontainer1}>
+            <View style={styles.bgImage}>
+                <Image style={styles.image} source={{ uri: about.image }} />
             </View>
-
-            <View style={styles.contentContainer}>
-                <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-                    <View style={styles.carouselwrap}>
-                        <Carousel
-                            data={carouselData}
-                            renderItem={renderItem}
-                            sliderWidth={wp(100)}
-                            autoplay={true}
-                            itemWidth={wp(90)} // Set item width to full width
-                            onSnapToItem={(index) => setActiveIndex(index)}
-                            autoplayInterval={5000}
-                            loop={true}
-                        />
-                        <View style={styles.paginationContainer}>
-                            <Pagination
-                                dotsLength={carouselData.length}
-                                activeDotIndex={activeIndex}
-                                dotStyle={styles.paginationDot}
-                                inactiveDotStyle={styles.paginationInactiveDot}
-                                inactiveDotOpacity={0.4}
-                                inactiveDotScale={0.6}
-                            />
-                        </View>
-                    </View>
-
-                    <View style={styles.headingwrap}>
-
-                    <View  >
-                            <View style={styles.buttonview}>
-
-                                {
-                                    about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
-                                        <Text style={styles.buttonText}>Audio</Text>
-                                        <Icon name="multitrack-audio" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
-
-                                {
-                                    about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
-                                        <Text style={styles.buttonText}>Video</Text>
-                                        <Icon name="ondemand-video" size={24} color="#fff" />
-                                    </TouchableOpacity> : null
-                                }
-
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
-                            <Text style={styles.headtext}>{about.name}</Text>
-                            <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
-                        </View>
-                        <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
-
-
-
-
-                        <View style={styles.headtext2wrap}>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
-                            </View>
-                            <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
-                                <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
-                            </View>
-
-
-
-                        </View>
-
-
-
-
-                        
-                    </View>
-
-                </ScrollView>
-            </View>
-
-            <View>
-                <AudioModal data={about} visible={audioModalVisible} onClose={() => setAudioModalVisible(false)} />
-                <ButtonModal
-                    visible={buttonmodal}
-                    onClose={() => setbuttonmodal(false)}
-                    onPlayOnline={handlePlayOnline}
-                    onDownloadAndPlay={handleDownloadAndPlay}
-                />
-            </View>
-            <VideoModal
-                visible={videoModalVisible}
-                onClose={() => setvideoModalVisible(false)}
-                videoUri={about.video_upload}
-                playMode={playMode}
-            />
-
         </View>
 
+        <View style={styles.contentContainer}>
+            <View style={styles.carouselwrap}>
+                <Carousel
+                    data={carouselData}
+                    renderItem={renderItem}
+                    sliderWidth={wp(100)}
+                    autoplay={false}
+                    itemWidth={wp(90)} // Set item width to full width
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                    autoplayInterval={5000}
+                    loop={true}
+                />
+                <View style={styles.paginationContainer}>
+                    <Pagination
+                        dotsLength={carouselData.length}
+                        activeDotIndex={activeIndex}
+                        dotStyle={styles.paginationDot}
+                        inactiveDotStyle={styles.paginationInactiveDot}
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.6}
+                    />
+                </View>
+            </View>
+            <ScrollView>
+                <View style={styles.headingwrap}>
+
+                    <View style={{ flexDirection: 'row', flexWrap: "wrap", justifyContent: "space-between", width: '100%' }}>
+                        <Text style={styles.headtext}>{about.name}</Text>
+                        <TouchableOpacity style={styles.dibtn} ><Text style={{ color: '#fff', fontWeight: "400", fontSize: 15 }} onPress={() => goOnMap(about)}>Show On Map</Text></TouchableOpacity>
+                    </View>
+
+                    <Text style={{ color: '#000', textAlign: 'justify' }}>{stripHtmlTags(about.description)}</Text>
+
+                    <View style={styles.headtext2wrap}>
+                        <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 1</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.headtext2}>OPEN TIME:&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_first}</Text></Text>
+                            <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_first}</Text></Text>
+                        </View>
+                        <Text style={{ textAlign: 'center', fontSize: 25, fontWeight: "500" }}>Time Slot 2</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.headtext2}>OPEN TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.open_time_second}</Text></Text>
+                            <Text style={styles.headtext2}>CLOSE TIME :&nbsp;&nbsp;<Text style={{ color: '#000', fontWeight: "400", }}>{about.close_time_second}</Text></Text>
+                        </View>
+
+
+
+                    </View>
+
+
+
+
+                    <View  >
+                        <View style={styles.buttonview}>
+
+                            {
+                                about.audio_link && about.audio_link.length > 0 ? <TouchableOpacity style={styles.button} onPress={openAudioModal}>
+                                    <Text style={styles.buttonText}>Audio</Text>
+                                    <Icon name="multitrack-audio" size={24} color="#fff" />
+                                </TouchableOpacity> : null
+                            }
+
+                            {
+                                about.video_upload && about.video_upload.length > 0 ? <TouchableOpacity style={styles.button} onPress={openvideoModal}>
+                                    <Text style={styles.buttonText}>Video</Text>
+                                    <Icon name="ondemand-video" size={24} color="#fff" />
+                                </TouchableOpacity> : null
+                            }
+
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
+        </View>
+
+        <View>
+            <AudioModal data={about} visible={audioModalVisible} SelectedLanguage1={SelectedLanguage1} onClose={() => setAudioModalVisible(false)} />
+            <ButtonModal
+                visible={buttonmodal}
+                onClose={() => setbuttonmodal(false)}
+                onPlayOnline={handlePlayOnline}
+                onDownloadAndPlay={handleDownloadAndPlay}
+            />
+        </View>
+        <VideoModal
+            visible={videoModalVisible}
+            onClose={() => setvideoModalVisible(false)}
+            videoUri={about}
+       
+        />
+
+    </View>
     );
 };
 
