@@ -311,7 +311,7 @@ const Mainmap = ({ route, navigation }) => {
 
   console.log('offlineData', offlineData);
 
-  const GOOGLE_MAPS_APIKEY = "AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98"
+  const GOOGLE_MAPS_APIKEY = "AIzaSyAiM1P7Z6YRNVl8b4vTszyFBURAvuI05FA"
 
 
   useEffect(() => {
