@@ -1,0 +1,14 @@
+diff --git a/node_modules/react-native-geocoder/android/build.gradle b/node_modules/react-native-geocoder/android/build.gradle
+index 8a174dc..033a880 100644
+--- a/node_modules/react-native-geocoder/android/build.gradle
++++ b/node_modules/react-native-geocoder/android/build.gradle
+@@ -16,6 +16,7 @@ android {
+ }
+ 
+ dependencies {
+-    compile fileTree(include: ['*.jar'], dir: 'libs')
+-    compile "com.facebook.react:react-native:+"
++    implementation fileTree(dir: "libs", include: ["*.jar"])
++   implementation 'com.facebook.react:react-native:+'
++
+ }

@@ -10,7 +10,9 @@ import PlatsDetails from '../src/Componets/PlatsDetails';
 import Flowers from '../src/Componets/Flowers';
 import Langchange from '../src/Componets/Langchange';
 import Mainmap from '../src/Componets/Mainmap';
-import Flowerdetails from '../src/Componets/Flowerdetails';
+import Flowerdetails from '../src/Componets/flowerdetails';
+
+
 
 
 

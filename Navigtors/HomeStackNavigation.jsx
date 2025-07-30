@@ -22,7 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Entypo';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Flowerdetails from '../src/Componets/Flowerdetails';
+import Flowerdetails from '../src/Componets/flowerdetails';
 import Logout from '../src/Componets/Logout';
 import AddEntity from '../src/Componets/AddEntity';
 import AddEntityform from '../src/Componets/AddEntityform';
