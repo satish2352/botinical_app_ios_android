@@ -1,4 +1,4 @@
-package com.zooapp
+package com.botanicalgarden.hydtel
 
 import android.app.Application
 import com.facebook.react.PackageList

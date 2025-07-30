@@ -1,10 +1,17 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /usr/local/Cellar/android-sdk/24.3.3/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Firebase Messaging
+-keep class com.google.firebase.messaging.FirebaseMessagingService { *; }
+-keep class com.google.firebase.iid.FirebaseInstanceIdReceiver { *; }
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.cloudmessaging.** { *; }
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
 
-# Add any project specific keep options here:
+# Needed for Google Play Services
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+# Prevent stripping of IntentService for FCM
+-keep class * extends android.app.Service
+
+# Keep annotations (sometimes used by Firebase)
+-keepattributes *Annotation*

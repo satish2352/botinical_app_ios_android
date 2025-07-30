@@ -1,4 +1,4 @@
-package com.zooapp
+package com.botanicalgarden.hydtel
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
