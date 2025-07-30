@@ -34,6 +34,8 @@ import Arvrdetails from '../src/Componets/Arvrdetails';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Priortyamenities from '../src/Componets/Priortyamenities';
 import PriortyArvrdetails from '../src/Componets/PriortyArvrdetails';
+import WebviewScreen from '../src/Componets/WebviewScreen';
+import DeleteAccountScreen from '../src/Componets/DeleteAccountScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -122,6 +124,8 @@ function HomeStackNavigation() {
       <Stack.Screen name="Arvrdetails" component={Arvrdetails} />
       <Stack.Screen name="Priortyamenities" component={Priortyamenities} />
       <Stack.Screen name="PriortyArvrdetails" component={PriortyArvrdetails} />
+      <Stack.Screen name="WebviewScreen" component={WebviewScreen} />
+      <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} />
 
 
 

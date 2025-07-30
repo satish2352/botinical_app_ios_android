@@ -37,6 +37,8 @@ import ZonesStack from './ZonesStack';
 import Login from '../src/Componets/Login';
 import PriorityamenitiesStack from './PriorityamenitiesStack';
 import Langchange from '../src/Componets/Langchange';
+import WebviewScreen from '../src/Componets/WebviewScreen';
+import DeleteAccountScreen from '../src/Componets/DeleteAccountScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -59,7 +61,7 @@ function CustomDrawerContent(props) {
       { cancelable: false }
     );
   };
-  
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor="#01595A" barStyle="light-content" />
@@ -74,12 +76,12 @@ function CustomDrawerContent(props) {
 
         <DrawerItemList {...props} />
         <TouchableOpacity style={styles.info} >
-        <Langchange color={'#ffff'} size={25} />
+          <Langchange color={'#ffff'} size={25} />
 
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.info1} onPress={() => showAlert()} >
-        <Icon1 name="info-with-circle" size={25} color="#ffff" />
-      </TouchableOpacity>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.info1} onPress={() => showAlert()} >
+          <Icon1 name="info-with-circle" size={25} color="#ffff" />
+        </TouchableOpacity>
       </DrawerContentScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
         <Logout />
@@ -90,16 +92,16 @@ function CustomDrawerContent(props) {
 }
 
 function DrawerNavigator() {
-  const { SelectedLanguage1, roleid,isLoggedIn } = globalvariavle();
-  console.log('isLoggedIn',isLoggedIn);
-  
+  const { SelectedLanguage1, roleid, isLoggedIn } = globalvariavle();
+  console.log('isLoggedIn', isLoggedIn);
+
   useEffect(() => {
     return () => { }
-  }, [SelectedLanguage1,roleid])
+  }, [SelectedLanguage1, roleid])
   const roleId = roleid; // Example roleId, adjust as needed
   return (
 
-    <Drawer.Navigator initialRouteName= 'HomeStack'
+    <Drawer.Navigator initialRouteName='HomeStack'
       screenOptions={{
         statusBarHidden: false,
         headerShown: false,
@@ -113,7 +115,7 @@ function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
 
- 
+
       <Drawer.Screen
         name="HomeStack"
         component={HomeStackNavigation}
@@ -248,7 +250,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-      ):null}
+      ) : null}
 
       <Drawer.Screen
         name="ChangepassStack"
@@ -260,6 +262,56 @@ function DrawerNavigator() {
           ),
         }}
       />
+     <Drawer.Screen
+  name="termandconditions"
+  component={WebviewScreen}
+  initialParams={{
+    title: SelectedLanguage1 === 'english' ? 'Terms and Conditions' : 'నిబంధనలు మరియు షరతులు',
+    url: 'https://support.virtualwildlifesafari.in/terms-and-conditions.html',
+  }}
+  options={{
+    title: SelectedLanguage1 === 'english' ? 'Terms and Conditions' : 'నిబంధనలు మరియు షరతులు',
+    drawerIcon: ({ focused }) => (
+      <Icon
+        name={focused ? 'document-text' : 'document-text-outline'}
+        size={24}
+        color={focused ? '#fff' : '#ccc'}
+      />
+    ),
+  }}
+/>
+
+<Drawer.Screen
+  name="policy"
+  component={WebviewScreen}
+  initialParams={{
+    title: SelectedLanguage1 === 'english' ? 'Privacy Policy' : 'గోప్యతా విధానం',
+    url: 'https://support.virtualwildlifesafari.in/privacy-policy.html',
+  }}
+  options={{
+    title: SelectedLanguage1 === 'english' ? 'Privacy Policy' : 'గోప్యతా విధానం',
+    drawerIcon: ({ focused }) => (
+      <Icon
+        name={focused ? 'shield-checkmark' : 'shield-checkmark-outline'}
+        size={24}
+        color={focused ? '#fff' : '#ccc'}
+      />
+    ),
+  }}
+/>
+
+
+      <Drawer.Screen
+        name="deleteaccount"
+        component={DeleteAccountScreen}
+        options={{
+          title: SelectedLanguage1 === 'english' ? 'Delete Account' : 'ఖాతాను తొలగించండి',
+          drawerIcon: ({ focused }) => (
+            <Icon name="trash-bin" size={25} color={focused ? '#fff' : '#ccc'} />
+          ),
+        }}
+      />
+
 
 
 
