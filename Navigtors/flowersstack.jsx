@@ -11,13 +11,8 @@ import Flowers from '../src/Componets/Flowers';
 import Langchange from '../src/Componets/Langchange';
 import Mainmap from '../src/Componets/Mainmap';
 import Flowerdetails from '../src/Componets/flowerdetails';
-
-
-
-
-
 const Stack = createNativeStackNavigator();
-function Flowersstack() {
+function FlowersStack() {
     const navigation = useNavigation();
     return (
 
@@ -57,4 +52,4 @@ function Flowersstack() {
     );
 }
 
-export default Flowersstack;
+export default FlowersStack;

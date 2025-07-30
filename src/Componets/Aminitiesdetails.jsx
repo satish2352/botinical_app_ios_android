@@ -49,7 +49,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
     const [playMode, setPlayMode] = useState(null);
     const [buttonmodal, setbuttonmodal] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-    console.log(about);
+    console.log('ysstytusd',about.video_upload);
 
     useEffect(() => {
 
@@ -229,7 +229,7 @@ const Aminitiesdetails = ({ route, navigation }) => {
         <VideoModal
             visible={videoModalVisible}
             onClose={() => setvideoModalVisible(false)}
-            videoUri={about}
+            videoUri={about?.video_upload}
        
         />
 

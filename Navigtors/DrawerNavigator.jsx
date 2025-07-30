@@ -27,7 +27,7 @@ import AminetiesMapstack from './AminetiesMapstack';
 import { MyProvider } from '../context/Mycontext';
 import Mainmapstack from './Mainmapstack';
 import AddEntityStack from './AddEntityStack';
-import Flowersstack from './Flowersstack';
+import FlowersStack from './FlowersStack';
 import Logout from '../src/Componets/Logout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { globalvariavle } from './globlevariable/MyContext';
@@ -157,8 +157,8 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-        name="Flowersstack"
-        component={Flowersstack}
+        name="FlowersStack"
+        component={FlowersStack}
         options={{
           title: SelectedLanguage1 === 'english' ? 'Plants' : 'మొక్కలు',
           drawerIcon: ({ focused, size }) => (
