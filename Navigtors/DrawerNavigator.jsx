@@ -55,7 +55,7 @@ function CustomDrawerContent(props) {
         },
         {
           text: "KNOW MORE",
-          onPress: () => Linking.openURL("https://www.google.com"),
+          onPress: () => Linking.openURL("https://support.virtualwildlifesafari.in/terms-and-conditions.html"),
         },
       ],
       { cancelable: false }
